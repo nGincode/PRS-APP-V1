@@ -1,10 +1,10 @@
 # PRS System Aplication
 
 ## Required
-Codeigniter V3
-Req intl
-Req application/config/database.php
-Req application/config/config.php
+1. Codeigniter V3
+2. Req intl
+3. Req application/config/database.php
+4. Req application/config/config.php
 
 ## Features
 1. Barcode
