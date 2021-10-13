@@ -1,10 +1,12 @@
-## PRS System Aplication
+# PRS System Aplication
 
-# Required
+## Required
 Codeigniter V3
 Req intl
+Req application/config/database.php
+Req application/config/config.php
 
-# Features
+## Features
 1. Barcode
 2. Absensi
 3. Logistik (order,belanja, dll)
