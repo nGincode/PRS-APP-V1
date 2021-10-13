@@ -32,6 +32,10 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 
 #edit sendiri
-uplods/
-#application/config/database.php
-#application/config/config.php
+uplods/absensi/
+uplods/data_qr/
+uplods/ivn_image/
+uplods/original/
+uplods/resized/
+uplods/thumb/
+uplods/voucher/
