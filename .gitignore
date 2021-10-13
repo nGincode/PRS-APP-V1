@@ -32,5 +32,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 
 #edit sendiri
+application/config/config.php
 application/config/database.php
 uplods/
