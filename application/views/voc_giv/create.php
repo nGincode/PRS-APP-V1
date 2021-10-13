@@ -145,7 +145,7 @@ endif; ?>
               <tr style="width: 200px;">
                 <td><?php echo $no++; ?></td>
                 <td><?php echo $d['nama']; ?></td>
-                <td><img width="100" src="../assets/voucher/<?php echo $d['img']; ?>"> </td>
+                <td><img width="100" src="../uploads/voucher/<?php echo $d['img']; ?>"> </td>
                 <td><?php echo $d['tglbuat']; ?></td>
                 <td><?php echo $unt; ?></td>
                 <td style="text-align: center;  width: 90px;"><button type="button" class="btn btn-danger" onclick="removeFunc(<?php echo $d['id']; ?>)" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash-o"></i></button></td>

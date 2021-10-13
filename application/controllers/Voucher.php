@@ -102,7 +102,7 @@ class Voucher extends Admin_Controller
             $data = $this->model_vocgif->validasinama($nama);
             if (!$data > 0) {
 
-                $config['upload_path']          = './assets/voucher';
+                $config['upload_path']          = './uploads/voucher';
                 $config['file_name']          = $nama;
                 $config['allowed_types']        = 'jpg';
 
@@ -232,7 +232,7 @@ class Voucher extends Admin_Controller
             if ($cek < 1) {
                 $delete = $this->model_vocgif->removenv($id);
                 if ($delete == true) {
-                    unlink("./assets/voucher/" . $tiket_data['img']);
+                    unlink("./uploads/voucher/" . $tiket_data['img']);
                     $response['success'] = true;
                     $response['messages'] = "Berhasil Terhapus";
                 } else {
