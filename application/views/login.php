@@ -48,7 +48,7 @@
             </a>
           </div>
           <br>
-          System Version V.1 Build.11
+          System Version V.1.0.0
         </form>
         <form action="#" class="sign-up-form"><a href="<?php echo base_url('auth/login'); ?>"><img width="200px" src="https://wellthefood.com/wp-content/uploads/2020/08/prs.png"></a>
           <h2 class="title">Registrasi</h2>
