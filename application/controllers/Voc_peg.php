@@ -203,10 +203,11 @@ class Voc_peg extends Admin_Controller
 							$sub = '';
 						} else {
 
-							$dt = "Nama : " . $data['namavoc'] . " <br> 
-						ID Voucher : " . $data['kode'] . " <br> 
-						Kadaluarsa : " . $data['kadaluarsa'] . " <br> 
-						Sisa Penukaran : $hari Hari<br> ";
+							$dt = "<br>
+							Nama : " . $data['namavoc'] . " <br> 
+							ID Voucher : " . $data['kode'] . " <br> 
+							Kadaluarsa : " . $data['kadaluarsa'] . " <br> 
+							Sisa Penukaran : $hari Hari<br> ";
 							$sub = '<br><br>';
 							echo '<a href="' . base_url('voc_peg/gunakangiv?idvoc=' . $id) . '"><button class="btn btn-success btn-sm" class="form-control"><span class="glyphicon glyphicon-send"></span> <b>Gunakan</b></button></a></form>';
 

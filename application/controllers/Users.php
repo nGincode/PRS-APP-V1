@@ -461,7 +461,7 @@ class Users extends Admin_Controller
 	{
 		$id = $this->session->userdata('id');
 
-		$config['upload_path'] = './assets/images/logo';
+		$config['upload_path'] = './uploads/logo';
 		$config['file_name']   = time();
 		$config['allowed_types'] = 'gif|jpg|jpeg|png';
 
@@ -474,7 +474,7 @@ class Users extends Admin_Controller
 
 			$datausers = $this->model_users->getUserData($id);
 			$oldName = $datausers['logo'];
-			$target = './assets/images/logo/' . $oldName;
+			$target = './uploads/logo/' . $oldName;
 			if (file_exists($target)) {
 				unlink($target);
 			}
