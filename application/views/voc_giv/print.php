@@ -25,8 +25,8 @@
 		?> <div style="margin: 5px;">
 					<center>
 
-						<img style="left: 128;top: -8;position: relative;" width="65" height="65" src="<?php echo base_url() ?>assets/data qr/<?php echo $d['kode'] ?>.png">
-						<img width="180" height="315" src="<?php echo  base_url() ?>assets/voucher/<?php echo $asal['img']; ?>">
+						<img style="left: 128;top: -8;position: relative;" width="65" height="65" src="<?php echo base_url() ?>/uploads/data_qr/voc_peg/<?php echo $d['kode'] ?>.png">
+						<img width="180" height="315" src="<?php echo  base_url() ?>/uploads/voucher/<?php echo $asal['img']; ?>">
 
 					</center>
 				</div>
