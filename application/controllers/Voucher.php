@@ -175,7 +175,7 @@ class Voucher extends Admin_Controller
                         if ($create == true) {
 
 
-                            $tempdir = FCPATH . '/uploads/data_qr/voc_peg/';
+                            $tempdir = FCPATH . '/uploads/data_qr/voc_giv/';
 
                             if (!file_exists($tempdir)) #kalau folder belum ada, maka buat.
                                 mkdir($tempdir);
