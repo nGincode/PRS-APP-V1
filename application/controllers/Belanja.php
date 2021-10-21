@@ -155,6 +155,7 @@ class Belanja extends Admin_Controller
 				$buttons .= '<li><a href="' . base_url("belanja/edit/" . $value['id']) . '"><i class="fa fa-pencil"></i> Edit</a></li>';
 			}
 
+			$buttons .= '<li><a href="#" onclick="receipt(' . $value['id'] . ')" ><i class="fa fa-print"></i> Cetak Receipt</a></li>';
 			if (in_array('deletebelanja', $this->permission)) {
 				$buttons .= '<li><a  onclick="removeFunc(' . $value['id'] . ')" style="cursor:pointer;"   data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash-o"></i> Hapus</a></li>';
 			}
@@ -225,6 +226,56 @@ class Belanja extends Admin_Controller
 
 		$this->form_validation->set_rules('product[]', 'Product name', 'trim|required');
 		if ($this->form_validation->run() == TRUE) {
+
+
+			$hitung = $this->input->post('product');
+			$clear_array = array_count_values($hitung);
+			$au = array_keys($clear_array);
+			$ay = array_values($hitung);
+
+			if ($au == $ay) {
+				$judulbelanja = array(
+					'tgl' =>  $this->input->post('tgl'),
+					'total' =>  $this->input->post('net_amount_value'),
+				);
+				$ebelanja = $this->model_belanja->editbelanja($id, $judulbelanja);
+				if ($ebelanja) {
+
+					$count_product = count($this->input->post('product'));
+
+
+					$this->db->where('belanja_id', $id);
+					$this->db->delete('belanja_item');
+
+					$items = array();
+					for ($x = 0; $x < $count_product; $x++) {
+						$nama_produk = $this->model_products->getProductData($this->input->post('product[]')[$x]);
+						array_push($items, array(
+							'tgl' =>  $this->input->post('tgl'),
+							'product_id' => $this->input->post('product[]')[$x],
+							'nama_produk' => $nama_produk['name'],
+							'qty' => $this->input->post('qty[]')[$x],
+							'satuan' => $this->input->post('satuan_value[]')[$x],
+							'harga' => $this->input->post('rate_value[]')[$x],
+							'belanja_id' => $id
+						));
+					}
+					$belanja = $this->model_belanja->create($items);
+					if ($belanja) {
+						$this->session->set_flashdata('success', 'Berhasil Diubah');
+						redirect('belanja/edit/' . $id, 'refresh');
+					} else {
+						$this->session->set_flashdata('error', 'Terjadi Kesalahan!!');
+						redirect('belanja/edit/' . $id, 'refresh');
+					}
+				} else {
+					$this->session->set_flashdata('error', 'Terjadi Kesalahan!!');
+					redirect('belanja/', 'refresh');
+				}
+			} else {
+				$this->session->set_flashdata('error', 'Maaf.. ! Produk Pesanan Anda Ada Yang Ganda');
+				redirect('belanja', 'refresh');
+			}
 		} else {
 			$company = $this->model_company->getCompanyData(1);
 			$this->data['company_data'] = $company;
@@ -245,10 +296,10 @@ class Belanja extends Admin_Controller
 				}
 
 				$this->data['order_data'] = $result;
-				$this->data['products'] = $this->model_products->getActiveProductDataall();
+				$this->data['products'] = $this->model_products->getProductData();
 			} else {
 				$this->session->set_flashdata('error', 'Maaf.. ! Anda Tidak Punya Hak Akses');
-				redirect('orders/', 'refresh');
+				redirect('belanja', 'refresh');
 			}
 
 
@@ -396,6 +447,148 @@ class Belanja extends Admin_Controller
 		} else {
 			$this->session->set_flashdata('error', 'Data Tidak Ditemukan');
 			redirect('belanja/', 'refresh');
+		}
+	}
+
+
+
+
+
+
+
+	public function printDiv()
+	{
+		$id = $this->input->post('id');
+
+		if (!$id) {
+			redirect('dashboard', 'refresh');
+		}
+
+		if ($id) {
+			$getbelanjaData = $this->model_belanja->getbelanjaData($id);
+			$orders_items = $this->model_belanja->getbelanjaid($id);
+
+			$html = '<!-- Main content -->
+			<!DOCTYPE html>
+			<html>
+			<head>
+			  <meta charset="utf-8">
+			  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+			  <title>Invoice Order</title>
+			  <!-- Tell the browser to be responsive to screen width -->
+			  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+			  <!-- Bootstrap 3.3.7 -->
+			  <link rel="stylesheet" href="' . base_url('assets/bower_components/bootstrap/dist/css/bootstrap.min.css') . '">
+			  <!-- Font Awesome -->
+			  <link rel="stylesheet" href="' . base_url('assets/bower_components/font-awesome/css/font-awesome.min.css') . '">
+			  <link rel="stylesheet" href="' . base_url('assets/dist/css/AdminLTE.min.css') . '">
+			</head>
+			<body onload="window.print();">
+			<style>html, body {height:unset;}</style>
+			<div class="wrapper" style="width: 55mm;height:unset;">
+			  <section class="invoice">
+			    <!-- title row -->
+			    <div class="row">
+			      <div class="col-xs-12">
+			        <h2 class="page-header" style="font-size: 18px; text-align:center;margin-top: -7px;"><br>
+			          <center><b>Pembelanjaan</b></center>
+			        </h2>
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- info row -->
+			    <div class="row invoice-info">
+			      
+			      <div class="col-sm-4 invoice-col" style="font-size: 12px; width:100%;">
+			        
+			        <b>Bill ID :</b> ' . $getbelanjaData['bill_no'] . '<br>
+			        <b>Tanggal :</b> ' . $getbelanjaData['tgl'] . '
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- /.row -->
+
+			    <!-- Table row -->
+			    <div class="row">
+			      <div class="col-xs-12 table-responsive">
+			        <table class="table"  style="font-size: 12px; width:100%;">
+			        
+			          <tbody>';
+			$no = 1;
+			$jmltotal = 0;
+			foreach ($orders_items as $k => $v) {
+
+				$product_data = $this->model_products->getProductData($v['product_id']);
+
+
+				if ($v['harga']) {
+					$hrg = $v['harga'];
+				} else {
+					$hrg = 0;
+				}
+
+				if ($v['qty']) {
+					$qty = $v['qty'];
+					$jumlah = $qty * $hrg;
+				} else {
+					$qty = 0;
+					$jumlah = $qty * $hrg;
+				}
+
+				if (isset($product_data['name'])) {
+					$nama = $product_data['name'];
+				} else {
+					$nama = $v['nama_produk'];
+				}
+
+				$jmltotal += $jumlah;
+
+				$html .= '<tr style="border-top: 2px dashed ;border-bottom: 1px dashed ;">
+				            <td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">' . $nama . '<br>' . $qty . ' X ' . $hrg . '/' . $v['satuan'] . ' = Rp.' . number_format($jumlah, 0, ',', '.') . '</td>
+			          	</tr>';
+			}
+
+			$html .= '</tbody>
+			        </table>
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- /.row -->
+
+			    <div class="row">
+			      
+			      <div class="col-xs-6 pull pull-right" style="font-size: 12px; width:100%; margin-top: -20px;">
+
+			        <div class="table-responsive">
+			          <table class="table" >
+			           ';
+
+
+			$html .= ' 
+			            <tr>
+			              <th>Total:</th>
+			              <td>Rp. ' . number_format($jmltotal, 2, ',', '.') . '</td>
+			            </tr>
+
+			           
+			          </table>
+			          <div>
+			        </div>
+			        <div>
+			        Note:
+			        <div style=" border: 1px solid;height: 60px;border-radius: 0px 10px;"></div>
+			        </div>
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- /.row -->
+			  </section>
+			  <!-- /.content -->
+			</div>
+			</body>
+			</html>';
+
+			echo $html;
 		}
 	}
 }

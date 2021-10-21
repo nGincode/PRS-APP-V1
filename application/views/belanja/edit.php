@@ -26,7 +26,7 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Tambah
+      Edit
       <small>Belanja</small>
     </h1>
     <ol class="breadcrumb">
@@ -55,7 +55,7 @@
             <!-- /.box-tools -->
           </div>
           <!-- /.box-header -->
-          <form role="form" action="<?php echo base_url('belanja/create') ?>" method="post" class="form-horizontal">
+          <form role="form" enctype="multipart/form-data" action="" method="post" class="form-horizontal">
             <div class="box-body">
 
               <?php echo validation_errors(); ?>
@@ -185,7 +185,7 @@
             <div class="box-footer">
               <input type="hidden" name="service_charge_rate" value="<?php echo $company_data['service_charge_value'] ?>" autocomplete="off">
               <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
-              <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Tambah</button>
+              <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Edit</button>
               <a href="<?php echo base_url('belanja/') ?>" class="btn btn-warning"><i class="fa fa-close"></i> Batal</a>
             </div>
           </form>

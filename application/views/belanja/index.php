@@ -131,6 +131,9 @@
 </div>
 <!-- /.content-wrapper -->
 
+
+<div id="printaera" style="position: absolute; z-index: -1;"></div>
+
 <?php if (in_array('deletebelanja', $user_permission)) : ?>
   <!-- remove brand modal -->
   <div class="modal fade" tabindex="-1" role="dialog" id="removeModal">
@@ -228,4 +231,22 @@
       });
     }
   }
+
+
+  //print
+  function receipt(id) {
+    $.ajax({
+      url: "<?= base_url('belanja/printDiv') ?>",
+      type: 'POST',
+      data: {
+        id: id
+      },
+      success: function(data) {
+        document.getElementById("printaera").innerHTML = data;
+        $.print("#printaera");
+      }
+    });
+
+  }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/jQuery.print@1.5.1/jQuery.print.min.js"></script>

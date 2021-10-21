@@ -23,6 +23,14 @@ class Model_belanja extends CI_Model
 			return ($insert == true) ? true : false;
 		}
 	}
+	public function editbelanja($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$insert = $this->db->update('belanja', $data);
+			return ($insert == true) ? true : false;
+		}
+	}
 
 	public function getakhirbelanja()
 	{
