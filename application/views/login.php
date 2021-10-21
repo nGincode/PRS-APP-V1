@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="<?php echo base_url('assets/login/style.css') ?>" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <title>PRS System Application</title>
-  <link rel="icon" type="image/png" href="https://wellthefood.com/wp-content/uploads/2020/10/prs.png" />
+  <link rel="icon" type="image/png" href="<?= base_url() ?>assets/images/logo/prslogin.png" />
 </head>
 
 <body>
@@ -50,7 +50,7 @@
           <br>
           System Version V.1.0.0
         </form>
-        <form action="#" class="sign-up-form"><a href="<?php echo base_url('auth/login'); ?>"><img width="200px" src="https://wellthefood.com/wp-content/uploads/2020/08/prs.png"></a>
+        <form action="#" class="sign-up-form"><a href="<?php echo base_url('auth/login'); ?>"><img width="200px" src="<?= base_url() ?>assets/images/logo/prslogin.png"></a>
           <h2 class="title">Registrasi</h2>
           <div class="input-field">
             <i class="fas fa-user"></i>

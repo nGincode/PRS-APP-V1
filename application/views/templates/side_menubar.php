@@ -10,7 +10,11 @@ $user_data = $this->model_users->getUserData($id_user);
   <section class="sidebar">
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="<?php echo base_url(); ?>uploads/logo/<?php echo $this->session->userdata('logo'); ?>" style="margin-top: 10px;" alt="User Image">
+        <img src=" <?php if (file_exists('./uploads/logo/' . $this->session->userdata('logo'))) {
+                      echo base_url('/uploads/logo/' . $this->session->userdata('logo'));
+                    } else {
+                      echo base_url('/uploads/ivn_image/unnamed.png');
+                    } ?>" style="margin-top: 10px;" alt="User Image">
       </div>
       <div class="pull-left info">
         <p><?php echo $user_data['firstname'] . ' ' . $user_data['lastname']; ?></p>

@@ -23,7 +23,12 @@ endif; ?>
         <!-- Profile Image -->
         <div class="box box-primary">
           <div class="box-body box-profile">
-            <img class="profile-user-img img-responsive img-circle" src="<?php echo base_url(); ?>assets/images/logo/<?php echo $user_data['logo']; ?>" alt="User profile picture">
+            <img class="profile-user-img img-responsive img-circle" src="
+            <?php if (file_exists('./uploads/logo/' . $this->session->userdata('logo'))) {
+              echo base_url('/uploads/logo/' . $this->session->userdata('logo'));
+            } else {
+              echo base_url('/uploads/ivn_image/unnamed.png');
+            } ?>" alt="User profile picture">
 
             <h3 class="profile-username text-center"><?php echo $user_data['store']; ?></h3>
 

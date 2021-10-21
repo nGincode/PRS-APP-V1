@@ -27,15 +27,24 @@
           <!-- Menu Toggle Button -->
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <!-- The user image in the navbar-->
-            <img width="18.5px" src="<?php echo base_url(); ?>uploads/logo/<?php echo $this->session->userdata('logo'); ?>" class="img-image" alt="User Image">
+            <img width="18.5px" src="
+            <?php if (file_exists('./uploads/logo/' . $this->session->userdata('logo'))) {
+              echo base_url('/uploads/logo/' . $this->session->userdata('logo'));
+            } else {
+              echo base_url('/uploads/ivn_image/unnamed.png');
+            } ?>
+            " class="img-image" alt="User Image">
             <!-- hidden-xs hides the username on small devices so only the image appears. -->
             <span class="hidden-xs"><b><?php echo $ds_id = $this->session->userdata('store'); ?></b></span>
           </a>
           <ul class="dropdown-menu">
             <!-- The user image in the menu -->
             <li class="user-header">
-              <img src="<?php echo base_url(); ?>/uploads/logo/<?php echo $this->session->userdata('logo'); ?>" class="img-circle" alt="User Image">
-
+              <?php if (file_exists('./uploads/logo/' . $this->session->userdata('logo'))) {
+                echo '<img src="' . base_url('/uploads/logo/' . $this->session->userdata('logo')) . '" class="img-circle" alt="User Image">';
+              } else {
+                echo '<img src="' . base_url('/uploads/ivn_image/unnamed.png') . '" class="img-circle" alt="User Image">';
+              } ?>
               <p>
                 <b><?php echo $ds_id = $this->session->userdata('store'); ?></b>
               </p>
