@@ -1,10 +1,10 @@
 # PRS System Aplication
 
 ## Required
-1. Codeigniter V3
-2. Req intl
-3. Req application/config/database.php
-4. Req application/config/config.php
+1. Codeigniter 3
+2. Req application/config/database.php
+3. Req application/config/config.php
+4. PHP 7.4 >
 
 ## Features
 1. Barcode
@@ -14,3 +14,6 @@
 5. Outlet
 6. Stock
 7. Inventaris
+8. Pengadaan
+9. Belanja
+10. Sturk Nota
