@@ -26,6 +26,7 @@ class Products extends Admin_Controller
         $this->load->model('model_stores');
         $this->load->model('model_attributes');
         $this->load->model('model_company');
+        $this->load->model('model_belanja');
     }
 
     public function index()
@@ -402,7 +403,28 @@ class Products extends Admin_Controller
             }
         }
 
+        $user_id = $this->session->userdata('id');
+        $user_data = $this->model_users->getUserData($user_id);
+        $lihat = $user_data['group_id'];
+        if ($lihat == 2) {
+            $this->data['notif'] = $this->model_orders->upbaca(1);
+        }
+        if (isset($_GET['filter'])) {
+            $dt = $this->model_stores->getStoresData($_GET['filter']);
+            if ($dt) {
+                $this->data['pilih'] = $dt['name'];
+            } else {
+                $this->data['pilih'] = 'Tidak ditemukan';
+            }
+        } else {
+            $this->data['pilih'] = 'SEMUA';
+        };
+        $this->data['store'] = $this->model_stores->getStoresoutlet();
+        $this->data['div'] = $this->session->userdata('divisi');
+        $this->data['namastore'] = $this->session->userdata('store');
         $this->data['products'] = $this->model_products->getActiveProductDataall();
+
+
         $this->render_template('products/bmasuk', $this->data);
     }
 
@@ -1093,6 +1115,110 @@ class Products extends Admin_Controller
             }
 
             $this->render_template('orders/edit', $this->data);
+        }
+    }
+
+
+
+
+    public function masukbelanja()
+    {
+        $result = array('data' => array());
+
+        $var = $this->input->post('tgl');
+
+
+        if ($var) {
+            $tgl = str_replace('/', '-', $var);
+            $hasil = explode(" - ", $tgl);
+            $dari = date('Y-m-d', strtotime("-1 day", strtotime($hasil[0])));
+            $sampai =  date('Y-m-d', strtotime("+1 day", strtotime($hasil[1])));
+
+            $data = $this->model_belanja->getbelanjaterimabyall($dari, $sampai);
+
+            foreach ($data as $key => $value) {
+                // button
+
+                $status = $value['upload'];
+
+                if ($status == 0) {
+                    $buttons = ' <div class="btn-group dropleft">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+                                <ul class="dropdown-menu">';
+                    $buttons .= '<li><a style="cursor:pointer;" onclick="upload(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
+                    $buttons .= '<li><a  href="' . base_url('products/lihat/' . $value['id']) . '" ><i class="fa fa-eye"></i> Lihat</a></li>';
+                    $buttons .= '</ul></div>';
+                } elseif ($status == 1) {
+                    $buttons = '<span class="label label-success">Terupload</span>';
+                }
+
+                $result['data'][$key] = array(
+                    $buttons,
+                    $value['bill_no'],
+                    $value['tgl'],
+                    $value['total']
+                );
+            } // /foreach
+        } else {
+            $result['data'] = array();
+        }
+        echo json_encode($result);
+    }
+
+    public function uploadbarangmasuk()
+    {
+
+        $id = $this->input->post('id');
+        // $id = 15;
+
+        $belanja = $this->model_belanja->getbelanjaData($id);
+        $itembelanja = $this->model_belanja->getbelanjaid($id);
+
+        $status = '';
+        foreach ($itembelanja as $val) {
+            $produk = $this->model_products->getProductData($val['product_id']);
+
+            $name = $produk['name'];
+            $sku = $produk['sku'];
+            $price = $produk['price'];
+            $satuan = $produk['satuan'];
+            $qtysblm = $produk['qty'];
+            $qtymasuk = $val['qty'];
+            $qtytotal = $qtysblm + $qtymasuk;
+            $tglbmasuk = $belanja['tgl'];
+
+
+            $data1 = array(
+                'tgl_bmasuk' => $tglbmasuk,
+                'name' => $name,
+                'satuan' => $satuan,
+                'sku' => $sku,
+                'price' => $price,
+                'qtymasuk' => $qtymasuk,
+                'qtysblm' => $qtysblm,
+                'qtytotal' => $qtytotal,
+            );
+
+            $data2 = array(
+                'qty' => $qtytotal,
+            );
+
+            $create = $this->model_products->createstock($data1);
+            if ($create == true) {
+                $update = $this->model_products->update($data2, $id);
+                if ($update == true) {
+                    $this->model_belanja->uploadsuksesitem($val['id']);
+                    $status .= '';
+                } else {
+                    $status .= $name . ' ';
+                }
+            }
+        }
+
+        if ($status) {
+            echo $status;
+        } else {
+            $this->model_belanja->uploadsukses($id);
         }
     }
 }

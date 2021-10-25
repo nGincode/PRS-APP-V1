@@ -79,7 +79,7 @@ class Belanja extends Admin_Controller
 							$belanja = $this->model_belanja->create($items);
 							if ($belanja) {
 								$this->session->set_flashdata('success', 'Berhasil Dipesan');
-								redirect('belanja/create', 'refresh');
+								redirect('belanja/', 'refresh');
 							} else {
 								$this->session->set_flashdata('error', 'Terjadi Kesalahan!!');
 								redirect('belanja/create/', 'refresh');
@@ -155,6 +155,14 @@ class Belanja extends Admin_Controller
 				$buttons .= '<li><a href="' . base_url("belanja/edit/" . $value['id']) . '"><i class="fa fa-pencil"></i> Edit</a></li>';
 			}
 
+
+			$getbelanja = $this->model_belanja->getbelanjaData($value['id']);
+			if ($getbelanja['status'] == 0) {
+				if (in_array('updatebelanja', $this->permission)) {
+					$buttons .= '<li><a href="#" onclick="bekukan(' . $value['id'] . ')"><i class="fa fa-check"></i> Bekukan</a></li>';
+				}
+			}
+
 			$buttons .= '<li><a href="#" onclick="receipt(' . $value['id'] . ')" ><i class="fa fa-print"></i> Cetak Receipt</a></li>';
 			if (in_array('deletebelanja', $this->permission)) {
 				$buttons .= '<li><a  onclick="removeFunc(' . $value['id'] . ')" style="cursor:pointer;"   data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash-o"></i> Hapus</a></li>';
@@ -169,11 +177,17 @@ class Belanja extends Admin_Controller
 				$status = '<button type="button" class="btn btn-primary">Tidak diketahui</button>';
 			}
 
+			if ($value['total']) {
+				$total = number_format($value['total'], 0, ',', '.');
+			} else {
+				$total = 0;
+			}
+
 			$result['data'][$key] = array(
 				'<center>' . $buttons . '</center>',
 				'<center>' . $value['tgl'] . '</center>',
 				'<center>' . $value['bill_no'] . '</center>',
-				'<center>' . "Rp " . number_format($value['total'], 0, ',', '.') . '</center>',
+				'<center>' . "Rp " . $total . '</center>',
 				'<center>' . $status . '</center>',
 			);
 		} // /foreach
@@ -236,7 +250,7 @@ class Belanja extends Admin_Controller
 			if ($au == $ay) {
 				$judulbelanja = array(
 					'tgl' =>  $this->input->post('tgl'),
-					'total' =>  $this->input->post('net_amount_value'),
+					'total' =>  $this->input->post('gross_amount_value'),
 				);
 				$ebelanja = $this->model_belanja->editbelanja($id, $judulbelanja);
 				if ($ebelanja) {
@@ -310,6 +324,10 @@ class Belanja extends Admin_Controller
 			$this->data['div'] = $div;
 			$this->data['store_id'] = $store_id;
 			$this->data['store'] = $this->model_stores->getStoresoutlet();
+			$this->data['id'] = $id;
+
+
+			$this->data['getbelanja'] = $this->model_belanja->getbelanjaData($id);
 
 
 			$data = $this->model_belanja->getbelanjaData($id);
@@ -396,46 +414,51 @@ class Belanja extends Admin_Controller
 		$hasil = 0;
 		if ($tgl) {
 			foreach ($tgl as $key => $value) {
+				$blj = $this->model_belanja->belanjaData($value['id']);
+				$bljitem =  $this->model_belanja->getbelanjaid($blj['id']);
+
+				print_r($bljitem);
 				$no = 1;
-				$sheet->setCellValue('A' . $baris, 'No');
-				$sheet->setCellValue('B' . $baris, 'Tanggal');
-				$sheet->setCellValue('C' . $baris, 'Nama Produk');
-				$sheet->setCellValue('D' . $baris, 'Satuan');
-				$sheet->setCellValue('F' . $baris, 'Rp/1');
-				$sheet->setCellValue('E' . $baris, 'Qty');
-				$sheet->setCellValue('G' . $baris++, 'Σ');
+
+				// $sheet->setCellValue('A' . $baris, 'No');
+				// $sheet->setCellValue('B' . $baris, 'Tanggal');
+				// $sheet->setCellValue('C' . $baris, 'Nama Produk');
+				// $sheet->setCellValue('D' . $baris, 'Satuan');
+				// $sheet->setCellValue('F' . $baris, 'Rp/1');
+				// $sheet->setCellValue('E' . $baris, 'Qty');
+				// $sheet->setCellValue('G' . $baris++, 'Σ');
 
 
-				$data = $this->model_belanja->databelanja($value['tgl'], $tgl_awal, $tgl_akhir);
-				foreach ($data as $key => $value) {
-					$produk_id = $value['product_id'];
-					$product_data = $this->model_products->getProductData($produk_id);
-					$nama_produk = $product_data['name'];
-					$total = $value['qty'] * $value['harga'];
-					$hasil += $total;
-					$sheet->setCellValue('A' . $baris, $no++);
-					$sheet->setCellValue('B' . $baris, $value['tgl']);
-					$sheet->setCellValue('C' . $baris, $nama_produk);
-					$sheet->setCellValue('D' . $baris, $value['satuan']);
-					$sheet->setCellValue('F' . $baris,  'Rp. ' . number_format($value['harga'], 0, ",", "."));
-					$sheet->setCellValue('E' . $baris, $value['qty']);
-					$sheet->setCellValue('G' . $baris, 'Rp. ' . number_format($total, 0, ",", "."));
+				// $data = $this->model_belanja->databelanja($value['tgl'], $tgl_awal, $tgl_akhir);
+				// foreach ($data as $key => $value) {
+				// 	$produk_id = $value['product_id'];
+				// 	$product_data = $this->model_products->getProductData($produk_id);
+				// 	$nama_produk = $product_data['name'];
+				// 	$total = $value['qty'] * $value['harga'];
+				// 	$hasil += $total;
+				// 	$sheet->setCellValue('A' . $baris, $no++);
+				// 	$sheet->setCellValue('B' . $baris, $value['tgl']);
+				// 	$sheet->setCellValue('C' . $baris, $nama_produk);
+				// 	$sheet->setCellValue('D' . $baris, $value['satuan']);
+				// 	$sheet->setCellValue('F' . $baris,  'Rp. ' . number_format($value['harga'], 0, ",", "."));
+				// 	$sheet->setCellValue('E' . $baris, $value['qty']);
+				// 	$sheet->setCellValue('G' . $baris, 'Rp. ' . number_format($total, 0, ",", "."));
 
-					$baris++;
-					$count++;
-				}
-				$sheet->setCellValue('G' . $baris, $hasil);
-				$sheet->setCellValue('A' . $baris, 'Jumlah');
-				$spreadsheet->getActiveSheet()->mergeCells('A' . $baris . ':F' . $baris);
-				$sheet->setCellValue('G' . $baris, $hasil);
+				// 	$baris++;
+				// 	$count++;
+				// }
+				// $sheet->setCellValue('G' . $baris, $hasil);
+				// $sheet->setCellValue('A' . $baris, 'Jumlah');
+				// $spreadsheet->getActiveSheet()->mergeCells('A' . $baris . ':F' . $baris);
+				// $sheet->setCellValue('G' . $baris, $hasil);
 
-				$spreadsheet->getActiveSheet()->getStyle('A1:G' . $baris)->applyFromArray($alignmentcenter);
+				// $spreadsheet->getActiveSheet()->getStyle('A1:G' . $baris)->applyFromArray($alignmentcenter);
 
-				$baris++;
-				$count++;
+				// $baris++;
+				// $count++;
 
-				$baris++;
-				$count++;
+				// $baris++;
+				// $count++;
 			}
 
 
@@ -589,6 +612,26 @@ class Belanja extends Admin_Controller
 			</html>';
 
 			echo $html;
+		}
+	}
+
+
+	public function bekukan($id)
+	{
+		if (!in_array('updatebelanja', $this->permission)) {
+			redirect('belanja', 'refresh');
+		}
+		if (!$id) {
+			redirect('balanja', 'refresh');
+		}
+
+
+		$bekukan = $this->model_belanja->bekukan($id);
+
+		if ($bekukan == true) {
+			echo '';
+		} else {
+			echo 1;
 		}
 	}
 }

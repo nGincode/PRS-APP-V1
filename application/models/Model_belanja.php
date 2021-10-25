@@ -47,6 +47,22 @@ class Model_belanja extends CI_Model
 		return $query->result_array();
 	}
 
+
+	public function getbelanjaterima()
+	{
+		$sql = "SELECT * FROM belanja WHERE status=1  ";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+	public function getbelanjaterimabyall($tgl_awal, $tgl_akhir)
+	{
+		$sql = "SELECT * FROM belanja WHERE status=1 AND tgl BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY id DESC ";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
 	public function jumlahtgl($tgl)
 	{
 		$sql = " SELECT * FROM belanja WHERE tgl = '$tgl'";
@@ -69,7 +85,7 @@ class Model_belanja extends CI_Model
 
 	public function belanjaData($tgl_awal, $tgl_akhir)
 	{
-		$sql = " SELECT DISTINCT tgl FROM belanja WHERE tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
+		$sql = " SELECT * FROM belanja WHERE upload=1 AND tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -105,5 +121,34 @@ class Model_belanja extends CI_Model
 		$this->db->where('id', $id);
 		$baca = $this->db->update('belanja', $data);
 		return ($baca) ? true : false;
+	}
+
+	public function uploadsukses($id)
+	{
+		$data = array(
+			'upload' => 1
+		);
+		$this->db->where('id', $id);
+		$update = $this->db->update('belanja', $data);
+		return ($update == true) ? true : false;
+	}
+	public function uploadsuksesitem($id)
+	{
+		$data = array(
+			'upload' => 1
+		);
+		$this->db->where('id', $id);
+		$update = $this->db->update('belanja_item', $data);
+		return ($update == true) ? true : false;
+	}
+
+	public function bekukan($id)
+	{
+		$data = array(
+			'status' => 1
+		);
+		$this->db->where('id', $id);
+		$update = $this->db->update('belanja', $data);
+		return ($update == true) ? true : false;
 	}
 }

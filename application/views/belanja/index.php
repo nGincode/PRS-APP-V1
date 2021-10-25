@@ -248,5 +248,48 @@
     });
 
   }
+
+  function bekukan(id) {
+    Swal.fire({
+      title: 'Yakin akan di bekukan?',
+      text: "Pada tanggal ini tidak akan bisa di tambah dan edit!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "<?= base_url('belanja/bekukan/') ?>" + id,
+          type: 'POST',
+          data: {
+            id: id
+          },
+          success: function(data) {
+            if (data == '') {
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil...!',
+                text: 'Data berhasil dibekukan',
+                showConfirmButton: false,
+                timer: 4000
+              });
+              manageTable.ajax.reload(null, false);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Gagal...!',
+                text: 'Terdapat Masalah',
+                showConfirmButton: false,
+                timer: 4000
+              });
+
+            }
+          }
+        });
+      }
+    })
+  }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jQuery.print@1.5.1/jQuery.print.min.js"></script>

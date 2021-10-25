@@ -69,7 +69,9 @@
                       <div class="input-group-addon ">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="date" required name="tgl" value="<?= $tgl ?>" class="form-control pull-right">
+                      <input type="date" required name="tgl" <?php if ($getbelanja['status'] == 1) {
+                                                                echo 'disabled';
+                                                              } ?> value="<?= $tgl ?>" class="form-control pull-right">
                     </div>
 
                   </div>
@@ -103,7 +105,9 @@
 
                       <tr id="row_<?php echo $x; ?>">
                         <td>
-                          <select class="form-control select_group product" data-row-id="row_<?php echo $x; ?>" id="product_<?php echo $x; ?>" name="product[]" style="width:100%;" onchange="getProductData(<?php echo $x; ?>)" required=''>
+                          <select <?php if ($getbelanja['status'] == 1) {
+                                    echo 'disabled';
+                                  } ?> class="form-control select_group product" data-row-id="row_<?php echo $x; ?>" id="product_<?php echo $x; ?>" name="product[]" style="width:100%;" onchange="getProductData(<?php echo $x; ?>)" required=''>
                             <option selected="true" disabled="disabled">Pilih Produk</option>
                             <?php foreach ($products as $k => $v) : ?>
                               <option value="<?php echo $v['id'] ?>" <?php if ($val['product_id'] == $v['id']) {
@@ -113,10 +117,14 @@
                           </select>
                         </td>
                         <td>
-                          <input type="number" value="<?php echo $val['harga'] ?>" name="rate_value[]" id="rate_value_<?php echo $x; ?>" required class="form-control" autocomplete="off">
+                          <input type="number" <?php if ($getbelanja['status'] == 1) {
+                                                  echo 'disabled';
+                                                } ?> value="<?php echo $val['harga'] ?>" name="rate_value[]" id="rate_value_<?php echo $x; ?>" required class="form-control" autocomplete="off">
                         </td>
                         <td>
-                          <input type="number" step="any" value="<?php echo $val['qty'] ?>" name="qty[]" id="qty_<?php echo $x; ?>" class="form-control" required onkeyup="getTotal(<?php echo $x; ?>)">
+                          <input type="number" <?php if ($getbelanja['status'] == 1) {
+                                                  echo 'disabled';
+                                                } ?> step="any" value="<?php echo $val['qty'] ?>" name="qty[]" id="qty_<?php echo $x; ?>" class="form-control" required onkeyup="getTotal(<?php echo $x; ?>)">
                         </td>
 
                         <td>
@@ -182,12 +190,25 @@
             </div>
             <!-- /.box-body -->
 
-            <div class="box-footer">
-              <input type="hidden" name="service_charge_rate" value="<?php echo $company_data['service_charge_value'] ?>" autocomplete="off">
-              <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
-              <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Edit</button>
-              <a href="<?php echo base_url('belanja/') ?>" class="btn btn-warning"><i class="fa fa-close"></i> Batal</a>
-            </div>
+            <?php if ($getbelanja['status'] == 0) { ?>
+              <div class="box-footer">
+                <input type="hidden" name="service_charge_rate" value="<?php echo $company_data['service_charge_value'] ?>" autocomplete="off">
+                <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
+
+
+                <a href="<?php echo base_url('belanja/bekukan/' . $id) ?>" class="btn btn-danger"><i class="fa fa-check "></i> Bekukan</a>
+
+
+                <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Edit</button>
+                <a href="<?php echo base_url('belanja/') ?>" class="btn btn-warning"><i class="fa fa-close"></i> Batal</a>
+              </div>
+            <?php } else { ?>
+
+              <h1>
+                <b>Belanja Telah dibekukan
+                </b>
+              </h1>
+            <?php } ?>
           </form>
           <!-- /.box-body -->
         </div>
