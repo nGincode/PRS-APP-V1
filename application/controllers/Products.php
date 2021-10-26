@@ -585,7 +585,7 @@ class Products extends Admin_Controller
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                                 <ul class="dropdown-menu">';
 
-                        if (!$id_user == 66) {
+                        if ($id_user == 66) {
                             $buttons .= '<li><a style="cursor:pointer;" onclick="upload(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
                         }
 
