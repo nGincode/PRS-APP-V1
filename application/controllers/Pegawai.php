@@ -810,8 +810,8 @@ class Pegawai extends Admin_Controller
                         $sheet->setCellValue($alpac++ . $baris, '');
                     }
                     if ($keluar) {
-                        if (file_exists(FCPATH . '/uploads/absensi/' .  $masuk['image'])) {
-                            if (filesize(FCPATH . '/uploads/absensi/' .  $masuk['image']) > 1024) {
+                        if (file_exists(FCPATH . '/uploads/absensi/' .  $keluar['image'])) {
+                            if (filesize(FCPATH . '/uploads/absensi/' .  $keluar['image']) > 1024) {
                                 $spreadsheet->getActiveSheet()->getRowDimension($baris)->setRowHeight(40);
                                 $spreadsheet->getActiveSheet()->getColumnDimension($alpac)->setWidth(10);
                                 $sheeti = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
