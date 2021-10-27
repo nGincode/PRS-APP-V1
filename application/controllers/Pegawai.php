@@ -1217,63 +1217,63 @@ class Pegawai extends Admin_Controller
 
         if ($id) {
             if ($time_awal1) {
-                $ta1m = $time_awal1 . ':00';
+                $ta1m = $time_awal1;
             } else {
                 $ta1m = '';
             }
 
             if ($time_akhir1) {
-                $ta1k = $time_akhir1 . ':00';
+                $ta1k = $time_akhir1;
             } else {
                 $ta1k = '';
             }
 
             if ($time_awal2) {
-                $ta2m = $time_awal2 . ':00';
+                $ta2m = $time_awal2;
             } else {
                 $ta2m = '';
             }
 
             if ($time_akhir2) {
-                $ta2k = $time_akhir2 . ':00';
+                $ta2k = $time_akhir2;
             } else {
                 $ta2k = '';
             }
 
 
             if ($time_awal3) {
-                $ta3m = $time_awal3 . ':00';
+                $ta3m = $time_awal3;
             } else {
                 $ta3m = '';
             }
 
             if ($time_akhir3) {
-                $ta3k = $time_akhir3 . ':00';
+                $ta3k = $time_akhir3;
             } else {
                 $ta3k = '';
             }
 
 
             if ($time_awal4) {
-                $ta4m = $time_awal4 . ':00';
+                $ta4m = $time_awal4;
             } else {
                 $ta4m = '';
             }
 
             if ($time_akhir4) {
-                $ta4k = $time_akhir4 . ':00';
+                $ta4k = $time_akhir4;
             } else {
                 $ta4k = '';
             }
 
             if ($time_awal5) {
-                $ta5m = $time_awal5 . ':00';
+                $ta5m = $time_awal5;
             } else {
                 $ta5m = '';
             }
 
             if ($time_akhir5) {
-                $ta5k = $time_akhir5 . ':00';
+                $ta5k = $time_akhir5;
             } else {
                 $ta5k = '';
             }
@@ -1299,16 +1299,15 @@ class Pegawai extends Admin_Controller
 
             );
 
-            print_r($data);
 
             $update = $this->model_stores->update($data, $id);
 
             if ($update == true) {
                 $this->session->set_flashdata('success', 'Jam Telah diatur');
-                // redirect('pegawai/absensi', 'refresh');
+                redirect('pegawai/absensi', 'refresh');
             } else {
                 $this->session->set_flashdata('error', 'Terjadi Kesalahan Update!!');
-                // redirect('pegawai/absensi', 'refresh');
+                redirect('pegawai/absensi', 'refresh');
             }
         }
     }
