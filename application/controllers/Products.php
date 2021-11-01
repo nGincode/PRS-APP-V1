@@ -378,8 +378,12 @@ class Products extends Admin_Controller
             $date = new DateTime();
             $date->setTimeZone($timezone);
 
+
+            $tgl_bmasuk = $this->input->post('tgl_bmasuk');
+
             $data1 = array(
-                'tgl_bmasuk' => $date->format('Y-m-d'),
+                // 'tgl_bmasuk' => $date->format('Y-m-d'),
+                'tgl_bmasuk' =>  $tgl_bmasuk,
                 'name' => $product_name,
                 'satuan' => $satuan,
                 'sku' => $sku,

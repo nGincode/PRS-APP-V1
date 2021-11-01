@@ -40,6 +40,7 @@ endif; ?>
               <?php echo validation_errors(); ?>
               <table class="table table-bordered" id="product_info_table" style="overflow-x: scroll;display:block;">
                 <thead>
+                  <th style="width:10%;min-width:100px;text-align: center;">Tanggal</th>
                   <th style="width:70%;min-width:200px;text-align: center;">Produk</th>
                   <th style="width:30%;min-width:100px;text-align: center;">Qty</th>
                   <th style="width:5%;text-align: center;"><i class="fa fa-sign-in"></i></th>
@@ -47,6 +48,9 @@ endif; ?>
                 </thead>
                 <tbody>
                   <tr>
+                    <td>
+                      <input type="date" required name="tgl_bmasuk" id="tgl_bmasuk" class="form-control" autocomplete="off">
+                    </td>
                     <td>
                       <select class="form-control select_group product" id="product_name" name="product_name" style="width:100%;" required>
                         <option value="">Pilih Produk</option>
