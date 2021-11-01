@@ -1150,7 +1150,7 @@ class Products extends Admin_Controller
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                                 <ul class="dropdown-menu">';
                     $buttons .= '<li><a style="cursor:pointer;" onclick="upload(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
-                    $buttons .= '<li><a  href="' . base_url('products/lihat/' . $value['id']) . '" ><i class="fa fa-eye"></i> Lihat</a></li>';
+                    $buttons .= '<li><a  href="' . base_url('belanja/edit/' . $value['id']) . '" ><i class="fa fa-eye"></i> Lihat</a></li>';
                     $buttons .= '</ul></div>';
                 } elseif ($status == 1) {
                     $buttons = '<span class="label label-success">Terupload</span>';
@@ -1209,7 +1209,7 @@ class Products extends Admin_Controller
 
             $create = $this->model_products->createstock($data1);
             if ($create == true) {
-                $update = $this->model_products->update($data2, $id);
+                $update = $this->model_products->update($data2, $val['product_id']);
                 if ($update == true) {
                     $this->model_belanja->uploadsuksesitem($val['id']);
                     $status .= '';

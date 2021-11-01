@@ -196,7 +196,7 @@
                 <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
 
 
-                <a href="<?php echo base_url('belanja/bekukan/' . $id) ?>" class="btn btn-danger"><i class="fa fa-check "></i> Bekukan</a>
+                <a href="#" onclick="bekukan(<?= $id ?>)" class=" btn btn-danger"><i class="fa fa-check "></i> Bekukan</a>
 
 
                 <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Edit</button>
@@ -225,6 +225,51 @@
 <!-- /.content-wrapper -->
 
 <script type="text/javascript">
+  function bekukan(id) {
+    Swal.fire({
+      title: 'Yakin akan di bekukan?',
+      text: "Pada tanggal ini tidak akan bisa di tambah dan edit!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "<?= base_url('belanja/bekukan/') ?>" + id,
+          type: 'POST',
+          data: {
+            id: id
+          },
+          success: function(data) {
+            if (data == '') {
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil...!',
+                text: 'Data berhasil dibekukan',
+                showConfirmButton: false,
+                timer: 4000
+              });
+              setTimeout(function() {
+                location.reload();
+              }, 3500)
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Gagal...!',
+                text: 'Terdapat Masalah',
+                showConfirmButton: false,
+                timer: 4000
+              });
+
+            }
+          }
+        });
+      }
+    })
+  }
+
   var base_url = "<?php echo base_url(); ?>";
 
   $(document).ready(function() {
