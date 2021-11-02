@@ -15,6 +15,7 @@ class ivn extends Admin_Controller
         $this->load->model('model_products');
         $this->load->model('model_ivn');
         $this->load->model('model_users');
+        $this->load->model('model_stores');
     }
 
     /* 
@@ -27,6 +28,7 @@ class ivn extends Admin_Controller
             redirect('dashboard', 'refresh');
         }
 
+        $this->data['store'] = $this->model_stores->getStoresoutlet();
         $this->data['div'] = $this->session->userdata['divisi'];
         $this->render_template('ivn/index', $this->data);
     }
@@ -122,7 +124,6 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             if ($div == 11 or $div == 1 or $div == 2 or $div == 3) {
                 $result['data'][$key] = array(
-                    $buttons,
                     $img,
                     $value['bagian'],
                     $value['nama'],
@@ -811,14 +812,26 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             redirect('dashboard', 'refresh');
         }
 
-        //nama akun
-        $user_id = $this->session->userdata('id');
-        $outlet = $this->model_users->getUserData($user_id);
-        $this->data['nama'] = $outlet['firstname'] . ' ' . $outlet['lastname'];
+        $div = $this->session->userdata('divisi');
 
-        //store
-        $store_id = $this->session->userdata('store_id');
-        $this->data['store'] = $this->session->userdata('store');
+        if ($div == 0) {
+            //store
+            $store_id = $this->input->post('store');
+
+            $store = $this->model_stores->getStoresData($store_id);
+            $outlet = $this->model_users->ambilleader($store_id);
+            $this->data['nama'] = $outlet['firstname'] . ' ' . $outlet['lastname'];
+            $this->data['store']  = $store['name'];
+        } else {
+            //nama akun
+            $user_id = $this->session->userdata('id');
+            $outlet = $this->model_users->getUserData($user_id);
+            $this->data['nama'] = $outlet['firstname'] . ' ' . $outlet['lastname'];
+            //store
+            $store_id = $this->session->userdata('store_id');
+            $this->data['store'] = $this->session->userdata('store');
+        }
+
 
 
         $settgl_awal  = $this->input->post('tgl_awal');

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Model_users extends CI_Model
 {
@@ -7,9 +7,9 @@ class Model_users extends CI_Model
 		parent::__construct();
 	}
 
-	public function getUserData($userId = null) 
+	public function getUserData($userId = null)
 	{
-		if($userId) {
+		if ($userId) {
 			$sql = "SELECT * FROM users WHERE id = ?";
 			$query = $this->db->query($sql, array($userId));
 			return $query->row_array();
@@ -20,19 +20,18 @@ class Model_users extends CI_Model
 		return $query->result_array();
 	}
 
-	public function getUserDatastore($userId = null) 
+	public function getUserDatastore($userId = null)
 	{
-		if($userId) {
+		if ($userId) {
 			$sql = "SELECT * FROM users WHERE store = ?";
 			$query = $this->db->query($sql, array($userId));
 			return $query->result_array();
 		}
-
 	}
 
-	public function getUserGroup($userId = null) 
+	public function getUserGroup($userId = null)
 	{
-		if($userId) {
+		if ($userId) {
 			$sql = "SELECT * FROM user_group WHERE user_id = ?";
 			$query = $this->db->query($sql, array($userId));
 			$result = $query->row_array();
@@ -48,7 +47,7 @@ class Model_users extends CI_Model
 	public function create($data = '', $group_id = null)
 	{
 
-		if($data && $group_id) {
+		if ($data && $group_id) {
 			$create = $this->db->insert('users', $data);
 
 			$user_id = $this->db->insert_id();
@@ -69,18 +68,18 @@ class Model_users extends CI_Model
 		$this->db->where('id', $id);
 		$update = $this->db->update('users', $data);
 
-		if($group_id) {
+		if ($group_id) {
 			// user group
 			$update_user_group = array('group_id' => $group_id);
 			$this->db->where('user_id', $id);
 			$user_group = $this->db->update('user_group', $update_user_group);
-			return ($update == true && $user_group == true) ? true : false;	
+			return ($update == true && $user_group == true) ? true : false;
 		}
-			
-		return ($update == true) ? true : false;	
+
+		return ($update == true) ? true : false;
 	}
 
-	public function passedit($data,$id)
+	public function passedit($data, $id)
 	{
 		$this->db->where('id', $id);
 		$update = $this->db->update('users', $data);
@@ -109,10 +108,18 @@ class Model_users extends CI_Model
 	}
 
 
-//mengambil data store/outlet
-function datastore(){
-    $query = $this->db->get('stores');
-    return $query->result_array();
-}
-	
+	//mengambil data store/outlet
+	function datastore()
+	{
+		$query = $this->db->get('stores');
+		return $query->result_array();
+	}
+
+
+	public function ambilleader($id)
+	{
+		$sql = "SELECT * FROM users where store_id = $id and divisi = 11";
+		$query = $this->db->query($sql);
+		return $query->row_array();
+	}
 }

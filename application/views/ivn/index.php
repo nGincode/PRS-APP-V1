@@ -147,7 +147,20 @@
 
                 <div class="col-md-4 col-xs-12 pull pull-left">
 
-                  <br>
+                  <?php if ($div == 0) : ?>
+                    <div class="form-group">
+                      <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Outlet</label>
+                      <div class="col-sm-7">
+                        <select name="store" class="form-control">
+                          <?php foreach ($store as $k => $v) : ?>
+                            <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
+                          <?php endforeach ?>
+                        </select>
+
+                      </div>
+                    </div>
+                  <?php endif; ?>
+
                   <div class="form-group">
                     <label class="col-sm-5 control-label" style="text-align:left;">Tanggal Awal :</label>
                     <div class="col-sm-7">
@@ -182,7 +195,7 @@
               </div>
 
               <div class="box-footer">
-                <button type="submit" class="btn btn-app"><i class="fa fa-file-excel-o"></i> Excel</button>
+                <button type="submit" class="btn btn-app"><i class="fa fa-print-o"></i> Print</button>
               </div>
             </form>
           </div>
