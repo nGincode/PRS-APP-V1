@@ -85,14 +85,14 @@ class Model_belanja extends CI_Model
 
 	public function belanjaData($tgl_awal, $tgl_akhir)
 	{
-		$sql = " SELECT * FROM belanja WHERE upload=1 AND tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
+		$sql = " SELECT * FROM belanja WHERE tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
 	public function databelanja($tgl, $tgl_awal, $tgl_akhir)
 	{
-		$sql = " SELECT * FROM belanja WHERE tgl='$tgl' AND tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
+		$sql = " SELECT * FROM belanja_item WHERE tgl='$tgl' AND tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}

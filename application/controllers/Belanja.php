@@ -414,51 +414,50 @@ class Belanja extends Admin_Controller
 		$hasil = 0;
 		if ($tgl) {
 			foreach ($tgl as $key => $value) {
-				$blj = $this->model_belanja->belanjaData($value['id']);
+				$blj = $this->model_belanja->getbelanjaData($value['id']);
 				$bljitem =  $this->model_belanja->getbelanjaid($blj['id']);
 
-				print_r($bljitem);
 				$no = 1;
 
-				// $sheet->setCellValue('A' . $baris, 'No');
-				// $sheet->setCellValue('B' . $baris, 'Tanggal');
-				// $sheet->setCellValue('C' . $baris, 'Nama Produk');
-				// $sheet->setCellValue('D' . $baris, 'Satuan');
-				// $sheet->setCellValue('F' . $baris, 'Rp/1');
-				// $sheet->setCellValue('E' . $baris, 'Qty');
-				// $sheet->setCellValue('G' . $baris++, 'Σ');
+				$sheet->setCellValue('A' . $baris, 'No');
+				$sheet->setCellValue('B' . $baris, 'Tanggal');
+				$sheet->setCellValue('C' . $baris, 'Nama Produk');
+				$sheet->setCellValue('D' . $baris, 'Satuan');
+				$sheet->setCellValue('F' . $baris, 'Rp/1');
+				$sheet->setCellValue('E' . $baris, 'Qty');
+				$sheet->setCellValue('G' . $baris++, 'Σ');
 
 
-				// $data = $this->model_belanja->databelanja($value['tgl'], $tgl_awal, $tgl_akhir);
-				// foreach ($data as $key => $value) {
-				// 	$produk_id = $value['product_id'];
-				// 	$product_data = $this->model_products->getProductData($produk_id);
-				// 	$nama_produk = $product_data['name'];
-				// 	$total = $value['qty'] * $value['harga'];
-				// 	$hasil += $total;
-				// 	$sheet->setCellValue('A' . $baris, $no++);
-				// 	$sheet->setCellValue('B' . $baris, $value['tgl']);
-				// 	$sheet->setCellValue('C' . $baris, $nama_produk);
-				// 	$sheet->setCellValue('D' . $baris, $value['satuan']);
-				// 	$sheet->setCellValue('F' . $baris,  'Rp. ' . number_format($value['harga'], 0, ",", "."));
-				// 	$sheet->setCellValue('E' . $baris, $value['qty']);
-				// 	$sheet->setCellValue('G' . $baris, 'Rp. ' . number_format($total, 0, ",", "."));
+				$data = $this->model_belanja->databelanja($value['tgl'], $tgl_awal, $tgl_akhir);
+				foreach ($data as $key => $value) {
+					$produk_id = $value['product_id'];
+					$product_data = $this->model_products->getProductData($produk_id);
+					$nama_produk = $product_data['name'];
+					$total = $value['qty'] * $value['harga'];
+					$hasil += $total;
+					$sheet->setCellValue('A' . $baris, $no++);
+					$sheet->setCellValue('B' . $baris, $value['tgl']);
+					$sheet->setCellValue('C' . $baris, $nama_produk);
+					$sheet->setCellValue('D' . $baris, $value['satuan']);
+					$sheet->setCellValue('F' . $baris,  'Rp. ' . number_format($value['harga'], 0, ",", "."));
+					$sheet->setCellValue('E' . $baris, $value['qty']);
+					$sheet->setCellValue('G' . $baris, 'Rp. ' . number_format($total, 0, ",", "."));
 
-				// 	$baris++;
-				// 	$count++;
-				// }
-				// $sheet->setCellValue('G' . $baris, $hasil);
-				// $sheet->setCellValue('A' . $baris, 'Jumlah');
-				// $spreadsheet->getActiveSheet()->mergeCells('A' . $baris . ':F' . $baris);
-				// $sheet->setCellValue('G' . $baris, $hasil);
+					$baris++;
+					$count++;
+				}
+				$sheet->setCellValue('G' . $baris, $hasil);
+				$sheet->setCellValue('A' . $baris, 'Jumlah');
+				$spreadsheet->getActiveSheet()->mergeCells('A' . $baris . ':F' . $baris);
+				$sheet->setCellValue('G' . $baris, $hasil);
 
-				// $spreadsheet->getActiveSheet()->getStyle('A1:G' . $baris)->applyFromArray($alignmentcenter);
+				$spreadsheet->getActiveSheet()->getStyle('A1:G' . $baris)->applyFromArray($alignmentcenter);
 
-				// $baris++;
-				// $count++;
+				$baris++;
+				$count++;
 
-				// $baris++;
-				// $count++;
+				$baris++;
+				$count++;
 			}
 
 
