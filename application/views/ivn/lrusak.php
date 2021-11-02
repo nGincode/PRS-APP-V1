@@ -29,60 +29,60 @@
         <div id="messages"></div>
 
 
-        <div class="box box-success box-solid">
-          <div class="box-header with-border">
-            <h3 class="box-title"><b><i class="fa fa-briefcase"></i> Inventaris Rusak/Hilang</b></h3>
+        <?php if ($div != 0) { ?>
+          <div class="box box-success box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title"><b><i class="fa fa-briefcase"></i> Inventaris Rusak/Hilang</b></h3>
 
-            <div class="box-tools pull-right">
-              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-              </button>
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
             </div>
-            <!-- /.box-tools -->
+            <!-- /.box-header -->
+            <div class="box-body" id='penyesuaian'>
+              <form role="form" action="<?php base_url('ivn/lrusak') ?>" method="post" enctype="multipart/form-data">
+                <?php echo validation_errors(); ?>
+                <table class="table table-bordered" id="ivn_info_table" style="width: 100%;">
+                  <thead>
+                    <th style="width:50%;min-width:100px;text-align: center;">Inventaris</th>
+                    <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
+                    <th style="width:30%;min-width:200px;text-align: center;">Ket</th>
+                    <th style="max-width:100px;text-align: center;"><i class="fa fa-sign-in"></i></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <select class="form-control select_group product" id="nama" name="nama" style="width:100%;" required>
+                          <option value="">Pilih Inventaris</option>
+                          <?php foreach ($ivn as $k => $v) : ?>
+                            <option value="<?php echo $v['id'] ?>"><?php echo $v['nama'] ?> (<?php echo $v['bagian'] ?>)</option>
+                          <?php endforeach ?>
+                        </select>
+                      </td>
+                      <input type="hidden" class="form-control" id="tgl_rusak" name="tgl_rusak" autocomplete="off" value="<?php echo date('Y-m-d'); ?>" />
+
+                      <td>
+                        <input type="Number" name="jumlah" id="jumlah" required class="form-control" placeholder="Barang Yg Rusak" autocomplete="off">
+                      </td>
+                      <td>
+                        <input type="text" name="ket" id="ket" class="form-control" required placeholder="Keterangan" autocomplete="off">
+                      </td>
+                      <td>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
+              <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
           </div>
-          <!-- /.box-header -->
-          <div class="box-body" id='penyesuaian'>
-            <form role="form" action="<?php base_url('ivn/lrusak') ?>" method="post" enctype="multipart/form-data">
-              <?php echo validation_errors(); ?>
-              <table class="table table-bordered" id="ivn_info_table" style="width: 100%;">
-                <thead>
-                  <th style="width:50%;min-width:100px;text-align: center;">Inventaris</th>
-                  <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
-                  <th style="width:30%;min-width:200px;text-align: center;">Ket</th>
-                  <th style="max-width:100px;text-align: center;"><i class="fa fa-sign-in"></i></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <select class="form-control select_group product" id="nama" name="nama" style="width:100%;" required>
-                        <option value="">Pilih Inventaris</option>
-                        <?php foreach ($ivn as $k => $v) : ?>
-                          <option value="<?php echo $v['id'] ?>"><?php echo $v['nama'] ?> (<?php echo $v['bagian'] ?>)</option>
-                        <?php endforeach ?>
-                      </select>
-                    </td>
-                    <input type="hidden" class="form-control" id="tgl_rusak" name="tgl_rusak" autocomplete="off" value="<?php echo date('Y-m-d'); ?>" />
+        <?php } ?>
 
-                    <td>
-                      <input type="Number" name="jumlah" id="jumlah" required class="form-control" placeholder="Barang Yg Rusak" autocomplete="off">
-                    </td>
-                    <td>
-                      <input type="text" name="ket" id="ket" class="form-control" required placeholder="Keterangan" autocomplete="off">
-                    </td>
-                    <td>
-                      <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i></button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </form>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
-
-
-        <br /> <br />
 
 
         <div class="box box-primary box-solid">
@@ -103,6 +103,9 @@
               <thead>
                 <tr>
                   <th>Tanggal</th>
+                  <?php if ($div == 0) { ?>
+                    <th>Store</th>
+                  <?php } ?>
                   <th>Nama</th>
                   <th>Bagian</th>
                   <th>Ket</th>

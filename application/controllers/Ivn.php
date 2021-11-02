@@ -52,20 +52,36 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             $data = $this->model_ivn->getlaporaninputstore($store_id);
         } elseif ($div == 1 or $div == 2 or $div == 3) {
             $data = $this->model_ivn->getlaporaninputstorediv($store_id, $div);
+        } else {
+            $data = $this->model_ivn->getlaporaninput();
         }
 
-        foreach ($data as $key => $value) {
+        if ($div == 0) {
+            foreach ($data as $key => $value) {
 
-            $result['data'][$key] = array(
-                $value['tgl_masuk'],
-                $value['nama'],
-                $value['bagian'],
-                $value['jumlah'],
-                "Rp " . number_format($value['harga'], 0, ',', '.'),
-                "Rp " . number_format($value['jumlah'] * $value['harga'], 0, ',', '.')
-            );
-        } // /foreach
+                $result['data'][$key] = array(
+                    $value['tgl_masuk'],
+                    $value['store'],
+                    $value['nama'],
+                    $value['bagian'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['jumlah'] * $value['harga'], 0, ',', '.')
+                );
+            } // /foreach
+        } else {
+            foreach ($data as $key => $value) {
 
+                $result['data'][$key] = array(
+                    $value['tgl_masuk'],
+                    $value['nama'],
+                    $value['bagian'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['jumlah'] * $value['harga'], 0, ',', '.')
+                );
+            } // /foreach
+        }
         echo json_encode($result);
     }
 
@@ -347,6 +363,7 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         } else {
             // false case       
 
+            $this->data['div'] = $this->session->userdata['divisi'];
             $this->render_template('ivn/create', $this->data);
         }
     }
@@ -393,6 +410,7 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         $id_user = $this->session->userdata['id'];
         $store = $this->session->userdata['store'];
         $store_id = $this->session->userdata['store_id'];
+        $this->data['div'] = $this->session->userdata['divisi'];
 
         $this->form_validation->set_rules('nama', 'nama', 'trim|required');
 
@@ -460,20 +478,37 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             $data = $this->model_ivn->getlaporanmasukstore($store_id);
         } elseif ($div == 1 or $div == 2 or $div == 3) {
             $data = $this->model_ivn->getlaporanmasukstorediv($store_id, $div);
+        } else {
+            $data = $this->model_ivn->getlaporanmasuk();
         }
 
+        if ($div == 0) {
 
-        foreach ($data as $key => $value) {
+            foreach ($data as $key => $value) {
 
-            $result['data'][$key] = array(
-                $value['tgl_masuk'],
-                $value['nama'],
-                $value['bagian'],
-                $value['jumlah'],
-                "Rp " . number_format($value['harga'], 0, ',', '.'),
-                "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
-            );
-        } // /foreach
+                $result['data'][$key] = array(
+                    $value['tgl_masuk'],
+                    $value['store'],
+                    $value['nama'],
+                    $value['bagian'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
+                );
+            } // /foreach
+        } else {
+            foreach ($data as $key => $value) {
+
+                $result['data'][$key] = array(
+                    $value['tgl_masuk'],
+                    $value['nama'],
+                    $value['bagian'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
+                );
+            } // /foreach
+        }
 
         echo json_encode($result);
     }
@@ -546,6 +581,7 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         } elseif ($div == 1 or $div == 2 or $div == 3) {
             $this->data['ivn'] = $this->model_ivn->getivnDatastorediv($id_store, $div);
         }
+        $this->data['div'] = $this->session->userdata['divisi'];
         $this->render_template('ivn/lkeluar', $this->data);
     }
     public function laporanivnkeluar()
@@ -562,20 +598,36 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             $data = $this->model_ivn->getlaporankaluar($store_id);
         } elseif ($div == 1 or $div == 2 or $div == 3) {
             $data = $this->model_ivn->getlaporankaluardiv($store_id, $div);
+        } else {
+            $data = $this->model_ivn->getlaporankaluarall();
         }
 
-        foreach ($data as $key => $value) {
-
-            $result['data'][$key] = array(
-                $value['tgl_keluar'],
-                $value['nama'],
-                $value['bagian'],
-                $value['ke'],
-                $value['jumlah'],
-                "Rp " . number_format($value['harga'], 0, ',', '.'),
-                "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
-            );
-        } // /foreach
+        if ($div == 0) {
+            foreach ($data as $key => $value) {
+                $result['data'][$key] = array(
+                    $value['tgl_keluar'],
+                    $value['nama'],
+                    $value['store'],
+                    $value['bagian'],
+                    $value['ke'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
+                );
+            } // /foreach
+        } else {
+            foreach ($data as $key => $value) {
+                $result['data'][$key] = array(
+                    $value['tgl_keluar'],
+                    $value['nama'],
+                    $value['bagian'],
+                    $value['ke'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
+                );
+            } // /foreach
+        }
 
         echo json_encode($result);
     }
@@ -652,6 +704,7 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         } elseif ($div == 1 or $div == 2 or $div == 3) {
             $this->data['ivn'] = $this->model_ivn->getivnDatastorediv($store_id, $div);
         }
+        $this->data['div'] = $this->session->userdata['divisi'];
         $this->render_template('ivn/lrusak', $this->data);
     }
     //Tampil Laporan
@@ -669,21 +722,39 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             $data = $this->model_ivn->getlaporanrusak($store_id);
         } elseif ($div == 1 or $div == 2 or $div == 3) {
             $data = $this->model_ivn->getlaporanrusakdiv($store_id, $div);
+        } else {
+            $data = $this->model_ivn->getlaporanrusakall();
         }
 
-        foreach ($data as $key => $value) {
 
-            $result['data'][$key] = array(
-                $value['tgl_rusak'],
-                $value['nama'],
-                $value['bagian'],
-                $value['ket'],
-                $value['jumlah'],
-                "Rp " . number_format($value['harga'], 0, ',', '.'),
-                "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
-            );
-        } // /foreach
+        if ($div == 0) {
+            foreach ($data as $key => $value) {
 
+                $result['data'][$key] = array(
+                    $value['tgl_rusak'],
+                    $value['store'],
+                    $value['nama'],
+                    $value['bagian'],
+                    $value['ket'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
+                );
+            } // /foreach
+        } else {
+            foreach ($data as $key => $value) {
+
+                $result['data'][$key] = array(
+                    $value['tgl_rusak'],
+                    $value['nama'],
+                    $value['bagian'],
+                    $value['ket'],
+                    $value['jumlah'],
+                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
+                );
+            } // /foreach
+        }
         echo json_encode($result);
     }
 

@@ -85,6 +85,13 @@ class Model_ivn extends CI_Model
 		}
 	}
 
+	public function getlaporaninput()
+	{
+		$sql = "SELECT * FROM ivn_lmasukb ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array(); //kode khusus where
+	}
+
 	public function create($data)
 	{
 		if ($data) {
@@ -197,6 +204,12 @@ class Model_ivn extends CI_Model
 			return $query->result_array(); //kode khusus where
 		}
 	}
+	public function getlaporankaluarall()
+	{
+		$sql = "SELECT * FROM ivn_lkeluar ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 	//Selesai
 
 
@@ -272,6 +285,14 @@ class Model_ivn extends CI_Model
 		}
 	}
 
+
+	public function getlaporanmasuk()
+	{
+		$sql = "SELECT * FROM ivn_lmasuk  ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array(); //kode khusus where
+	}
+
 	public function cetakpertanggalmasukstore($tgl_awal, $tgl_akhir, $store_id)
 	{
 
@@ -311,6 +332,12 @@ class Model_ivn extends CI_Model
 			$query = $this->db->query($sql);
 			return $query->result_array(); //kode khusus where
 		}
+	}
+	public function getlaporanrusakall()
+	{
+		$sql = "SELECT * FROM ivn_lrusak ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
 	}
 	public function cetakpertanggalrusak($tgl_awal, $tgl_akhir, $store_id)
 	{

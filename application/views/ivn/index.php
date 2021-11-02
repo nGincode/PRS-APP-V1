@@ -195,7 +195,7 @@
               </div>
 
               <div class="box-footer">
-                <button type="submit" class="btn btn-app"><i class="fa fa-print-o"></i> Print</button>
+                <button type="submit" class="btn btn-app"><i class="fa fa-print"></i> Print</button>
               </div>
             </form>
           </div>
