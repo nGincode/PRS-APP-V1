@@ -240,7 +240,7 @@ class Pegawai extends Admin_Controller
 
         $this->data['pegawai_data'] = $pegawai_data;
         $this->data['div'] = $div;
-        $this->data['store'] = $this->model_stores->getStoresoutlet();
+        $this->data['store'] = $this->model_stores->getStoresData();
 
         if (isset($_GET['filter'])) {
             $dt = $this->model_stores->getStoresData($_GET['filter']);
