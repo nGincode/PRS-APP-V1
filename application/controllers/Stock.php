@@ -350,17 +350,16 @@ class Stock extends Admin_Controller
 
         foreach ($data as $key => $value) {
 
-            $buttons = '';
+            $buttons = '
+            <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+            <ul class="dropdown-menu">';
 
-            if (in_array('updatestock', $this->permission)) {
-                $buttons .= ' 
-                        <div class="btn-group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
+            $buttons .= ' 
                           <li><a href="' . base_url('stock/update/' . $value['id']) . '" class="btn btn-default"><i class="fa fa-pencil"></i> Edit</a></li>
-                        </ul>
-                        </div>';
-            }
+                       ';
+            $buttons .= ' </ul>
+            </div>';
 
             $div = $this->session->userdata('divisi');
 
@@ -394,41 +393,22 @@ class Stock extends Admin_Controller
             } else {
                 $harga = '0';
             }
+            $result['data'][$key] = array(
 
-            if ($div == 11 or $div == 0) {
-                $result['data'][$key] = array(
-
-                    $buttons,
-                    $value['store'],
-                    $bagian,
-                    $value['tgl'],
-                    $nama_produk,
-                    $harga . '/' . $value['uom'],
-                    $value['a_unit'],
-                    $value['t_unit'],
-                    $value['s_unit'],
-                    $value['unit'],
-                    $value['reg'],
-                    $status,
-                    $value['ket'],
-                );
-            } elseif ($div == 1 or $div == 2 or $div == 3) {
-
-                $result['data'][$key] = array(
-                    $value['store'],
-                    $bagian,
-                    $value['tgl'],
-                    $nama_produk,
-                    $harga . '/' . $value['uom'],
-                    $value['a_unit'],
-                    $value['t_unit'],
-                    $value['s_unit'],
-                    $value['unit'],
-                    $value['reg'],
-                    $status,
-                    $value['ket'],
-                );
-            };
+                $buttons,
+                $value['store'],
+                $bagian,
+                $value['tgl'],
+                $nama_produk,
+                $harga . '/' . $value['uom'],
+                $value['a_unit'],
+                $value['t_unit'],
+                $value['s_unit'],
+                $value['unit'],
+                $value['reg'],
+                $status,
+                $value['ket'],
+            );
         } // /foreach
 
         echo json_encode($result);
@@ -438,11 +418,36 @@ class Stock extends Admin_Controller
     /*
     Update
     */
+    function compressImage($source, $destination, $quality)
+    {
+        // mendapatkan info image
+        $imgInfo = getimagesize($source);
+        $mime = $imgInfo['mime'];
+        // membuat image baru
+        switch ($mime) {
+                // proses kode memilih tipe tipe image 
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($source);
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($source);
+                break;
+            case 'image/gif':
+                $image = imagecreatefromgif($source);
+                break;
+            default:
+                $image = imagecreatefromjpeg($source);
+        }
+
+        // Menyimpan image dengan ukuran yang baru
+        imagejpeg($image, $destination, $quality);
+
+        // Return image
+        return $destination;
+    }
+
     public function update($stock_id)
     {
-        if (!in_array('updatestock', $this->permission)) {
-            redirect('dashboard', 'refresh');
-        }
 
         if (!$stock_id) {
             redirect('dashboard', 'refresh');
@@ -471,35 +476,73 @@ class Stock extends Admin_Controller
                 $harga = '0';
             }
 
-            $a_nom = $harga *  $aunit;
-            $t_nom = $harga *  $this->input->post('t_unit');
-            $s_nom = $harga *  $this->input->post('s_unit');
-            $nom_u = $harga *  $u_terpakai;
+            if (!empty($_FILES['image']['name'])) {
+                $file_name = rand();
+                $config['upload_path']          = FCPATH . '/uploads/stock/';
+                $config['allowed_types']        = 'gif|jpg|jpeg|png';
+                $config['file_name']            = $file_name;
+                $config['quality'] = '20%';
 
-            // true case
-            $data = array(
-                'user_id' => $user_id,
-                'a_unit' => $aunit,
-                't_unit' => $this->input->post('t_unit'),
-                's_unit' => $this->input->post('s_unit'),
-                'uom' => $this->input->post('satuan'),
-                'bagian' => $this->input->post('bagian'),
-                'harga' => $harga,
-                'unit' => $u_terpakai,
-                'reg' => $this->input->post('reg'),
-                'status' => $pemakaian,
-                'ket' => $this->input->post('ket'),
+                $this->load->library('upload', $config);
+
+                if (!$this->upload->do_upload('image')) {
+                    $this->session->set_flashdata('error', $this->upload->display_errors());
+                    redirect('stock/update/' . $stock_id, 'refresh');
+                } else {
+                    $uploaded_data = $this->upload->data();
+
+                    $data = array(
+                        'user_id' => $user_id,
+                        'a_unit' => $aunit,
+                        't_unit' => $this->input->post('t_unit'),
+                        's_unit' => $this->input->post('s_unit'),
+                        'uom' => $this->input->post('satuan'),
+                        'bagian' => $this->input->post('bagian'),
+                        'harga' => $harga,
+                        'unit' => $u_terpakai,
+                        'reg' => $this->input->post('reg'),
+                        'status' => $pemakaian,
+                        'ket' => $this->input->post('ket'),
+                        'img' => $uploaded_data['file_name']
 
 
-            );
+                    );
 
-            $update = $this->model_stock->updatestock($data, $stock_id);
-            if ($update == true) {
-                $this->session->set_flashdata('success', 'Produk Diupdate');
-                redirect('stock/', 'refresh');
+                    $update = $this->model_stock->updatestock($data, $stock_id);
+                    if ($update == true) {
+                        $this->session->set_flashdata('success', 'Produk Diupdate');
+                        redirect('stock/update/' . $stock_id, 'refresh');
+                    } else {
+                        $this->session->set_flashdata('error', 'Terjadi Kesalahan Update!!');
+                        redirect('stock/update/' . $stock_id, 'refresh');
+                    }
+                }
             } else {
-                $this->session->set_flashdata('error', 'Terjadi Kesalahan Update!!');
-                redirect('stock/update/' . $stock_id, 'refresh');
+
+                $data = array(
+                    'user_id' => $user_id,
+                    'a_unit' => $aunit,
+                    't_unit' => $this->input->post('t_unit'),
+                    's_unit' => $this->input->post('s_unit'),
+                    'uom' => $this->input->post('satuan'),
+                    'bagian' => $this->input->post('bagian'),
+                    'harga' => $harga,
+                    'unit' => $u_terpakai,
+                    'reg' => $this->input->post('reg'),
+                    'status' => $pemakaian,
+                    'ket' => $this->input->post('ket')
+
+
+                );
+
+                $update = $this->model_stock->updatestock($data, $stock_id);
+                if ($update == true) {
+                    $this->session->set_flashdata('success', 'Produk Diupdate');
+                    redirect('stock/update/' . $stock_id, 'refresh');
+                } else {
+                    $this->session->set_flashdata('error', 'Terjadi Kesalahan Update!!');
+                    redirect('stock/update/' . $stock_id, 'refresh');
+                }
             }
         } else {
 

@@ -34,4 +34,9 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 #edit sendiri
 application/config/database.php
 application/config/config.php
-uploads/
+uploads/absensi/*
+uploads/data_qr/*
+uploads/ivn_image/*
+uploads/logo/*
+uploads/stock/*
+uploads/voucher/*

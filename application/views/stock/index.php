@@ -98,16 +98,7 @@
                 </tr>
                 </tr>
                 <tr>
-                  <?php $div = $this->session->userdata('divisi');
-                  if (in_array('updatestock', $user_permission)  || in_array('deletestock', $user_permission)) : ?>
-
-                    <?php if ($div == 11 or $div == 0) {
-                      echo $data = '<th style="min-width: 10px;">Action</th>';
-                    } elseif ($div == 1 or $div == 2 or $div == 3) {
-                      echo $data = '';
-                    } ?>
-
-                  <?php endif; ?>
+                  <th style="min-width: 20px;text-align: center;">Opsi</th>
                   <th style="min-width: 40px;text-align: center;">Store</th>
                   <th style="min-width: 80px;text-align: center;">Divisi</th>
                   <th style="min-width: 80px;text-align: center;">Tanggal</th>
