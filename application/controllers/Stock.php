@@ -367,7 +367,11 @@ class Stock extends Admin_Controller
             $produk_id = $value['produk_id'];
             $stock = $this->model_stock->getnamastockid($produk_id);
             if (isset($stock)) {
-                $nama_produk = $stock['nama_produk'];
+                if ($value['img']) {
+                    $nama_produk = '<a target="_blank" href="' . base_url('uploads/stock/' . $value['img']) . '">' . $stock['nama_produk'] . '</a>';
+                } else {
+                    $nama_produk = $stock['nama_produk'];
+                }
             } else {
                 $nama_produk = 'tak diketahui';
             }
