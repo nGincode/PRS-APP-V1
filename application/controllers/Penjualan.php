@@ -221,6 +221,8 @@ class penjualan extends Admin_Controller
 
                 $data = array(
                     'nama_menu' => $this->input->post('menu'),
+                    'store_id' => $this->input->post('store'),
+                    'harga' => $this->input->post('gross_amount_value'),
                 );
                 $this->model_penjualan->createresep($data);
                 $idresep = $this->model_penjualan->idresep();
@@ -376,6 +378,7 @@ class penjualan extends Admin_Controller
                 $no++,
                 $buttons,
                 $value['nama_menu'],
+                'Rp ' . number_format($value['harga'], 0, ",", "."),
             );
         }
         echo json_encode($result);

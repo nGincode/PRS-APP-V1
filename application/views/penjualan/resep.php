@@ -85,6 +85,7 @@
                   <th style="width:10%;min-width:70px;text-align: center;">Qty</th>
                   <th style="width:10%;min-width:70px;text-align: center;">Satuan</th>
                   <th style="width:10%;min-width:100px;text-align: center;">Harga</th>
+                  <th style="width:10%;min-width:100px;text-align: center;">Jumlah</th>
                   <th style="width:3%"><button type="button" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button></th>
                   </tr>
                 </thead>
@@ -112,12 +113,23 @@
                       <input type="number" disabled name="rate[]" id="rate_1" required class="form-control" autocomplete="off">
                       <input type="hidden" name="rate_value[]" id="rate_value_1" required class="form-control" autocomplete="off">
                     </td>
+                    <td>
+                      <input type="text" name="amount[]" id="amount_1" class="form-control" disabled autocomplete="off">
+                      <input type="hidden" name="amount_value[]" id="amount_value_1" class="form-control" autocomplete="off">
+                    </td>
                     <td><button type="button" class="btn btn-default" onclick="removeRow('1')"><i class="fa fa-close"></i></button></td>
                   </tr>
                 </tbody>
               </table>
               <br /> <br />
 
+              <div class="form-group">
+                <label for="gross_amount" class="col-sm-5 control-label">Jumlah Harga</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="gross_amount" name="gross_amount" disabled autocomplete="off">
+                  <input type="hidden" class="form-control" id="gross_amount_value" name="gross_amount_value" autocomplete="off">
+                </div>
+              </div>
             </div>
             <!-- /.box-body -->
 
@@ -159,6 +171,7 @@
               <th style="width: 10px;">No</th>
               <th style="width: 10px;">Action</th>
               <th>Nama</th>
+              <th>Total HPP</th>
             </tr>
           </thead>
 
@@ -272,6 +285,7 @@
             '<td><input type="number" step="any" name="qty[]" id="qty_' + row_id + '" class="form-control" onkeyup="getTotal(' + row_id + ')"></td>' +
             '<td><input type="text" name="satuan[]" id="satuan_' + row_id + '" class="form-control" disabled><input type="hidden" name="satuan_value[]" id="satuan_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="hidden" name="rate[]" id="rate_' + row_id + '" class="form-control"><input disabled type="number" name="rate_value[]" id="rate_value_' + row_id + '" class="form-control"></td>' +
+            '<td><input type="text" name="amount[]" id="amount_' + row_id + '" class="form-control" disabled><input type="hidden" name="amount_value[]" id="amount_value_' + row_id + '" class="form-control"></td>' +
             '<td><button type="button" class="btn btn-default" onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
             '</tr>';
 
@@ -291,6 +305,20 @@
 
   }); // /document
 
+  function getTotal(row = null) {
+    if (row) {
+      var total = Number($("#rate_value_" + row).val()) * Number($("#qty_" + row).val());
+
+      total = total.toFixed(0);
+      $("#amount_" + row).val(total);
+      $("#amount_value_" + row).val(total);
+
+      subAmount();
+
+    } else {
+      alert('no row !! please refresh the page');
+    }
+  }
 
   // get the product information from the server
   function getProductData(row_id) {
@@ -333,6 +361,40 @@
       }); // /ajax function to fetch the product data 
     }
   }
+
+
+  // calculate the total amount of the order
+  function subAmount() {
+    var tableProductLength = $("#product_info_table tbody tr").length;
+    var totalSubAmount = 0;
+    for (x = 0; x < tableProductLength; x++) {
+      var tr = $("#product_info_table tbody tr")[x];
+      var count = $(tr).attr('id');
+      count = count.substring(4);
+
+      totalSubAmount = Number(totalSubAmount) + Number($("#amount_" + count).val());
+    } // /for
+
+    totalSubAmount = totalSubAmount.toFixed(0);
+
+    // sub total
+    $("#gross_amount").val(totalSubAmount);
+    $("#gross_amount_value").val(totalSubAmount);
+
+    // vat
+    var vat = (Number($("#gross_amount").val()) / 100) * vat_charge;
+    vat = vat.toFixed(0);
+    $("#vat_charge").val(vat);
+    $("#vat_charge_value").val(vat);
+
+    // service
+    var service = (Number($("#gross_amount").val()) / 100) * service_charge;
+    service = service.toFixed(0);
+    $("#service_charge").val(service);
+    $("#service_charge_value").val(service);
+
+  } // /sub total amount
+
 
   function removeRow(tr_id) {
     $("#product_info_table tbody tr#row_" + tr_id).remove();
