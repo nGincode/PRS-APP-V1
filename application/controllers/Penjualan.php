@@ -208,7 +208,7 @@ class penjualan extends Admin_Controller
             redirect('dashboard', 'refresh');
         }
 
-        $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required|is_unique[penjualan_item_resep.nama]');
+        $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required|is_unique[penjualan_resep.nama]');
 
         if ($this->form_validation->run() == TRUE) {
 
