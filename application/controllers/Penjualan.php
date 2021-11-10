@@ -111,7 +111,7 @@ class penjualan extends Admin_Controller
     public function edititem()
     {
 
-        $this->form_validation->set_rules('nama', 'Nama', 'trim|required|is_unique[penjualan_item_resep.nama]');
+        $this->form_validation->set_rules('nama', 'Nama', 'trim|required');
         $this->form_validation->set_rules('satuan', 'Satuan', 'trim|required');
 
         $postid = $this->model_penjualan->getitemresep($this->input->post('id'));
