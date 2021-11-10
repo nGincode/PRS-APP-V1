@@ -62,6 +62,7 @@ endif; ?>
                     $lembur = json_decode($dt_store['lembur'], TRUE);
                     $khusus_s1 = json_decode($dt_store['khusus_s1'], TRUE);
                     $khusus_s2 = json_decode($dt_store['khusus_s2'], TRUE);
+                    $akustik = json_decode($dt_store['akustik'], TRUE);
                     ?>
                     <?php
                     if (date('D') == 'Sunday' or date('D') == 'Saturday') {
@@ -96,6 +97,9 @@ endif; ?>
                           echo '<option value="3">Lembur</option>';
                         };
                       }
+                      if ($akustik[0]) {
+                        echo '<option value="5">Akustik</option>';
+                      }
                     } else {  ?>
 
                       <?php if ($s1[0]) { ?>
@@ -109,6 +113,9 @@ endif; ?>
                       <option value="3">Lembur</option>
                     <?php } ?>
 
+                    <?php if ($akustik[0]) { ?>
+                      <option value="4">Akustik</option>
+                    <?php } ?>
                   </select>
                 </div>
 

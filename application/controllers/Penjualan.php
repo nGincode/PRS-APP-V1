@@ -23,6 +23,7 @@ class penjualan extends Admin_Controller
         $this->load->model('model_users');
         $this->load->model('model_penjualan');
         $this->load->model('Model');
+        $this->load->model('model_stores');
     }
 
 
@@ -249,6 +250,7 @@ class penjualan extends Admin_Controller
         } else {
 
             $this->data['products'] = $this->model_penjualan->getitemresep();
+            $this->data['store'] = $this->model_stores->getStoresoutlet();
 
             $this->render_template('penjualan/resep', $this->data);
         }

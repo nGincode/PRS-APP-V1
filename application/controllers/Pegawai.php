@@ -1016,6 +1016,15 @@ class Pegawai extends Admin_Controller
             $ks2m = '';
             $ks2k = '';
         }
+
+        $ak = json_decode($stores['akustik'], TRUE);
+        if ($stores['akustik']) {
+            $akustikm = $ak[0];
+            $akustikk = $ak[1];
+        } else {
+            $akustikm = '';
+            $akustikk = '';
+        }
         if ($stores) {
             echo '
         
@@ -1190,6 +1199,41 @@ class Pegawai extends Admin_Controller
 
                     </div>
                 </div>
+
+                
+                
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" style="text-align:left;">Akustik</label>
+                </div>
+
+                
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" style="text-align:left;">Jam Awal :</label>
+                    <div class="col-sm-7">
+
+                    <div class="input-group date">
+                        <div class="input-group-addon ">
+                        <i class="fa fa-clock-o "></i>
+                        </div>
+                        <input type="time" value="' . $akustikm . '"  name="time_awal6" class="form-control pull-right">
+                    </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" style="text-align:left;">Jam Akhir :</label>
+                    <div class="col-sm-7">
+
+                    <div class="input-group date">
+                        <div class="input-group-addon ">
+                        <i class="fa fa-clock-o "></i>
+                        </div>
+                        <input value="' . $akustikk . '" type="time" name="time_akhir6"  class="form-control pull-right">
+                    </div>
+
+                    </div>
+                </div>
                 ';
         } else {
             echo '';
@@ -1214,6 +1258,9 @@ class Pegawai extends Admin_Controller
 
         $time_awal5 = $this->input->post('time_awal5');
         $time_akhir5 = $this->input->post('time_akhir5');
+
+        $time_awal6 = $this->input->post('time_awal6');
+        $time_akhir6 = $this->input->post('time_akhir6');
 
         if ($id) {
             if ($time_awal1) {
@@ -1278,24 +1325,39 @@ class Pegawai extends Admin_Controller
                 $ta5k = '';
             }
 
+
+            if ($time_awal6) {
+                $ta6m = $time_awal6;
+            } else {
+                $ta6m = '';
+            }
+            if ($time_akhir6) {
+                $ta6k = $time_akhir6;
+            } else {
+                $ta6k = '';
+            }
+
             $dts1 = array($ta1m, $ta1k);
             $dts2 = array($ta2m, $ta2k);
             $dts3 = array($ta3m, $ta3k);
             $dts4 = array($ta4m, $ta4k);
             $dts5 = array($ta5m, $ta5k);
+            $dts6 = array($ta6m, $ta6k);
 
             $s1 = json_encode($dts1);
             $s2 = json_encode($dts2);
             $lembur = json_encode($dts3);
             $khususs1 = json_encode($dts4);
             $khususs2 = json_encode($dts5);
+            $akustik = json_encode($dts6);
 
             $data = array(
                 's1' => "$s1",
                 's2' => "$s2",
                 'lembur' => "$lembur",
                 'khusus_s1' => "$khususs1",
-                'khusus_s2' => "$khususs2"
+                'khusus_s2' => "$khususs2",
+                'akustik' => "$akustik"
 
             );
 

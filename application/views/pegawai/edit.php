@@ -137,6 +137,9 @@
                   <option value="Service Crew" <?php if ($pegawai_data['divisi'] == 'Service Crew') {
                                                   echo "selected='' ";
                                                 } ?>>Service Crew</option>
+                  <option value="Akustik" <?php if ($pegawai_data['divisi'] == 'Akustik') {
+                                            echo "selected='' ";
+                                          } ?>>Akustik</option>
                 </select>
               </div>
 
@@ -155,6 +158,9 @@
                   <option value="Staf" <?php if ($pegawai_data['jabatan'] == 'Staf') {
                                           echo "selected='' ";
                                         } ?>>Staf</option>
+                  <option value="Freelance" <?php if ($pegawai_data['jabatan'] == 'Freelance') {
+                                              echo "selected='' ";
+                                            } ?>>Freelance</option>
                 </select>
               </div>
 

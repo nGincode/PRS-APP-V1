@@ -60,10 +60,22 @@
 
               <?php echo validation_errors(); ?>
 
-              <div class="col-md-4 col-xs-15 ">
-                <div class="form-group">
+              <div class="form-group">
+                <div class="col-sm-7">
                   <label for="nama">Nama Menu </label>
                   <input type="text" class="form-control" id="nama" required name="menu" placeholder="Nama Menu Harus Sama Dengan Moka" autocomplete="off" />
+
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-7">
+                  <label for="store">Store </label>
+                  <select name="store" class="form-control">
+                    <?php foreach ($store as $k => $v) : ?>
+                      <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
+                    <?php endforeach ?>
+                  </select>
                 </div>
               </div>
 
