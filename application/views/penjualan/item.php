@@ -159,12 +159,11 @@
           <form role="form" action="<?= base_url('penjualan/edititem') ?>" method="post" enctype="multipart/form-data">
             <div class="box-body">
               <font style="color: red"><?php echo validation_errors(); ?></font>
-
-
               <div class="form-group">
                 <label for="satuan">Pilih Yang diedit</label><br>
 
-                <select name="id" class="form-control select_group">
+                <select onchange="edit()" id="selectBox" name="id" class="form-control select_group">
+
                   <?php foreach ($dataitem as $val) { ?>
                     <option value="<?= $val['id'] ?>"><?= $val['nama'] ?></option>
                   <?php } ?>
@@ -174,28 +173,28 @@
 
               <div class="form-group">
                 <label for="nama">Nama Item </label>
-                <input type="text" class="form-control" id="nama" required name="nama" placeholder="Masukkan Nama Item" autocomplete="off" />
+                <input type="text" class="form-control" id="namaedit" required name="nama" placeholder="Masukkan Nama Item" autocomplete="off" />
               </div>
 
 
               <div class="form-group">
                 <label for="satuan">Satuan</label><br>
 
-                <select name="satuan" class="form-control">
-                  <option value="Pcs">Pcs</option>
-                  <option value="Pck">Pck</option>
-                  <option value="Klg">Klg</option>
-                  <option value="Kg">Kg</option>
-                  <option value="Gr">Gr</option>
-                  <option value="Jrg">Jrg</option>
-                  <option value="Dus">Dus</option>
-                  <option value="Btl">Btl</option>
-                  <option value="Box">Box</option>
-                  <option value="Bks">Bks</option>
-                  <option value="Btr">Btr</option>
-                  <option value="Por">Porsi</option>
-                  <option value="Ml">Ml</option>
-                  <option value="Ptg">Potong</option>
+                <select name="satuan" id="selectedit" class="form-control">
+                  <option value="Pcs" id="Pcs">Pcs</option>
+                  <option value="Pck" id="Pck">Pck</option>
+                  <option value="Klg" id="Klg">Klg</option>
+                  <option value="Kg" id="Kg">Kg</option>
+                  <option value="Gr" id="Gr">Gr</option>
+                  <option value="Jrg" id="Jrg">Jrg</option>
+                  <option value="Dus" id="Dus">Dus</option>
+                  <option value="Btl" id="Btl">Btl</option>
+                  <option value="Box" id="Box">Box</option>
+                  <option value="Bks" id="Bks">Bks</option>
+                  <option value="Btr" id="Btr">Btr</option>
+                  <option value="Por" id="Pr">Porsi</option>
+                  <option value="Ml" id="Ml">Ml</option>
+                  <option value="Ptg" id="Ptg">Potong</option>
                 </select>
               </div>
 
@@ -203,7 +202,7 @@
 
               <div class="form-group">
                 <label for="harga">Harga</label>
-                <input type="text" class="form-control" id="harga" name="harga" placeholder="Masukkan Harga" autocomplete="off" />
+                <input type="text" class="form-control" id="hargaedit" name="harga" placeholder="Masukkan Harga" autocomplete="off" />
               </div>
 
 
@@ -283,7 +282,32 @@
 
   });
 
+  function edit() {
+    var selectBox = document.getElementById("selectBox");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    if (selectedValue) {
+      $.ajax({
+        url: base_url + '/penjualan/edititempjl',
+        type: 'POST',
+        data: {
+          id: selectedValue
+        },
+        success: function(data) {
+          const obj = JSON.parse(data);
+          $('#namaedit').val(obj.nama);
 
+          var opt = $("#" + obj.satuan),
+            html = $("<div>").append(opt.clone()).html();
+          html = html.replace(/\>/, ' selected="selected">');
+          opt.replaceWith(html);
+
+          $('#hargaedit').val(obj.harga);
+        }
+      });
+
+      // return false;
+    }
+  }
 
   // remove functions 
   function removeFunc(id) {

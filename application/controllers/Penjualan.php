@@ -221,8 +221,7 @@ class penjualan extends Admin_Controller
 
                 $data = array(
                     'nama_menu' => $this->input->post('menu'),
-                    'store_id' => $this->input->post('store'),
-                    'harga' => $this->input->post('gross_amount_value'),
+                    'store_id' => $this->input->post('store')
                 );
                 $this->model_penjualan->createresep($data);
                 $idresep = $this->model_penjualan->idresep();
@@ -318,6 +317,7 @@ class penjualan extends Admin_Controller
         $getresep = $this->model_penjualan->getresep($id);
         if ($getresep) {
             $this->data['namaresep'] = $getresep['nama_menu'];
+            $this->data['stores'] = $getresep['store_id'];
             $this->data['dt'] = $this->model_penjualan->getresepitemid($getresep['id']);
         } else {
             $this->data['namaresep'] = '';
@@ -326,6 +326,7 @@ class penjualan extends Admin_Controller
         }
 
 
+        $this->data['store'] = $this->model_stores->getStoresoutlet();
         $this->render_template('penjualan/resepedit', $this->data);
     }
 
@@ -342,6 +343,14 @@ class penjualan extends Admin_Controller
     public function getTableProductRow()
     {
         $products = $this->model_penjualan->getitemresep();
+        echo json_encode($products);
+    }
+
+
+    public function edititempjl()
+    {
+        $id = $this->input->post('id');
+        $products = $this->model_penjualan->getitemresepid($id);
         echo json_encode($products);
     }
 
@@ -372,13 +381,25 @@ class penjualan extends Admin_Controller
                 $buttons .= '<li><a style="cursor:pointer;" onclick="removeFunc(' . $value['id'] . ')" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i> Hapus</a></li>';
             }
             $buttons .= '</ul></div>';
+            $jmlh = 0;
+            $dataresep = $this->model_penjualan->getresepitemid($value['id']);
+            foreach ($dataresep as $v) {
+                $item1 = $this->model_penjualan->getitemresep($v['iditemresep']);
+                if (isset($item1['harga'])) {
+                    $jmlh += $item1['harga'] * $v['qty'];
+                } else {
+                    $jmlh += 0;
+                }
+                $jmlh += 0;
+            }
 
 
+            $ttl = "Rp " . number_format($jmlh, 0, ',', '.');
             $result['data'][$key] = array(
                 $no++,
                 $buttons,
                 $value['nama_menu'],
-                'Rp ' . number_format($value['harga'], 0, ",", "."),
+                $ttl
             );
         }
         echo json_encode($result);

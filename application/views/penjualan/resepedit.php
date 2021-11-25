@@ -26,7 +26,7 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Tambah
+      Edit
       <small>Resep</small>
     </h1>
     <ol class="breadcrumb">
@@ -46,7 +46,7 @@
 
         <div class="box box-success box-solid">
           <div class="box-header with-border">
-            <h3 class="box-title"><b>Tambah Resep</b></h3>
+            <h3 class="box-title"><b>Edit Resep</b></h3>
 
             <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -68,12 +68,28 @@
                 </div>
               </div>
 
+
+
+              <div class="form-group">
+                <div class="col-sm-7">
+                  <label for="store">Store </label>
+                  <select name="store" class="form-control">
+                    <?php foreach ($store as $k => $v) : ?>
+                      <option value="<?php echo $v['id'] ?>" <?php if ($v['id'] == $stores) {
+                                                                echo "selected='selected'";
+                                                              } ?>><?php echo $v['name'] ?></option>
+                    <?php endforeach ?>
+                  </select>
+                </div>
+              </div>
+
               <table class="table table-bordered" id="product_info_table" style="overflow-x: scroll;display:block;">
                 <thead>
                   <th style="width:50%;min-width:200px;text-align: center;">Nama Item</th>
                   <th style="width:10%;min-width:70px;text-align: center;">Qty</th>
                   <th style="width:10%;min-width:70px;text-align: center;">Satuan</th>
                   <th style="width:10%;min-width:100px;text-align: center;">Harga</th>
+                  <th style="width:10%;min-width:100px;text-align: center;">Jumlah</th>
                   <th style="width:3%"><button type="button" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button></th>
                   </tr>
                 </thead>
@@ -83,14 +99,20 @@
                   <?php
                   if (isset($dt)) : ?>
                     <?php $x = 1; ?>
-                    <?php foreach ($dt as $key => $val) :
+                    <?php
+                    $totaljumlah = 0;
+                    foreach ($dt as $key => $val) :
                       $ambiliditem = $this->model_penjualan->getitemresep($val['iditemresep']);
                       if ($ambiliditem) {
                         $satuan = $ambiliditem['satuan'];
                         $rate = $ambiliditem['harga'];
+                        $jjmlh = $ambiliditem['harga'] * $val['qty'];
+                        $totaljumlah += $ambiliditem['harga'] * $val['qty'];
                       } else {
                         $satuan = '';
                         $rate = '';
+                        $jjmlh = '';
+                        $totaljumlah += 0;
                       }
                     ?>
                       <tr id="row_<?php echo $x; ?>">
@@ -116,6 +138,11 @@
                           <input type="number" disabled name="rate[]" id="rate_<?php echo $x; ?>" value="<?php echo $rate ?>" required class="form-control" autocomplete="off">
                           <input type="hidden" name="rate_value[]" id="rate_value_<?php echo $x; ?>" value="<?php echo $rate ?>" required class="form-control" autocomplete="off">
                         </td>
+
+                        <td>
+                          <input type="text" name="amount[]" id="amount_<?php echo $x; ?>" value="<?php echo $jjmlh ?>" class="form-control" disabled autocomplete="off">
+                          <input type="hidden" name="amount_value[]" id="amount_value_<?php echo $x; ?>" value="<?php echo $jjmlh ?>" class=" form-control" autocomplete="off">
+                        </td>
                         <td><button type="button" class="btn btn-default" onclick="removeRow('<?php echo $x; ?>'')"><i class="fa fa-close"></i></button></td>
                       </tr>
                       <?php $x++; ?>
@@ -126,12 +153,20 @@
               </table>
               <br /> <br />
 
+
+              <div class="form-group">
+                <label for="gross_amount" class="col-sm-5 control-label">Jumlah Harga</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" value="<?php echo $totaljumlah  ?>" id="gross_amount" name="gross_amount" disabled autocomplete="off">
+                  <input type="hidden" class="form-control" value="<?php echo $totaljumlah  ?>" id="gross_amount_value" name="gross_amount_value" autocomplete="off">
+                </div>
+              </div>
+
             </div>
             <!-- /.box-body -->
 
             <div class="box-footer">
               <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Edit</button>
-              <a href="<?php echo base_url('belanja/') ?>" class="btn btn-warning"><i class="fa fa-close"></i> Batal</a>
             </div>
           </form>
           <!-- /.box-body -->
@@ -250,6 +285,7 @@
             '<td><input type="number" step="any" name="qty[]" id="qty_' + row_id + '" class="form-control" onkeyup="getTotal(' + row_id + ')"></td>' +
             '<td><input type="text" name="satuan[]" id="satuan_' + row_id + '" class="form-control" disabled><input type="hidden" name="satuan_value[]" id="satuan_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="hidden" name="rate[]" id="rate_' + row_id + '" class="form-control"><input disabled type="number" name="rate_value[]" id="rate_value_' + row_id + '" class="form-control"></td>' +
+            '<td><input type="text" name="amount[]" id="amount_' + row_id + '" class="form-control" disabled><input type="hidden" name="amount_value[]" id="amount_value_' + row_id + '" class="form-control"></td>' +
             '<td><button type="button" class="btn btn-default" onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
             '</tr>';
 
@@ -317,7 +353,53 @@
     subAmount();
   }
 
+  function getTotal(row = null) {
+    if (row) {
+      var total = Number($("#rate_value_" + row).val()) * Number($("#qty_" + row).val());
 
+      total = total.toFixed(0);
+      $("#amount_" + row).val(total);
+      $("#amount_value_" + row).val(total);
+
+      subAmount();
+
+    } else {
+      alert('no row !! please refresh the page');
+    }
+  }
+
+
+  // calculate the total amount of the order
+  function subAmount() {
+    var tableProductLength = $("#product_info_table tbody tr").length;
+    var totalSubAmount = 0;
+    for (x = 0; x < tableProductLength; x++) {
+      var tr = $("#product_info_table tbody tr")[x];
+      var count = $(tr).attr('id');
+      count = count.substring(4);
+
+      totalSubAmount = Number(totalSubAmount) + Number($("#amount_" + count).val());
+    } // /for
+
+    totalSubAmount = totalSubAmount.toFixed(0);
+
+    // sub total
+    $("#gross_amount").val(totalSubAmount);
+    $("#gross_amount_value").val(totalSubAmount);
+
+    // vat
+    var vat = (Number($("#gross_amount").val()) / 100) * vat_charge;
+    vat = vat.toFixed(0);
+    $("#vat_charge").val(vat);
+    $("#vat_charge_value").val(vat);
+
+    // service
+    var service = (Number($("#gross_amount").val()) / 100) * service_charge;
+    service = service.toFixed(0);
+    $("#service_charge").val(service);
+    $("#service_charge_value").val(service);
+
+  } // /sub total amount
 
 
   function lihat(id) {
