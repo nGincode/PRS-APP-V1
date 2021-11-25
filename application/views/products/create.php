@@ -98,6 +98,9 @@ endif; ?>
                   <option value="Btr">Btr</option>
                   <option value="Tbg">Tbg</option>
                   <option value="Ikt">Ikt</option>
+                  <option value="Bal">Bal</option>
+                  <option value="Sak">Sak</option>
+                  <option value="Ctn">Ctn</option>
                 </select>
               </div>
 

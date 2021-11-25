@@ -62,7 +62,7 @@ class Model_orders extends CI_Model
 			return false;
 		}
 
-		$sql = "SELECT * FROM orders_item WHERE order_id = ? ORDER BY id DESC";
+		$sql = "SELECT * FROM orders_item WHERE order_id = ? ORDER BY nama_produk ASC";
 		$query = $this->db->query($sql, array($order_id));
 		return $query->result_array();
 	}

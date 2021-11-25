@@ -129,6 +129,15 @@ endif; ?>
                   <option value="Ikt" <?php if ($product_data['satuan'] == 'Ikt') {
                                         echo "selected=''";
                                       } ?>>Ikt</option>
+                  <option value="Bal" <?php if ($product_data['satuan'] == 'Bal') {
+                                        echo "selected=''";
+                                      } ?>>Ikt</option>
+                  <option value="Sak" <?php if ($product_data['satuan'] == 'Sak') {
+                                        echo "selected=''";
+                                      } ?>>Ikt</option>
+                  <option value="Ctn" <?php if ($product_data['satuan'] == 'Ctn') {
+                                        echo "selected=''";
+                                      } ?>>Ikt</option>
                 </select>
 
               </div>
