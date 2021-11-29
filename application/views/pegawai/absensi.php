@@ -442,6 +442,11 @@ endif; ?>
                       <center>G.Masuk</center>
                     </th>
                   <?php endif; ?>
+                  <?php if ($div != 0) : ?>
+                    <th style='width:70px'>
+                      <center>Gambar</center>
+                    </th>
+                  <?php endif; ?>
                   <?php if ($div == 0) : ?>
                     <th style='width:70px'>
                       <center>G.Keluar</center>

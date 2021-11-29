@@ -984,6 +984,7 @@ class Pegawai extends Admin_Controller
                         $value['tgl'],
                         $value['nama'],
                         $shf,
+                        $img . $img1,
                         $masuk,
                         $keluar,
                     );
