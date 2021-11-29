@@ -137,11 +137,12 @@ endif; ?>
 
 
                 </div>
-                <!-- /.box-body -->
+              </div>
+              <!-- /.box-body -->
 
-                <div class="box-footer">
-                  <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> Simpan</button>
-                </div>
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> Simpan</button>
+              </div>
             </form>
           </div>
           <!-- /.box -->
@@ -173,94 +174,145 @@ endif; ?>
         var nama = $('#nama').val();
         var sift = $('#sift').val();
         var ket = $("#ket:checked").val();
-        Webcam.snap(function(data_uri) {
-          image = data_uri;
-          //$('#my_camera').html('<img src="' + data_uri + '"/>')
-        });
 
-        if (image) {
-          $.ajax({
-              url: '<?php echo site_url("Pegawai/saveabsensi"); ?>',
-              type: 'POST',
-              dataType: 'json',
-              data: {
-                nama: nama,
-                image: image,
-                ket: ket,
-                sift: sift
-              },
-            })
-            .done(function(data) {
-              if (data == 'q') {
+        $.ajax({
+            url: '<?php echo site_url("Pegawai/ambilnamaid"); ?>',
+            type: 'POST',
+            data: {
+              id: nama
+            },
+            beforeSend: function() {
+              Swal.showLoading();
+            },
+            success: function(data) {
+              if (data == 'gagal') {
                 Swal.fire({
                   icon: 'error',
                   title: 'Gagal...!',
-                  text: 'Terjadi Masalah Pada Gambar',
+                  text: 'Nama Pegawai Tidak ditemukan',
                   showConfirmButton: false,
-                  timer: 1500
+                  timer: 2000
                 });
-              } else if (data == 'qw') {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Gagal...!',
-                  text: 'Foto anda tidak terdeteksi',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-              } else if (data == 'zz') {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Gagal...!',
-                  text: 'Shift Tidak Valid',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-              } else if (data == 5) {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Gagal...!',
-                  text: 'Anda Harus Absen Masuk Dulu',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-              } else if (data > 0) {
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Berhasil...!',
-                  text: 'Anda Berhasil Absen',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
-
+                var namapegawai = data;
                 setTimeout(function() { // wait for 5 secs(2)
                   location.reload(); // then reload the page.(3)
-                }, 1500);
+                }, 2000);
               } else {
+                var namapegawai = data;
                 Swal.fire({
-                  icon: 'error',
-                  title: 'Gagal...!',
-                  text: 'Anda Telah Absen Hari Ini',
-                  showConfirmButton: false,
-                  timer: 1500
-                });
+                  title: 'Yakin?',
+                  text: "Absen dengan nama " + namapegawai + " dengan shift " + sift,
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Hadir'
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    Webcam.snap(function(data_uri) {
+                      image = data_uri;
+                      //$('#my_camera').html('<img src="' + data_uri + '"/>')
+                    });
+                    if (image) {
+                      $.ajax({
+                          url: '<?php echo site_url("Pegawai/saveabsensi"); ?>',
+                          type: 'POST',
+                          dataType: 'json',
+                          data: {
+                            nama: nama,
+                            image: image,
+                            ket: ket,
+                            sift: sift
+                          },
+                          beforeSend: function() {
+                            Swal.showLoading();
+                          },
+                          success: function(data) {
+                            if (data == 'q') {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Terjadi Masalah Pada Gambar',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+                            } else if (data == 'xx') {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Anda hanya bisa absen masuk 05:00 - 17:59',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+                            } else if (data == 'qw') {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Foto anda tidak terdeteksi',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+                            } else if (data == 'zz') {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Shift Tidak Valid',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+                            } else if (data == 5) {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Anda Harus Absen Masuk Dulu',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+                            } else if (data > 0) {
+                              Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil...!',
+                                text: 'Anda Berhasil Absen',
+                                showConfirmButton: false,
+                                timer: 2000
+                              });
 
+                              setTimeout(function() { // wait for 5 secs(2)
+                                location.reload(); // then reload the page.(3)
+                              }, 2000);
+                            } else {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Anda Telah Absen Hari Ini',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+
+                            }
+                          }
+                        })
+                        .fail(function(data) {
+                          console.log(data);
+                        });
+
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal...!',
+                        text: 'Kamera Bermasalah Refresh Halaman',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
+                    }
+                  }
+                })
               }
-            })
-            .fail(function(data) {
-              console.log(data);
-            });
-
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Gagal...!',
-            text: 'Kamera Bermasalah Refresh Halaman',
-            showConfirmButton: false,
-            timer: 1500
+            }
+          })
+          .fail(function(data) {
+            console.log(data);
           });
-        }
-
-
 
       });
     </script>
