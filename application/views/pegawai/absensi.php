@@ -199,14 +199,19 @@ endif; ?>
                 }, 2000);
               } else {
                 var namapegawai = data;
+                if (ket == 1) {
+                  var absen = 'Masuk';
+                } else {
+                  var absen = 'Keluar';
+                }
                 Swal.fire({
-                  title: 'Yakin?',
-                  text: "Absen dengan nama " + namapegawai + " dengan shift " + sift,
+                  title: absen + '?',
+                  text: "Absen " + absen + " dengan nama " + namapegawai + " dengan shift " + sift,
                   icon: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#3085d6',
                   cancelButtonColor: '#d33',
-                  confirmButtonText: 'Hadir'
+                  confirmButtonText: 'Kirim'
                 }).then((result) => {
                   if (result.isConfirmed) {
                     Webcam.snap(function(data_uri) {
@@ -233,6 +238,22 @@ endif; ?>
                                 icon: 'error',
                                 title: 'Gagal...!',
                                 text: 'Terjadi Masalah Pada Gambar',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+                            } else if (data == 'cc') {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Anda kecepatan absennya',
+                                showConfirmButton: false,
+                                timer: 4000
+                              });
+                            } else if (data == 'yy') {
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal...!',
+                                text: 'Gagal mengambil waktu shift',
                                 showConfirmButton: false,
                                 timer: 4000
                               });
