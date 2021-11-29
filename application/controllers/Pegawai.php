@@ -383,6 +383,7 @@ class Pegawai extends Admin_Controller
 
         if ($ket == 1) {
             $date = date('Y-m-d');
+            $datev = 1;
             $masuk = 1;
             $keluar = 0;
 
@@ -452,7 +453,13 @@ class Pegawai extends Admin_Controller
             $pegawai = $this->model_pegawai->cekdulikatabsenm($date, $nama, 1);
         } else {
             $tgl = $this->model_pegawai->ambiltanggalakhirmasuk($nama, 1);
-            $date = $tgl['tgl'];
+            if (isset($tgl)) {
+                $date = $tgl['tgl'];
+                $datev = 1;
+            } else {
+                $date = 0;
+                $datev = 0;
+            }
             $masuk = 0;
             $keluar = 1;
             $terlambat = 0;
@@ -466,51 +473,55 @@ class Pegawai extends Admin_Controller
         } else {
             $time = 0;
         }
-        if ($time = 0 or $time < $waktu) {
-            if ($time = 0 or $waktu < '18:00:00') {
-                if ($time = 0 or $waktu > '05:00:00' or $ket == 2) {
+        if ($ket = 2 or $time < $waktu) {
+            if ($ket = 2 or $waktu < '18:00:00') {
+                if ($ket = 2 or $waktu > '05:00:00' or $ket == 2) {
                     if (!$cekwaktu) {
-                        if ($validkeluar > 0 or $pegawai == 0) {
+                        if ($datev == 1) {
+                            if ($validkeluar > 0 or $pegawai == 0) {
 
-                            if ($pegawai == 0) {
+                                if ($pegawai == 0) {
 
-                                $image = str_replace('data:image/jpeg;base64,', '', $image);
-                                $image = base64_decode($image);
-                                $filename = 'image_' . time() . '.png';
-                                file_put_contents(FCPATH . '/uploads/absensi/' . $filename, $image);
-                                if (file_exists(FCPATH . '/uploads/absensi/' . $filename)) {
-                                    if (filesize(FCPATH . '/uploads/absensi/' .  $filename) > 1024) {
+                                    $image = str_replace('data:image/jpeg;base64,', '', $image);
+                                    $image = base64_decode($image);
+                                    $filename = 'image_' . time() . '.png';
+                                    file_put_contents(FCPATH . '/uploads/absensi/' . $filename, $image);
+                                    if (file_exists(FCPATH . '/uploads/absensi/' . $filename)) {
+                                        if (filesize(FCPATH . '/uploads/absensi/' .  $filename) > 1024) {
 
-                                        $pegawai = $this->model_pegawai->getpegawaiid($nama);
+                                            $pegawai = $this->model_pegawai->getpegawaiid($nama);
 
-                                        $data = array(
-                                            'nama' => $pegawai['nama'],
-                                            'image' => $filename,
-                                            'store' => $store,
-                                            'idpegawai' => $nama,
-                                            'store_id' => $store_id,
-                                            'waktu_masuk' => $masuk,
-                                            'waktu_keluar' => $keluar,
-                                            'tgl' => $date,
-                                            'terlambat' => $terlambat,
-                                            'sift' => $sift,
-                                            'waktu' => $waktu
+                                            $data = array(
+                                                'nama' => $pegawai['nama'],
+                                                'image' => $filename,
+                                                'store' => $store,
+                                                'idpegawai' => $nama,
+                                                'store_id' => $store_id,
+                                                'waktu_masuk' => $masuk,
+                                                'waktu_keluar' => $keluar,
+                                                'tgl' => $date,
+                                                'terlambat' => $terlambat,
+                                                'sift' => $sift,
+                                                'waktu' => $waktu
 
-                                        );
+                                            );
 
-                                        $res = $this->model_pegawai->insertabsen($data);
-                                        echo json_encode($res);
+                                            $res = $this->model_pegawai->insertabsen($data);
+                                            echo json_encode($res);
+                                        } else {
+                                            echo json_encode('qw');
+                                        }
                                     } else {
-                                        echo json_encode('qw');
+                                        echo json_encode('q');
                                     }
                                 } else {
-                                    echo json_encode('q');
+                                    echo json_encode(0);
                                 }
                             } else {
-                                echo json_encode(0);
+                                echo json_encode(5);
                             }
                         } else {
-                            echo json_encode(5);
+                            echo json_encode('yy');
                         }
                     } else {
                         echo json_encode('zz');

@@ -253,7 +253,7 @@ endif; ?>
                               Swal.fire({
                                 icon: 'error',
                                 title: 'Gagal...!',
-                                text: 'Gagal mengambil waktu shift',
+                                text: 'Anda harus absen masuk dulu',
                                 showConfirmButton: false,
                                 timer: 4000
                               });
