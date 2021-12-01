@@ -652,7 +652,7 @@ class Pegawai extends Admin_Controller
         $no2 = 1;
 
         // $data = $this->model_pegawai->excelabsensi($tgl_awal, $tgl_akhir, $store_id);
-        $nama = $this->model_pegawai->namapegawai($store_id);
+        $nama = $this->model_pegawai->namapegawaiaktif($store_id);
         $tgl = $this->model_pegawai->excelabsensijudul($tgl_awal, $tgl_akhir, $store_id);
         $filename = "Laporan Absensi " . $store . " Dari " . $tgl_awal . " Sampai " . $tgl_akhir . ".xlsx";
 
