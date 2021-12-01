@@ -442,7 +442,19 @@ class Pegawai extends Admin_Controller
                 if ($cek[0]) {
                     $cekwaktu = '';
                 } else {
-                    $cekwaktu = 'Khusus Shift 1';
+                    $cekwaktu = 'Khusus Shift 2';
+                }
+                if ($waktu > $cek[0]) {
+                    $terlambat = 1;
+                } else {
+                    $terlambat = 0;
+                }
+            } else if ($sift == 6) {
+                $cek = json_decode($waktusift['akustik'], TRUE);
+                if ($cek[0]) {
+                    $cekwaktu = '';
+                } else {
+                    $cekwaktu = 'Akustik';
                 }
                 if ($waktu > $cek[0]) {
                     $terlambat = 1;
@@ -475,7 +487,7 @@ class Pegawai extends Admin_Controller
         }
         if ($ket = 2 or $time < $waktu) {
             if ($ket = 2 or $waktu < '18:00:00') {
-                if ($ket = 2 or $waktu > '05:00:00' or $ket == 2) {
+                if ($ket = 2 or $waktu > '05:00:00') {
                     if (!$cekwaktu) {
                         if ($datev == 1) {
                             if ($validkeluar > 0 or $pegawai == 0) {

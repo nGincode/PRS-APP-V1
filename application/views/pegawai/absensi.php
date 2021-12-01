@@ -93,12 +93,9 @@ endif; ?>
                         if ($s2[0]) {
                           echo '<option value="2">Shift 2</option>';
                         };
-                        if ($lembur[0]) {
-                          echo '<option value="3">Lembur</option>';
-                        };
                       }
                       if ($akustik[0]) {
-                        echo '<option value="5">Akustik</option>';
+                        echo '<option value="6">Akustik</option>';
                       }
                     } else {  ?>
 
@@ -109,13 +106,15 @@ endif; ?>
                         <option value="2">Sift 2</option>
                     <?php }
                     } ?>
+
                     <?php if ($lembur[0]) { ?>
                       <option value="3">Lembur</option>
                     <?php } ?>
 
                     <?php if ($akustik[0]) { ?>
-                      <option value="4">Akustik</option>
+                      <option value="6">Akustik</option>
                     <?php } ?>
+
                   </select>
                 </div>
 
