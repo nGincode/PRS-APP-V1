@@ -211,6 +211,12 @@ class Model_pegawai extends CI_Model
 		return $query->result_array();
 	}
 
+	public function namapegawaiaktif($store_id)
+	{
+		$query = $this->db->query("SELECT DISTINCT nama FROM pegawai_absen WHERE store_id = $store_id And keluar = 0");
+		return $query->result_array();
+	}
+
 	public function excelmasuk($nama, $tgl, $store_id, $masuk)
 	{
 		$query = $this->db->query("SELECT * FROM pegawai_absen WHERE store_id = $store_id AND waktu_masuk = $masuk AND nama = '$nama' AND  tgl ='$tgl'");

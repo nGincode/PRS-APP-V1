@@ -666,10 +666,18 @@ class Pegawai extends Admin_Controller
 
                 foreach ($tgl as $key => $t) {
 
+                    //isi data
                     $masuk = $this->model_pegawai->excelmasuk($n['nama'], $t['tgl'], $store_id, 1);
                     $keluar = $this->model_pegawai->excelkeluar($n['nama'], $t['tgl'], $store_id, 1);
                     if ($masuk) {
-                        $sheet->setCellValue($alpac++ . $baris, $masuk['waktu']);
+                        if ($masuk['terlambat'] == 0) {
+                            $sheet->setCellValue($alpac++ . $baris, $masuk['waktu']);
+                        } else {
+                            $spreadsheet->getActiveSheet()->getStyle($alpac . $baris)->getFill()
+                                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                                ->getStartColor()->setARGB('F6FF27');
+                            $sheet->setCellValue($alpac++ . $baris, $masuk['waktu']);
+                        }
                     } else {
                         $sheet->setCellValue($alpac++ . $baris, '');
                     }
@@ -697,7 +705,17 @@ class Pegawai extends Admin_Controller
             foreach ($tgl as $key => $t) {
                 $alph = $alpa;
                 $alph++;
-                $sheet->setCellValue($alpa . '4', $t['tgl']);
+                $day = date('D', strtotime($t['tgl']));
+                $dayList = array(
+                    'Sun' => 'Minggu',
+                    'Mon' => 'Senin',
+                    'Tue' => 'Selasa',
+                    'Wed' => 'Rabu',
+                    'Thu' => 'Kamis',
+                    'Fri' => 'Jumat',
+                    'Sat' => 'Sabtu'
+                );
+                $sheet->setCellValue($alpa . '4', $dayList[$day] . ', ' . $t['tgl']);
                 $spreadsheet->getActiveSheet()->mergeCells($alpa . '4:' .  $alph . '4');
                 $spreadsheet->getActiveSheet()->getStyle($alpa . '4:' .  $alph . '4')->applyFromArray($alignmentcenter);
                 $sheet->setCellValue($alpa . '5', 'Masuk');
