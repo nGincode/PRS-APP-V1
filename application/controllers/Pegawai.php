@@ -993,7 +993,7 @@ class Pegawai extends Admin_Controller
                 $shf = '1';
             } else if ($value['sift'] == 5) {
                 $shf = '2';
-            } else if ($value['shift'] > 5) {
+            } else if ($value['sift'] == 6) {
                 $shf = 'Akustik';
             }
             if ($div == 0) {
