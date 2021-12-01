@@ -213,7 +213,7 @@ class Model_pegawai extends CI_Model
 
 	public function namapegawaiaktif($store_id)
 	{
-		$query = $this->db->query("SELECT DISTINCT nama FROM pegawai_absen WHERE store_id = $store_id And keluar = 0");
+		$query = $this->db->query("SELECT DISTINCT nama FROM pegawai WHERE store_id = $store_id And keluar = 0");
 		return $query->result_array();
 	}
 
