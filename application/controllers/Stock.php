@@ -1040,17 +1040,16 @@ class Stock extends Admin_Controller
 
 
             $writer = new Xlsx($spreadsheet);
-            header('Content-Disposition: attachment;filename="' . $filename . '"');
-            header('Content-Type: application/vnd.ms-excel');
+            // header('Content-Disposition: attachment;filename="' . $filename . '"');
+            // header('Content-Type: application/vnd.ms-excel');
             header('Cache-Control: max-age=0');
-            $writer->save('php://output');
+            $writer->save('assets/excel/' . $filename);
         } else {
-
-            $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
-            redirect('stock/laporan', 'refresh');
+            echo 1;
+            // $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
+            // redirect('stock/laporan', 'refresh');
         }
     }
-
 
     public function export()
     {
@@ -1216,13 +1215,65 @@ class Stock extends Admin_Controller
             }
 
             $writer = new Xlsx($spreadsheet);
-            header('Content-Disposition: attachment;filename="' . $filename . '"');
-            header('Content-Type: application/vnd.ms-excel');
+            // header('Content-Disposition: attachment;filename="' . $filename . '"');
+            // header('Content-Type: application/vnd.ms-excel');
             header('Cache-Control: max-age=0');
-            $writer->save('php://output');
+            $writer->save('assets/excel/' . $filename);
         } else {
-            //$this->session->set_flashdata('error', 'Data Tidak Ditemukan');
-            //redirect('stock/laporan', 'refresh');
+            echo 1;
+            // $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
+            // redirect('stock/laporan', 'refresh');
+        }
+    }
+
+    public function fileexcel()
+    {
+        $result = array('data' => array());
+        $folder = "assets/excel/"; //Sesuaikan Folder nya
+        if (!($buka_folder = opendir($folder))) die("eRorr... Tidak bisa membuka Folder");
+
+        $file_array = array();
+        while ($baca_folder = readdir($buka_folder)) {
+            $file_array[] = array('nama' => $baca_folder);
+        }
+
+        $posts = array();
+
+        $jumlah_array = count($file_array);
+        $hapus = 0;
+        for ($i = 0; $i < $jumlah_array; $i++) {
+            $nama_file = $file_array[$i]['nama'];
+            $posts[] = array('nama_file' => "$nama_file");
+
+            if ($nama_file == '.' or $nama_file == '..') {
+                $hapus += 1;
+            } else {
+                $s = $i - $hapus;
+                $result['data'][$s] = array(
+                    $nama_file,
+                    '<a class="btn btn-success" href="' . base_url('assets/excel/' . $nama_file) . '"><i class="fa fa-download"></i></a> <a class="btn btn-danger"  href="' . base_url('stock/hapusfile?id=' . $nama_file) . '"><i class="fa fa-trash"></i></a>'
+                );
+            }
+        }
+
+        echo json_encode($result);
+    }
+
+    public function hapusfile()
+    {
+
+        $id = $this->input->get('id');
+
+        if ($id) {
+            $file = 'assets/excel/' . $id;
+            if (file_exists($file)) {
+                unlink($file);
+                $this->session->set_flashdata('success', 'Berhasil dihapus');
+                redirect('stock/laporan', 'refresh');
+            } else {
+                $this->session->set_flashdata('error', 'Gagal Menghapus');
+                redirect('stock/laporan', 'refresh');
+            }
         }
     }
 
