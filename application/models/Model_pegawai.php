@@ -211,9 +211,9 @@ class Model_pegawai extends CI_Model
 		return $query->result_array();
 	}
 
-	public function namapegawaiaktif($store_id)
+	public function namapegawaiabsen($tgl_awal, $tgl_akhir, $store_id)
 	{
-		$query = $this->db->query("SELECT DISTINCT nama FROM pegawai WHERE store_id = $store_id And keluar = 0  ORDER BY nama ASC");
+		$query = $this->db->query("SELECT DISTINCT nama FROM pegawai WHERE store_id = $store_id AND tgl BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY nama ASC");
 		return $query->result_array();
 	}
 
