@@ -368,8 +368,10 @@ class Stock extends Admin_Controller
             $stock = $this->model_stock->getnamastockid($produk_id);
             if (isset($stock)) {
                 if ($value['img']) {
+                    $img = '<center><a target="_blank" href="' . base_url('uploads/stock/' . $value['img']) . '"><i class="fa fa-image"></i></a></center>';
                     $nama_produk = '<a target="_blank" href="' . base_url('uploads/stock/' . $value['img']) . '">' . $stock['nama_produk'] . '</a>';
                 } else {
+                    $img = '';
                     $nama_produk = $stock['nama_produk'];
                 }
             } else {
@@ -412,6 +414,7 @@ class Stock extends Admin_Controller
                 $value['reg'],
                 $status,
                 $value['ket'],
+                $img,
             );
         } // /foreach
 

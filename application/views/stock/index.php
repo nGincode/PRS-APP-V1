@@ -95,6 +95,7 @@
                   <th style="text-align: center;" colspan="1">Sisa</th>
                   <th style="text-align: center;" colspan="1">Terpakai</th>
                   <th style="text-align: center;" colspan="3">Register</th>
+                  <th style="min-width: 50px;text-align: center;">Gambar</th>
                 </tr>
                 </tr>
                 <tr>
@@ -111,6 +112,7 @@
                   <th style="min-width: 50px;text-align: center;">Reg</th>
                   <th style="min-width: 50px;text-align: center;">Status</th>
                   <th style="min-width: 50px;text-align: center;">Ket</th>
+                  <th style="min-width: 50px;text-align: center;">Img</th>
                 </tr>
               </thead>
 
