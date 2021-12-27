@@ -163,6 +163,12 @@ $user_data = $this->model_users->getUserData($id_user);
               <?php endif; ?>
 
               <?php if (in_array('viewProduct', $user_permission)) : ?>
+                <?php if ($id_user == 2) { ?>
+                  <li id="ProductrusakNav"><a href="<?php echo base_url('products/rmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Rusak</a></li>
+                <?php } ?>
+              <?php endif; ?>
+
+              <?php if (in_array('viewProduct', $user_permission)) : ?>
                 <li id="ProductkeluarNav"><a href="<?php echo base_url('products/lkeluar') ?>"><i class="fa fa-sign-out"></i> Barang Keluar</a></li>
               <?php endif; ?>
 
@@ -603,6 +609,37 @@ $user_data = $this->model_users->getUserData($id_user);
                 </li>
               <?php endif; ?>
 
+
+            </ul>
+          </li>
+        <?php endif; ?>
+
+
+        <?php if (in_array('createdapro', $user_permission) || in_array('updatedapro', $user_permission) || in_array('viewdapro', $user_permission) || in_array('deletedapro', $user_permission)) : ?>
+          <li class="treeview" id="maindaproNav">
+            <a href="#">
+              <i class="fa fa-cube"></i>
+              <span>Dapur Produksi</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+
+              <?php if (in_array('createdapro', $user_permission)) : ?>
+                <li id="bahanmatah"><a href="<?php echo base_url('dapro/bahanmatah') ?>"><i class="fa fa-sign-in"></i> Bahan Baku</a>
+                </li>
+              <?php endif; ?>
+
+
+              <?php if (in_array('createdapro', $user_permission)) : ?>
+                <li id="adddaproNav"><a href="<?php echo base_url('dapro/create') ?>"><i class="fa fa-sign-in"></i> Resep to produk</a>
+                </li>
+              <?php endif; ?>
+
+              <?php if (in_array('viewdapro', $user_permission)) : ?>
+                <li id="managedaproNav"><a href="<?php echo base_url('dapro') ?>"><i class="fa fa-gear"></i>Manage</a></li>
+              <?php endif; ?>
 
             </ul>
           </li>

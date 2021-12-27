@@ -88,6 +88,7 @@ class penjualan extends Admin_Controller
             array_push($data1, array(
                 'idpenjualanresep' => $idresep['id'],
                 'iditemresep' => $v['iditemresep'],
+                'idproduct' => $v['idproduct'],
                 'qty' => $v['qty'],
             ));
         }
@@ -229,9 +230,18 @@ class penjualan extends Admin_Controller
                 $count_product = count($this->input->post('product'));
                 $items = array();
                 for ($x = 0; $x < $count_product; $x++) {
+                    if ($this->input->post('store') == 7) {
+                        $idproduct = $this->input->post('product[]')[$x];
+                        $iditemresep = 0;
+                    } else {
+                        $iditemresep = $this->input->post('product[]')[$x];
+                        $idproduct = 0;
+                    }
+
                     array_push($items, array(
                         'idpenjualanresep' => $idresep['id'],
-                        'iditemresep' => $this->input->post('product[]')[$x],
+                        'iditemresep' => $iditemresep,
+                        'idproduct' => $idproduct,
                         'qty' => $this->input->post('qty[]')[$x],
                     ));
                 }
@@ -251,7 +261,7 @@ class penjualan extends Admin_Controller
         } else {
 
             $this->data['products'] = $this->model_penjualan->getitemresep();
-            $this->data['store'] = $this->model_stores->getStoresoutlet();
+            $this->data['store'] = $this->model_stores->getStoresData();
 
             $this->render_template('penjualan/resep', $this->data);
         }
@@ -274,6 +284,7 @@ class penjualan extends Admin_Controller
 
                 $data = array(
                     'nama_menu' => $this->input->post('menu'),
+                    'store_id' => $this->input->post('store')
                 );
                 $this->db->where('id', $id);
                 $this->db->update('penjualan_resep', $data);
@@ -287,9 +298,18 @@ class penjualan extends Admin_Controller
                 $count_product = count($this->input->post('product'));
                 $items = array();
                 for ($x = 0; $x < $count_product; $x++) {
+                    if ($this->input->post('store') == 7) {
+                        $idproduct = $this->input->post('product[]')[$x];
+                        $iditemresep = 0;
+                    } else {
+                        $iditemresep = $this->input->post('product[]')[$x];
+                        $idproduct = 0;
+                    }
+
                     array_push($items, array(
                         'idpenjualanresep' => $idresep['id'],
-                        'iditemresep' => $this->input->post('product[]')[$x],
+                        'iditemresep' => $iditemresep,
+                        'idproduct' => $idproduct,
                         'qty' => $this->input->post('qty[]')[$x],
                     ));
                 }
@@ -313,7 +333,6 @@ class penjualan extends Admin_Controller
     {
 
         $id = $this->input->get('id');
-        $this->data['products'] = $this->model_penjualan->getitemresep();
         $getresep = $this->model_penjualan->getresep($id);
         if ($getresep) {
             $this->data['namaresep'] = $getresep['nama_menu'];
@@ -340,12 +359,27 @@ class penjualan extends Admin_Controller
         }
     }
 
+
+    public function getProductValueByIdLogistik()
+    {
+        $product_id = $this->input->post('product_id');
+        if ($product_id) {
+            $product_data = $this->model_penjualan->getitemprod($product_id);
+            echo json_encode($product_data);
+        }
+    }
+
     public function getTableProductRow()
     {
         $products = $this->model_penjualan->getitemresep();
         echo json_encode($products);
     }
 
+    public function getTableProductRowLogistik()
+    {
+        $products = $this->model_penjualan->getitemprod();
+        echo json_encode($products);
+    }
 
     public function edititempjl()
     {
@@ -384,13 +418,23 @@ class penjualan extends Admin_Controller
             $jmlh = 0;
             $dataresep = $this->model_penjualan->getresepitemid($value['id']);
             foreach ($dataresep as $v) {
-                $item1 = $this->model_penjualan->getitemresep($v['iditemresep']);
-                if (isset($item1['harga'])) {
-                    $jmlh += $item1['harga'] * $v['qty'];
+                if ($v['iditemresep']) {
+                    $item1 = $this->model_penjualan->getitemresep($v['iditemresep']);
+                    if (isset($item1['harga'])) {
+                        $jmlh += $item1['harga'] * $v['qty'];
+                    } else {
+                        $jmlh += 0;
+                    }
+                    $jmlh += 0;
                 } else {
+                    $item1 = $this->model_penjualan->getitemprod($v['idproduct']);
+                    if (isset($item1['price'])) {
+                        $jmlh += $item1['price'] * $v['qty'];
+                    } else {
+                        $jmlh += 0;
+                    }
                     $jmlh += 0;
                 }
-                $jmlh += 0;
             }
 
 

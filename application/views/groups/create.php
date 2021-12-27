@@ -210,6 +210,14 @@ endif; ?>
                       <td><input type="checkbox" name="permission[]" id="permission" value="viewpenjualan" class="minimal"></td>
                       <td><input type="checkbox" name="permission[]" id="permission" value="deletepenjualan" class="minimal"></td>
                     </tr>
+
+                    <tr>
+                      <td>Dapur Produksi</td>
+                      <td><input type="checkbox" name="permission[]" id="permission" value="createdapro" class="minimal"></td>
+                      <td><input type="checkbox" name="permission[]" id="permission" value="updatedapro" class="minimal"></td>
+                      <td><input type="checkbox" name="permission[]" id="permission" value="viewdapro" class="minimal"></td>
+                      <td><input type="checkbox" name="permission[]" id="permission" value="deletedapro" class="minimal"></td>
+                    </tr>
                     <tr>
                       <td>Reports</td>
                       <td> - </td>

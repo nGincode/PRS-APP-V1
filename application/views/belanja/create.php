@@ -69,7 +69,7 @@
                       <div class="input-group-addon ">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="date" required name="tgl" class="form-control pull-right">
+                      <input type="date" id="tgl" required name="tgl" class="form-control pull-right">
                     </div>
 
                   </div>
@@ -167,6 +167,7 @@
               <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
               <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Tambah</button>
               <a href="<?php echo base_url('belanja/') ?>" class="btn btn-warning"><i class="fa fa-close"></i> Batal</a>
+              <a class="btn btn-primary" onclick="ambil()">Ambil</a>*Mengambil data dari order sesuai tanggal diatas dengan tgl laporan order data akan otomatis terakumulasi
             </div>
           </form>
           <!-- /.box-body -->
@@ -368,5 +369,66 @@
   function removeRow(tr_id) {
     $("#product_info_table tbody tr#row_" + tr_id).remove();
     subAmount();
+  }
+
+  function ambil() {
+    var tgl = $('#tgl').val();
+    if (tgl) {
+
+      $.ajax({
+        url: "<?= base_url('belanja/ambil/') ?>",
+        type: 'POST',
+        data: {
+          tgl: tgl
+        },
+        success: function(data) {
+          if (data > 0) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil...!',
+              text: 'Data berhasil diambil',
+              showConfirmButton: false,
+              timer: 2000
+            });
+            setTimeout(function() {
+              window.location.href = "<?= base_url("belanja/edit/") ?>" + data;
+            }, 2000)
+          } else if (data == 'zz') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal...!',
+              text: 'Gagal membuat belanja',
+              showConfirmButton: false,
+              timer: 4000
+            });
+          } else if (data == 'z') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal...!',
+              text: 'Tanggal Telah Ada',
+              showConfirmButton: false,
+              timer: 4000
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal...!',
+              text: 'Terdapat Masalah',
+              showConfirmButton: false,
+              timer: 4000
+            });
+
+          }
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal...!',
+        text: 'Tanggal Harus diisi',
+        showConfirmButton: false,
+        timer: 4000
+      });
+    }
   }
 </script>

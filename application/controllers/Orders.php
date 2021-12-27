@@ -118,21 +118,21 @@ class Orders extends Admin_Controller
 							$orders_data = $this->model_orders->getOrdersData($value['id']);
 							$orders_item = $this->model_orders->getOrdersItemData($orders_data['id']);
 
-							if ($store_id == $value['store_id']) {
-								if (isset($orders_item['0'])) {
-									if ($orders_item['0']['qtydeliv'] == NULL) {
-										$arv = '<a target="__blank" href="' . base_url('orders/arv/' . $value['id']) . '" class="btn btn-danger"><i class="fa fa-spinner"></i></a>';
+							// if ($store_id == $value['store_id']) {
+							if (isset($orders_item['0'])) {
+								if ($orders_item['0']['qtydeliv'] == NULL) {
+									$arv = '<a target="__blank" href="' . base_url('orders/arv/' . $value['id']) . '" class="btn btn-danger"><i class="fa fa-spinner"></i></a>';
+								} else {
+									if ($orders_item['0']['qtyarv'] == NULL) {
+										$arv = '<a target="__blank" href="' . base_url('orders/arv/' . $value['id']) . '" class="btn btn-warning"><i class="fa fa-caret-square-o-up"></i></a>';
 									} else {
-										if ($orders_item['0']['qtyarv'] == NULL) {
-											$arv = '<a target="__blank" href="' . base_url('orders/arv/' . $value['id']) . '" class="btn btn-warning"><i class="fa fa-caret-square-o-up"></i></a>';
-										} else {
-											$arv = '<a target="__blank" href="' . base_url('orders/arv/' . $value['id']) . '" class="btn btn-success"><i class="fa fa-check-square-o"></i></a>';
-										}
+										$arv = '<a target="__blank" href="' . base_url('orders/arv/' . $value['id']) . '" class="btn btn-success"><i class="fa fa-check-square-o"></i></a>';
 									}
 								}
-							} else {
-								$arv = ' <span class="label label-danger" title="Sampai">No Akses</span>';
 							}
+							// } else {
+							// 	$arv = ' <span class="label label-danger" title="Sampai">No Akses</span>';
+							// }
 						}
 
 						if (in_array('updateOrder', $this->permission)) {

@@ -85,6 +85,24 @@ endif; ?>
               </div>
 
               <div class="form-group">
+
+                <label for="tipe">Tipe Barang (<?php if ($product_data['tipe'] == '0') {
+                                                  echo "Umum";
+                                                } else if ($product_data['tipe'] == '1') {
+                                                  echo "Bahan Baku";
+                                                } ?>)</label>
+                <select class="form-control" name="tipe">
+                  <option value="0" <?php if ($product_data['tipe'] == '0') {
+                                      echo "checked='' ";
+                                    } ?>>Umum</option>
+                  <option value="1" <?php if ($product_data['tipe'] == '1') {
+                                      echo "selected=''";
+                                    } ?>>Bahan Baku</option>
+                </select>
+
+              </div>
+
+              <div class="form-group">
                 <label for="ke">Penampilan</label><br>
                 <?php
                 foreach ($store as $key => $value) {

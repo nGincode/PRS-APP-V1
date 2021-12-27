@@ -151,4 +151,13 @@ class Model_belanja extends CI_Model
 		$update = $this->db->update('belanja', $data);
 		return ($update == true) ? true : false;
 	}
+	public function ubahjumlah($id, $harga)
+	{
+		$data = array(
+			'total' => $harga
+		);
+		$this->db->where('id', $id);
+		$update = $this->db->update('belanja', $data);
+		return ($update == true) ? true : false;
+	}
 }

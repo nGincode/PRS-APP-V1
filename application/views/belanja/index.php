@@ -45,9 +45,7 @@
             <table id="manageTable" class="table  table-bordered table-striped" style="width: 100%;">
               <thead>
                 <tr>
-                  <?php if (in_array('deletebelanja', $user_permission) || in_array('deletebelanja', $user_permission)) : ?>
-                    <th style=" width:5px;text-align: center;">Opsi</th>
-                  <?php endif; ?>
+                  <th style=" width:5px;text-align: center;">Opsi</th>
                   <th style="text-align: center;">Tanggal</th>
                   <th style="text-align: center;">No Bill</th>
                   <th style="text-align: center;">Total</th>

@@ -578,6 +578,31 @@ endif; ?>
                                                                                                                             } ?>></td>
                     </tr>
 
+
+                    <tr>
+                      <td>Dapur Produksi</td>
+                      <td><input type="checkbox" name="permission[]" id="permission" class="minimal" value="createdapro" <?php if ($serialize_permission) {
+                                                                                                                            if (in_array('createdapro', $serialize_permission)) {
+                                                                                                                              echo "checked";
+                                                                                                                            }
+                                                                                                                          } ?>></td>
+                      <td><input type="checkbox" name="permission[]" id="permission" class="minimal" value="updatedapro" <?php if ($serialize_permission) {
+                                                                                                                            if (in_array('updatedapro', $serialize_permission)) {
+                                                                                                                              echo "checked";
+                                                                                                                            }
+                                                                                                                          } ?>></td>
+                      <td><input type="checkbox" name="permission[]" id="permission" class="minimal" value="viewdapro" <?php if ($serialize_permission) {
+                                                                                                                          if (in_array('viewdapro', $serialize_permission)) {
+                                                                                                                            echo "checked";
+                                                                                                                          }
+                                                                                                                        } ?>></td>
+                      <td><input type="checkbox" name="permission[]" id="permission" class="minimal" value="deletedapro" <?php if ($serialize_permission) {
+                                                                                                                            if (in_array('deletedapro', $serialize_permission)) {
+                                                                                                                              echo "checked";
+                                                                                                                            }
+                                                                                                                          } ?>></td>
+                    </tr>
+
                     <tr>
                       <td>Reports</td>
                       <td> - </td>

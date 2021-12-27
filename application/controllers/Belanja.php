@@ -70,6 +70,7 @@ class Belanja extends Admin_Controller
 									'tgl' =>  $this->input->post('tgl'),
 									'product_id' => $this->input->post('product[]')[$x],
 									'nama_produk' => $nama_produk['name'],
+									'tipe' => $nama_produk['tipe'],
 									'qty' => $this->input->post('qty[]')[$x],
 									'satuan' => $this->input->post('satuan_value[]')[$x],
 									'harga' => $this->input->post('rate_value[]')[$x],
@@ -268,6 +269,7 @@ class Belanja extends Admin_Controller
 							'tgl' =>  $this->input->post('tgl'),
 							'product_id' => $this->input->post('product[]')[$x],
 							'nama_produk' => $nama_produk['name'],
+							'tipe' => $nama_produk['tipe'],
 							'qty' => $this->input->post('qty[]')[$x],
 							'satuan' => $this->input->post('satuan_value[]')[$x],
 							'harga' => $this->input->post('rate_value[]')[$x],
@@ -631,6 +633,59 @@ class Belanja extends Admin_Controller
 			echo '';
 		} else {
 			echo 1;
+		}
+	}
+
+	public function ambil()
+	{
+
+		$tgl = $this->input->post('tgl');
+		$cektgl = $this->model_belanja->jumlahtgl($tgl);
+		if ($cektgl < 1) {
+			$data = $this->model_orders->getOrderidtgl($tgl);
+
+			$bill_no = 'BILBLJ-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
+			$judulbelanja = array(
+				'tgl' =>  $tgl,
+				'total' =>  0,
+				'bill_no' =>  $bill_no
+			);
+			$createbelanja = $this->model_belanja->createbelanja($judulbelanja);
+
+			if ($createbelanja) {
+				$databelanja = $this->model_belanja->getakhirbelanja();
+				$items = array();
+				$harga = 0;
+				foreach ($data as $val) {
+
+					$qty = 0;
+					$result = $this->model_orders->getOrderbyidtgl($val['product_id'], $tgl);
+					foreach ($result as $v) {
+						$qty += $v['qty'];
+					}
+
+					$product = $this->model_products->getProductData($val['product_id']);
+
+					array_push($items, array(
+						'tgl' =>  $tgl,
+						'product_id' => $val['product_id'],
+						'nama_produk' => $product['name'],
+						'tipe' => $product['tipe'],
+						'qty' => $qty,
+						'satuan' => $product['satuan'],
+						'harga' => $product['price'],
+						'belanja_id' => $databelanja['id']
+					));
+					$harga += $product['price'];
+				}
+				$belanja = $this->model_belanja->create($items);
+				$this->model_belanja->ubahjumlah($databelanja['id'], $harga);
+				echo $databelanja['id'];
+			} else {
+				echo 'zz';
+			}
+		} else {
+			echo 'z';
 		}
 	}
 }

@@ -174,6 +174,7 @@ class Products extends Admin_Controller
                 'availability' => $this->input->post('availability'),
                 'kadaluarsa' => $kadaluarsa,
                 'user_id' => $user_id,
+                'tipe' => $this->input->post('tipe'),
             );
 
             $create = $this->model_products->create($data);
@@ -263,6 +264,7 @@ class Products extends Admin_Controller
                 'description' => $this->input->post('description'),
                 'availability' => $this->input->post('availability'),
                 'kadaluarsa' => $kadaluarsa,
+                'tipe' => $this->input->post('tipe'),
             );
 
 
@@ -432,11 +434,121 @@ class Products extends Admin_Controller
         $this->render_template('products/bmasuk', $this->data);
     }
 
+
+    public function rmasuk()
+    {
+        if (!in_array('createProduct', $this->permission)) {
+            redirect('dashboard', 'refresh');
+        }
+
+        $this->form_validation->set_rules('product_name', 'Product name', 'trim|required');
+        $this->form_validation->set_rules('qty', 'Qty', 'trim|required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $id = $this->input->post('product_name');
+            $qtypost = $this->input->post('qty');
+            $qtydata = $this->model_products->getProductData($id);
+            $product_name = $qtydata['name'];
+            $price = $qtydata['price'];
+            $satuan = $qtydata['satuan'];
+            $sku = $qtydata['sku'];
+            $qty = $qtypost - $qtydata['qty'];
+
+
+            $timezone = new DateTimeZone('Asia/Jakarta');
+            $date = new DateTime();
+            $date->setTimeZone($timezone);
+
+
+            $tgl_bmasuk = $this->input->post('tgl_bmasuk');
+
+            $data1 = array(
+                // 'tgl_bmasuk' => $date->format('Y-m-d'),
+                'tgl_bmasuk' =>  $tgl_bmasuk,
+                'name' => $product_name,
+                'satuan' => $satuan,
+                'sku' => $sku,
+                'price' => $price,
+                'qtymasuk' => $qtypost,
+                'qtysblm' => $qtydata['qty'],
+                'qtytotal' => $qty,
+            );
+            $data2 = array(
+                'qty' => $qty,
+            );
+
+            $create = $this->model_products->createstockrusak($data1);
+            $update = $this->model_products->update($data2, $id);
+            if ($update == true) {
+                $this->session->set_flashdata('success', 'Stock dikurangi');
+                redirect('products/rmasuk', 'refresh');
+            } else {
+                $this->session->set_flashdata('error', 'Terjadi Kesalahan !!');
+                redirect('products/rmasuk', 'refresh');
+            }
+        }
+
+        $user_id = $this->session->userdata('id');
+        $user_data = $this->model_users->getUserData($user_id);
+        $lihat = $user_data['group_id'];
+        if ($lihat == 2) {
+            $this->data['notif'] = $this->model_orders->upbaca(1);
+        }
+        if (isset($_GET['filter'])) {
+            $dt = $this->model_stores->getStoresData($_GET['filter']);
+            if ($dt) {
+                $this->data['pilih'] = $dt['name'];
+            } else {
+                $this->data['pilih'] = 'Tidak ditemukan';
+            }
+        } else {
+            $this->data['pilih'] = 'SEMUA';
+        };
+        $this->data['store'] = $this->model_stores->getStoresoutlet();
+        $this->data['div'] = $this->session->userdata('divisi');
+        $this->data['namastore'] = $this->session->userdata('store');
+        $this->data['products'] = $this->model_products->getActiveProductDataall();
+
+
+        $this->render_template('products/rmasuk', $this->data);
+    }
+
     public function laporanstockmasuk()
     {
         $result = array('data' => array());
 
         $data = $this->model_products->getProductstockData();
+
+        foreach ($data as $key => $value) {
+
+
+            $uang = $value['price'];
+            $harga = number_format("$uang", 0, ",", ".");
+
+            $angka = $value['price'] * $value['qtymasuk'];
+            $hargatotal = number_format("$angka", 0, ",", ".");
+
+
+            $result['data'][$key] = array(
+                $value['tgl_bmasuk'],
+                $value['sku'],
+                $value['name'],
+                $value['qtysblm'] . '/' . $value['satuan'],
+                $value['qtymasuk'] . '/' . $value['satuan'],
+                $value['qtytotal'],
+                'Rp. ' . $harga,
+                //Total Harga
+                'Rp. ' . $hargatotal,
+            );
+        } // /foreach
+
+        echo json_encode($result);
+    }
+    public function laporanstockrusak()
+    {
+        $result = array('data' => array());
+
+        $data = $this->model_products->getProductstockDataRusak();
 
         foreach ($data as $key => $value) {
 

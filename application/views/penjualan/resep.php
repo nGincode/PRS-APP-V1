@@ -70,8 +70,8 @@
 
               <div class="form-group">
                 <div class="col-sm-7">
-                  <label for="store">Store </label>
-                  <select name="store" class="form-control">
+                  <label for="store_resep">Store </label>
+                  <select name="store" class="form-control" id="store_resep" onchange="kosongkan()">
                     <?php foreach ($store as $k => $v) : ?>
                       <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
                     <?php endforeach ?>
@@ -91,34 +91,6 @@
                 </thead>
 
                 <tbody>
-
-                  <tr id="row_1">
-                    <td>
-                      <select class="form-control select_group product" data-row-id="row_1" id="product_1" name="product[]" style="width:100%;" onchange="getProductData(1)" required=''>
-                        <option selected="true" disabled="disabled">Pilih Produk</option>
-                        <?php foreach ($products as $k => $v) : ?>
-                          <option value="<?php echo $v['id'] ?>"><?php echo $v['nama'] ?></option>
-                        <?php endforeach ?>
-                      </select>
-                    </td>
-                    <td>
-                      <input type="number" step="any" name="qty[]" id="qty_1" class="form-control" required onkeyup="getTotal(1)">
-                    </td>
-
-                    <td>
-                      <input type="text" name="satuan[]" id="satuan_1" class="form-control" disabled autocomplete="off">
-                      <input type="hidden" name="satuan_value[]" id="satuan_value_1" class="form-control" autocomplete="off">
-                    </td>
-                    <td>
-                      <input type="number" disabled name="rate[]" id="rate_1" required class="form-control" autocomplete="off">
-                      <input type="hidden" name="rate_value[]" id="rate_value_1" required class="form-control" autocomplete="off">
-                    </td>
-                    <td>
-                      <input type="text" name="amount[]" id="amount_1" class="form-control" disabled autocomplete="off">
-                      <input type="hidden" name="amount_value[]" id="amount_value_1" class="form-control" autocomplete="off">
-                    </td>
-                    <td><button type="button" class="btn btn-default" onclick="removeRow('1')"><i class="fa fa-close"></i></button></td>
-                  </tr>
                 </tbody>
               </table>
               <br /> <br />
@@ -262,8 +234,16 @@
 
       var tambah = $('#add_row');
 
+      var idoutlet = $('#store_resep').val();
+
+      if (idoutlet == 7) {
+        var almt = '/penjualan/getTableProductRowLogistik/';
+      } else {
+        var almt = '/penjualan/getTableProductRow/';
+      }
+
       $.ajax({
-        url: base_url + '/penjualan/getTableProductRow/',
+        url: base_url + almt,
         type: 'post',
         dataType: 'json',
         beforeSend: function() {
@@ -277,7 +257,12 @@
             '<select class="form-control select_group product" data-row-id="' + row_id + '" id="product_' + row_id + '" name="product[]" style="width:100%;" onchange="getProductData(' + row_id + ')" required>' +
             '<option selected="true" disabled="disabled">Pilih Produk</option>';
           $.each(response, function(index, value) {
-            html += '<option value="' + value.id + '">' + value.nama + '</option>';
+            if (idoutlet == 7) {
+              var perid = value.name;
+            } else {
+              var perid = value.nama;
+            }
+            html += '<option value="' + value.id + '">' + perid + '</option>';
           });
 
           html += '</select>' +
@@ -335,8 +320,17 @@
 
 
     } else {
+
+      var idoutlet = $('#store_resep').val();
+
+      if (idoutlet == 7) {
+        var almt = '/penjualan/getProductValueByIdLogistik/';
+      } else {
+        var almt = '/penjualan/getProductValueById/';
+      }
+
       $.ajax({
-        url: base_url + 'penjualan/getProductValueById',
+        url: base_url + almt,
         type: 'post',
         data: {
           product_id: product_id
@@ -345,13 +339,19 @@
         success: function(response) {
           // setting the rate value into the rate input field
 
-          $("#rate_value_" + row_id).val(response.harga);
-          $("#rate_" + row_id).val(response.harga);
-
-          $("#satuan_" + row_id).val(response.satuan);
-          $("#satuan_value_" + row_id).val(response.satuan);
-
-          $("#nama_produk_" + row_id).val(response.nama);
+          if (idoutlet == 7) {
+            $("#rate_value_" + row_id).val(response.price);
+            $("#rate_" + row_id).val(response.price);
+            $("#satuan_" + row_id).val(response.satuan);
+            $("#satuan_value_" + row_id).val(response.satuan);
+            $("#nama_produk_" + row_id).val(response.name);
+          } else {
+            $("#rate_value_" + row_id).val(response.harga);
+            $("#rate_" + row_id).val(response.harga);
+            $("#satuan_" + row_id).val(response.satuan);
+            $("#satuan_value_" + row_id).val(response.satuan);
+            $("#nama_produk_" + row_id).val(response.nama);
+          }
 
           $("#qty_" + row_id).val();
           $("#qty_" + row_id).focus();
@@ -402,7 +402,9 @@
   }
 
 
-
+  function kosongkan() {
+    $("#product_info_table tbody tr").html('');
+  }
 
   function lihat(id) {
     if (id) {

@@ -76,6 +76,15 @@ endif; ?>
                 <input type="number" class="form-control" id="hpp" name="hpp" placeholder="Harga Pokok Penjualan" autocomplete="off" />
               </div>
 
+
+              <div class="form-group">
+                <label for="tipe">Tipe Barang</label>
+                <select class="form-control" name="tipe">
+                  <option value="0">Umum</option>
+                  <option value="1">Bahan Baku</option>
+                </select>
+              </div>
+
               <div class="form-group">
                 <label for="ke">Penampilan</label><br>
                 <?php

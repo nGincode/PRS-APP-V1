@@ -20,6 +20,20 @@ class Model_penjualan extends CI_Model
 		return $query->result_array();
 	}
 
+
+	public function getitemprod($id = null)
+	{
+		if ($id) {
+			$sql = "SELECT * FROM products WHERE id = ? ORDER BY id DESC";
+			$query = $this->db->query($sql, array($id));
+			return $query->row_array();
+		}
+
+		$sql = "SELECT * FROM products Where tipe = 1";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
 	public function updateitemresepdata($id, $data)
 	{
 		if ($id && $data) {

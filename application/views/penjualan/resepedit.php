@@ -72,8 +72,8 @@
 
               <div class="form-group">
                 <div class="col-sm-7">
-                  <label for="store">Store </label>
-                  <select name="store" class="form-control">
+                  <label for="store_resep">Store </label>
+                  <select name="store" class="form-control" onchange="kosongkan()" id="store_resep">
                     <?php foreach ($store as $k => $v) : ?>
                       <option value="<?php echo $v['id'] ?>" <?php if ($v['id'] == $stores) {
                                                                 echo "selected='selected'";
@@ -102,17 +102,35 @@
                     <?php
                     $totaljumlah = 0;
                     foreach ($dt as $key => $val) :
-                      $ambiliditem = $this->model_penjualan->getitemresep($val['iditemresep']);
-                      if ($ambiliditem) {
-                        $satuan = $ambiliditem['satuan'];
-                        $rate = $ambiliditem['harga'];
-                        $jjmlh = $ambiliditem['harga'] * $val['qty'];
-                        $totaljumlah += $ambiliditem['harga'] * $val['qty'];
+
+                      if ($val['iditemresep']) {
+                        $ambiliditem = $this->model_penjualan->getitemresep($val['iditemresep']);
+                        $products = $this->model_penjualan->getitemresep();
+                        if ($ambiliditem) {
+                          $satuan = $ambiliditem['satuan'];
+                          $rate = $ambiliditem['harga'];
+                          $jjmlh = $ambiliditem['harga'] * $val['qty'];
+                          $totaljumlah += $ambiliditem['harga'] * $val['qty'];
+                        } else {
+                          $satuan = '';
+                          $rate = '';
+                          $jjmlh = '';
+                          $totaljumlah += 0;
+                        }
                       } else {
-                        $satuan = '';
-                        $rate = '';
-                        $jjmlh = '';
-                        $totaljumlah += 0;
+                        $ambiliditem = $this->model_penjualan->getitemprod($val['idproduct']);
+                        $products = $this->model_penjualan->getitemprod();
+                        if ($ambiliditem) {
+                          $satuan = $ambiliditem['satuan'];
+                          $rate = $ambiliditem['price'];
+                          $jjmlh = $ambiliditem['price'] * $val['qty'];
+                          $totaljumlah += $ambiliditem['price'] * $val['qty'];
+                        } else {
+                          $satuan = '';
+                          $rate = '';
+                          $jjmlh = '';
+                          $totaljumlah += 0;
+                        }
                       }
                     ?>
                       <tr id="row_<?php echo $x; ?>">
@@ -120,9 +138,19 @@
                           <select class=" form-control select_group product" data-row-id="row_<?php echo $x; ?>" id="product_<?php echo $x; ?>" name="product[]" style="width:100%;" onchange="getProductData(<?php echo $x; ?>)" required=''>
                             <option selected="true" disabled="disabled">Pilih Produk</option>
                             <?php foreach ($products as $k => $v) : ?>
-                              <option value="<?php echo $v['id'] ?>" <?php if ($val['iditemresep'] == $v['id']) {
-                                                                        echo "selected='selected'";
-                                                                      } ?>><?php echo $v['nama'] ?></option>
+                              <option value="<?php echo $v['id'] ?>" <?php if ($val['iditemresep']) {
+                                                                        if ($val['iditemresep'] == $v['id']) {
+                                                                          echo "selected='selected'";
+                                                                        }
+                                                                      } else {
+                                                                        if ($val['idproduct'] == $v['id']) {
+                                                                          echo "selected='selected'";
+                                                                        }
+                                                                      } ?>><?php if ($val['iditemresep']) {
+                                                                              echo $v['nama'];
+                                                                            } else {
+                                                                              echo $v['name'];
+                                                                            } ?></option>
                             <?php endforeach ?>
                           </select>
                         </td>
@@ -262,8 +290,18 @@
 
       var tambah = $('#add_row');
 
+
+      var idoutlet = $('#store_resep').val();
+
+      if (idoutlet == 7) {
+        var almt = '/penjualan/getTableProductRowLogistik/';
+      } else {
+        var almt = '/penjualan/getTableProductRow/';
+      }
+
+
       $.ajax({
-        url: base_url + '/penjualan/getTableProductRow/',
+        url: base_url + almt,
         type: 'post',
         dataType: 'json',
         beforeSend: function() {
@@ -277,7 +315,12 @@
             '<select class="form-control select_group product" data-row-id="' + row_id + '" id="product_' + row_id + '" name="product[]" style="width:100%;" onchange="getProductData(' + row_id + ')" required>' +
             '<option selected="true" disabled="disabled">Pilih Produk</option>';
           $.each(response, function(index, value) {
-            html += '<option value="' + value.id + '">' + value.nama + '</option>';
+            if (idoutlet == 7) {
+              var perid = value.name;
+            } else {
+              var perid = value.nama;
+            }
+            html += '<option value="' + value.id + '">' + perid + '</option>';
           });
 
           html += '</select>' +
@@ -419,6 +462,9 @@
     }
   }
 
+  function kosongkan() {
+    $("#product_info_table tbody tr").html('');
+  }
 
   // remove functions 
   function removeFunc(id) {

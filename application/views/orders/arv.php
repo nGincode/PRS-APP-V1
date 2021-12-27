@@ -84,9 +84,17 @@ else :
 
 
                   <div class="form-group">
-                    <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Tanggal</label>
+                    <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Tanggal Order</label>
                     <div class="col-sm-7">
-                      <input type="date" readonly name="tgl_order" value="<?php echo date('Y-m-d', $order_data['order']['date_time']) ?>" required class="form-control" autocomplete="off">
+                      <input type="date" readonly name="tgl_order" value="<?php echo $order_data['order']['tgl_pesan'] ?>" required class="form-control" autocomplete="off">
+                    </div>
+                  </div>
+
+
+                  <div class="form-group">
+                    <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Tanggal Laporan</label>
+                    <div class="col-sm-7">
+                      <input type="date" readonly name="tgl_lap" value="<?php echo date('Y-m-d', $order_data['order']['date_time']) ?>" required class="form-control" autocomplete="off">
                     </div>
                   </div>
 

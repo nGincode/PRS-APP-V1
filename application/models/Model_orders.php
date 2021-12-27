@@ -152,8 +152,10 @@ class Model_orders extends CI_Model
 			$nama = $this->model_products->getProductData($this->input->post('product')[$x]);
 			if ($nama) {
 				$nmp =  $nama['name'];
+				$tipe =  $nama['tipe'];
 			} else {
 				$nmp = 'Tidak ditemukan';
+				$tipe =  0;
 			}
 
 			$items = array(
@@ -166,9 +168,11 @@ class Model_orders extends CI_Model
 				'qty' => $this->input->post('qty')[$x],
 				'satuan' => $this->input->post('satuan_value[]')[$x],
 				'tgl_order' => $date->format('Y-m-d'),
+				'tgl_laporan' =>  $date->format('Y-m-d'),
 				'rate' => $this->input->post('rate_value')[$x],
 				'amount' => $this->input->post('amount_value')[$x],
-				'nama_produk' => $nmp
+				'nama_produk' => $nmp,
+				'tipe' => $tipe
 			);
 
 			$this->db->insert('orders_item', $items);
@@ -251,8 +255,10 @@ class Model_orders extends CI_Model
 				$nama = $this->model_products->getProductData($this->input->post('product')[$x]);
 				if ($nama) {
 					$nmp =  $nama['name'];
+					$tipe =  $nama['tipe'];
 				} else {
 					$nmp = 'Tidak ditemukan';
+					$tipe =  0;
 				}
 
 
@@ -263,6 +269,7 @@ class Model_orders extends CI_Model
 					'store' => $this->input->post('store')[$x],
 					'product_id' => $this->input->post('product')[$x],
 					'tgl_order' => $this->input->post('tgl_order'),
+					'tgl_laporan' =>  $this->input->post('tgl_lap'),
 					'qty' => $qty,
 					'qtydeliv' => $this->input->post('qtydeliv')[$x],
 					'satuan' => $satuan,
@@ -271,7 +278,8 @@ class Model_orders extends CI_Model
 					'baca' => $this->input->post('baca')[$x],
 					'status_up' => $this->input->post('status_up')[$x],
 					'qtyarv' => $this->input->post('arv')[$x],
-					'nama_produk' => $nmp
+					'nama_produk' => $nmp,
+					'tipe' => $tipe
 				);
 				$this->db->insert('orders_item', $items);
 			}
@@ -310,8 +318,10 @@ class Model_orders extends CI_Model
 				$nama = $this->model_products->getProductData($this->input->post('product')[$x]);
 				if ($nama) {
 					$nmp =  $nama['name'];
+					$tipe =  $nama['tipe'];
 				} else {
 					$nmp = 'Tidak ditemukan';
+					$tipe =  0;
 				}
 
 
@@ -322,13 +332,15 @@ class Model_orders extends CI_Model
 					'store' => $this->input->post('store')[$x],
 					'product_id' => $this->input->post('product')[$x],
 					'tgl_order' => $this->input->post('tgl_order'),
+					'tgl_laporan' =>  $this->input->post('tgl_lap'),
 					'qty' => $qty,
 					'qtydeliv' => $this->input->post('qtydeliv')[$x],
 					'qtyarv' => $this->input->post('qtyarv')[$x],
 					'satuan' => $satuan,
 					'rate' => $this->input->post('rate_value')[$x],
 					'amount' => $this->input->post('amount_value')[$x],
-					'nama_produk' => $nmp
+					'nama_produk' => $nmp,
+					'tipe' => $tipe
 				);
 				$this->db->insert('orders_item', $items);
 			}
@@ -464,6 +476,21 @@ class Model_orders extends CI_Model
 	public function getOrdersstore($tgl_awal, $tgl_akhir)
 	{
 		$sql = "SELECT DISTINCT store_id FROM orders_item WHERE status_up=1 AND tgl_order BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl_order ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+	public function getOrderidtgl($tgl)
+	{
+		$sql = "SELECT DISTINCT product_id FROM orders_item WHERE tgl_laporan='$tgl'";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	public function getOrderbyidtgl($id, $tgl)
+	{
+		$sql = "SELECT * FROM orders_item WHERE product_id=$id and tgl_laporan='$tgl'";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}

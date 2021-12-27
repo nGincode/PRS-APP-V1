@@ -13,12 +13,12 @@ class Model_products extends CI_Model
 	public function getProductData($id = null)
 	{
 		if ($id) {
-			$sql = "SELECT * FROM products where id = ? ORDER BY id DESC";
+			$sql = "SELECT * FROM products where id = ? ORDER BY name ASC";
 			$query = $this->db->query($sql, array($id));
 			return $query->row_array();
 		}
 
-		$sql = "SELECT * FROM products ORDER BY id DESC, sku DESC";
+		$sql = "SELECT * FROM products ORDER BY name ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -129,6 +129,16 @@ class Model_products extends CI_Model
 			return ($insert == true) ? true : false;
 		}
 	}
+
+
+	//laporan masuk stock
+	public function createstockrusak($data)
+	{
+		if ($data) {
+			$insert = $this->db->insert('products_l_stock_rusak', $data);
+			return ($insert == true) ? true : false;
+		}
+	}
 	public function getProductstockData($id = null)
 	{
 		if ($id) {
@@ -138,6 +148,18 @@ class Model_products extends CI_Model
 		}
 
 		$sql = "SELECT * FROM products_l_stock_masuk ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+	public function getProductstockDataRusak($id = null)
+	{
+		if ($id) {
+			$sql = "SELECT * FROM products_l_stock_rusak where id = ?";
+			$query = $this->db->query($sql, array($id));
+			return $query->row_array();
+		}
+
+		$sql = "SELECT * FROM products_l_stock_rusak ORDER BY id DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
