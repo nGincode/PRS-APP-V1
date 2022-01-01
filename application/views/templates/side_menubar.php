@@ -633,7 +633,7 @@ $user_data = $this->model_users->getUserData($id_user);
 
 
               <?php if (in_array('createdapro', $user_permission)) : ?>
-                <li id="adddaproNav"><a href="<?php echo base_url('dapro/create') ?>"><i class="fa fa-sign-in"></i> Resep to produk</a>
+                <li id="hasil"><a href="<?php echo base_url('dapro/hasil') ?>"><i class="fa fa-sign-in"></i> Resep to produk</a>
                 </li>
               <?php endif; ?>
 

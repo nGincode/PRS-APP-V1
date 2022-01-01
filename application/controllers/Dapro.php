@@ -39,8 +39,7 @@ class Dapro extends Admin_Controller
     {
 
         $result = array('data' => array());
-        // $var = $this->input->post('tgl');
-        $var = '20/12/2021 - 30/12/2021';
+        $var = $this->input->post('tgl');
 
         if ($var) {
 
@@ -163,5 +162,12 @@ class Dapro extends Admin_Controller
                 echo 1;
             }
         }
+    }
+
+
+    public function hasil()
+    {
+        $this->data['namastore'] = $_SESSION['store'];
+        $this->render_template('dapro/hasil', $this->data);
     }
 }

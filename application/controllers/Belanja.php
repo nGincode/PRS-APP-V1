@@ -163,7 +163,7 @@ class Belanja extends Admin_Controller
 					$buttons .= '<li><a href="#" onclick="bekukan(' . $value['id'] . ')"><i class="fa fa-check"></i> Bekukan</a></li>';
 				}
 			}
-
+			$buttons .= '<li><a href="#" onclick="lihatBelnj(' . $value['id'] . ')"  data-toggle="modal" data-target="#lihatBelnj"><i class="fa fa-file-text-o"></i> Cek Belanja</a></li>';
 			$buttons .= '<li><a href="#" onclick="receipt(' . $value['id'] . ')" ><i class="fa fa-print"></i> Cetak Receipt</a></li>';
 			if (in_array('deletebelanja', $this->permission)) {
 				$buttons .= '<li><a  onclick="removeFunc(' . $value['id'] . ')" style="cursor:pointer;"   data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash-o"></i> Hapus</a></li>';
@@ -687,5 +687,83 @@ class Belanja extends Admin_Controller
 		} else {
 			echo 'z';
 		}
+	}
+
+
+
+
+	public function lihatblj()
+	{
+		$id = $this->input->post('id');
+		$order_data = $this->model_belanja->getbelanjaData($id);
+		$orders_items = $this->model_belanja->getbelanjaid($id);
+
+		echo ' 
+			<table class="table table-striped" style="font-size: 11px; width:100%;">
+		        <thead>
+		        <tr>
+		          <th style="font-size: 12px; width:5%;">No</th>
+		          <th style="font-size: 12px; width:20%;">Tgl</th>
+		          <th style="font-size: 12px; width:30%;">Produk</th>
+		          <th style="font-size: 12px; width:10%;">Qty</th>
+		          <th style="font-size: 12px; width:10%;">Rp/1</th>
+		          <th style="font-size: 12px; width:10%;">Σ</th>
+		        </tr>
+		        </thead>
+		        <tbody>';
+
+		$no = 1;
+		$jml = 0;
+		foreach ($orders_items as $k => $v) {
+
+			$product_data = $this->model_products->getProductData($v['product_id']);
+
+
+			if ($v['harga']) {
+				$hrg = $v['harga'];
+			} else {
+				$hrg = 0;
+			}
+
+			if ($v['qty']) {
+				$qty = $v['qty'];
+			} else {
+				$qty = 0;
+			}
+
+			if ($v['qty']) {
+				$qtydeliv = $v['qty'];
+				$jumlah = $qtydeliv * $hrg;
+			} else {
+				$qtydeliv = 0;
+				$jumlah = $qty * $hrg;
+			}
+
+			if (isset($product_data['name'])) {
+				$nama = $product_data['name'];
+			} else {
+				$nama = $v['nama_produk'];
+			}
+			$jml += $jumlah;
+			echo '	<tr>
+				            <td>' . $no . '</td>
+				            <td>' . $v['tgl'] . '</td>
+				            <td>' . $nama . '</td>
+				            <td>' . $qty . '</td>
+				            <td>Rp.' . number_format($hrg, 0, ',', '.') . '/' . $v['satuan'] . '</td>
+				            <td>Rp.' . number_format($jumlah, 0, ',', '.') . '</td>
+			          	</tr>';
+
+			$no++;
+		}
+		echo  '<tr>
+		            <td>Jumlah</td>
+		            <td></td>
+		            <td></td>
+		            <td></td>
+		            <td></td>
+		            <td>Rp.' . number_format($jml, 0, ',', '.') . '</td>
+		            <tr>
+		</tbody></table> ';
 	}
 }

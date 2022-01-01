@@ -156,6 +156,24 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 <?php endif; ?>
+<div class="modal fade" tabindex="-1" role="dialog" id="lihatBelnj">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Produk Belanja</h4>
+      </div>
+
+      <div class="box-body" style="overflow: auto;">
+        <div id="lihatForm">
+          <div id="datablj">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 
 
@@ -288,6 +306,23 @@
         });
       }
     })
+  }
+  // lihat functions 
+  function lihatBelnj(id) {
+    if (id) {
+      $.ajax({
+        url: "<?php echo base_url('belanja/lihatblj'); ?>",
+        type: "POST",
+        data: {
+          id: id
+        },
+        success: function(data) {
+          $('#datablj').html(data);
+        }
+      });
+
+      return false;
+    }
   }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jQuery.print@1.5.1/jQuery.print.min.js"></script>
