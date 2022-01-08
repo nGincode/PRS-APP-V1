@@ -47,44 +47,40 @@ class Belanja extends Admin_Controller
 
 			if ($au == $ay) {
 
-				$cektgl = $this->model_belanja->jumlahtgl($this->input->post('tgl'));
-				if ($cektgl < 1) {
-					$bill_no = 'BILBLJ-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
-					$judulbelanja = array(
-						'tgl' =>  $this->input->post('tgl'),
-						'total' =>  $this->input->post('net_amount_value'),
-						'bill_no' =>  $bill_no
-					);
-					$createbelanja = $this->model_belanja->createbelanja($judulbelanja);
-					if ($createbelanja) {
+				// $cektgl = $this->model_belanja->jumlahtgl($this->input->post('tgl'));
+				// if ($cektgl < 1) {
+				$bill_no = 'BILBLJ-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
+				$judulbelanja = array(
+					'tgl' =>  $this->input->post('tgl'),
+					'total' =>  $this->input->post('net_amount_value'),
+					'bill_no' =>  $bill_no
+				);
+				$createbelanja = $this->model_belanja->createbelanja($judulbelanja);
+				if ($createbelanja) {
 
-						$databelanja = $this->model_belanja->getakhirbelanja();
+					$databelanja = $this->model_belanja->getakhirbelanja();
 
-						if ($databelanja['tgl'] == $this->input->post('tgl')) {
-							$count_product = count($this->input->post('product'));
+					if ($databelanja['tgl'] == $this->input->post('tgl')) {
+						$count_product = count($this->input->post('product'));
 
-							$items = array();
-							for ($x = 0; $x < $count_product; $x++) {
-								$nama_produk = $this->model_products->getProductData($this->input->post('product[]')[$x]);
-								array_push($items, array(
-									'tgl' =>  $this->input->post('tgl'),
-									'product_id' => $this->input->post('product[]')[$x],
-									'nama_produk' => $nama_produk['name'],
-									'tipe' => $nama_produk['tipe'],
-									'qty' => $this->input->post('qty[]')[$x],
-									'satuan' => $this->input->post('satuan_value[]')[$x],
-									'harga' => $this->input->post('rate_value[]')[$x],
-									'belanja_id' => $databelanja['id']
-								));
-							}
-							$belanja = $this->model_belanja->create($items);
-							if ($belanja) {
-								$this->session->set_flashdata('success', 'Berhasil Dipesan');
-								redirect('belanja/', 'refresh');
-							} else {
-								$this->session->set_flashdata('error', 'Terjadi Kesalahan!!');
-								redirect('belanja/create/', 'refresh');
-							}
+						$items = array();
+						for ($x = 0; $x < $count_product; $x++) {
+							$nama_produk = $this->model_products->getProductData($this->input->post('product[]')[$x]);
+							array_push($items, array(
+								'tgl' =>  $this->input->post('tgl'),
+								'product_id' => $this->input->post('product[]')[$x],
+								'nama_produk' => $nama_produk['name'],
+								'tipe' => $nama_produk['tipe'],
+								'qty' => $this->input->post('qty[]')[$x],
+								'satuan' => $this->input->post('satuan_value[]')[$x],
+								'harga' => $this->input->post('rate_value[]')[$x],
+								'belanja_id' => $databelanja['id']
+							));
+						}
+						$belanja = $this->model_belanja->create($items);
+						if ($belanja) {
+							$this->session->set_flashdata('success', 'Berhasil Dipesan');
+							redirect('belanja/', 'refresh');
 						} else {
 							$this->session->set_flashdata('error', 'Terjadi Kesalahan!!');
 							redirect('belanja/create/', 'refresh');
@@ -94,9 +90,13 @@ class Belanja extends Admin_Controller
 						redirect('belanja/create/', 'refresh');
 					}
 				} else {
-					$this->session->set_flashdata('error', 'Tanggal Telah Ada!!');
+					$this->session->set_flashdata('error', 'Terjadi Kesalahan!!');
 					redirect('belanja/create/', 'refresh');
 				}
+				// } else {
+				// 	$this->session->set_flashdata('error', 'Tanggal Telah Ada!!');
+				// 	redirect('belanja/create/', 'refresh');
+				// }
 			} else {
 				$this->session->set_flashdata('error', 'Maaf.. ! Produk Pesanan Anda Ada Yang Ganda');
 				redirect('belanja/create', 'refresh');

@@ -133,7 +133,7 @@ if ($store_id == 1) :
                       <th style="width:10%;min-width:100px;text-align: center;">Hrg/1</th>
                       <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
                       <?php if (!$order_data['order']['status_up'] == 1) : ?>
-                        <th style="width:10%"><button type="button" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button></th>
+                        <th style="width:10%;text-align: center;"><i class="fa fa-close"></i></th>
                       <?php endif; ?>
                     </tr>
                   </thead>
@@ -212,6 +212,11 @@ if ($store_id == 1) :
                       <?php endforeach; ?>
                     <?php endif; ?>
                   </tbody>
+                  <tfoot>
+                    <th colspan="6">
+                      <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                    </th>
+                  </tfoot>
                 </table>
 
                 <br /> <br />
@@ -641,7 +646,8 @@ if ($div > 0) :
                           <th style="width:10%;min-width:100px;text-align: center;">Hrg/1</th>
                           <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
                           <?php if (!$order_data['order']['status_up'] == 1) : ?>
-                            <th style="width:3%;"><button type="button" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button></th>
+                            <th style="width:10%;text-align: center;"><i class="fa fa-close"></i></th>
+
                           <?php endif; ?>
                         </tr>
                       </thead>
@@ -651,7 +657,10 @@ if ($div > 0) :
 
                         <?php if (isset($order_data['order_item'])) : ?>
                           <?php $x = 1; ?>
-                          <?php foreach ($order_data['order_item'] as $key => $val) : ?>
+                          <?php
+
+                          asort($order_data['order_item']);
+                          foreach ($order_data['order_item'] as $key => $val) : ?>
 
                             <input type="hidden" name="satuan_value[]" id="satuan_<?php echo $x; ?>" value="<?php echo $val['satuan'] ?>" class="form-control" autocomplete="off">
                             <input type="hidden" name="store[]" value="<?php echo $val['store'] ?>" class="form-control" autocomplete="off">
@@ -690,6 +699,11 @@ if ($div > 0) :
                           <?php endforeach; ?>
                         <?php endif; ?>
                       </tbody>
+                      <tfoot>
+                        <th colspan="6">
+                          <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                        </th>
+                      </tfoot>
                     </table>
 
                     <br /> <br />
@@ -1113,7 +1127,10 @@ if ($store_id > 1 && $div == 0) :
 
                     <?php if (isset($order_data['order_item'])) : ?>
                       <?php $x = 1; ?>
-                      <?php foreach ($order_data['order_item'] as $key => $val) : ?>
+                      <?php
+
+                      asort($order_data['order_item']);
+                      foreach ($order_data['order_item'] as $key => $val) : ?>
                         <tr id="row_<?php echo $x; ?>" style="<?php if ($val['qtyarv'] == NULL) {
                                                                 echo '';
                                                               } else {

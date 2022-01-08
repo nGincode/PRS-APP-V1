@@ -209,7 +209,21 @@ class penjualan extends Admin_Controller
             redirect('dashboard', 'refresh');
         }
 
-        $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required|is_unique[penjualan_resep.nama_menu]');
+        if ($this->input->post('store') == 7) {
+            $idproduct = $this->input->post('menuproduk');
+            $namp = $this->model_products->getProductData($idproduct);
+            if ($namp) {
+                $namamnu = $namp['name'];
+            } else {
+                $namamnu = '';
+            }
+            $this->form_validation->set_rules('menuproduk', 'Nama Menu', 'trim|required|is_unique[penjualan_resep.nama_menu]');
+        } else {
+            $idproduct = 0;
+            $namamnu = $this->input->post('menu');
+            $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required|is_unique[penjualan_resep.nama_menu]');
+        }
+
 
         if ($this->form_validation->run() == TRUE) {
 
@@ -220,9 +234,11 @@ class penjualan extends Admin_Controller
             $ay = array_values($hitung);
             if ($au == $ay) {
 
+
                 $data = array(
-                    'nama_menu' => $this->input->post('menu'),
-                    'store_id' => $this->input->post('store')
+                    'nama_menu' => $namamnu,
+                    'store_id' => $this->input->post('store'),
+                    'idproduct' => $idproduct
                 );
                 $this->model_penjualan->createresep($data);
                 $idresep = $this->model_penjualan->idresep();
@@ -262,6 +278,7 @@ class penjualan extends Admin_Controller
 
             $this->data['products'] = $this->model_penjualan->getitemresep();
             $this->data['store'] = $this->model_stores->getStoresData();
+            $this->data['prodctjdi'] = $this->model_penjualan->getProductjadi();
 
             $this->render_template('penjualan/resep', $this->data);
         }
@@ -271,7 +288,21 @@ class penjualan extends Admin_Controller
     {
 
         $id = $this->input->post('id');
-        $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required');
+
+        if ($this->input->post('store') == 7) {
+            $idproduct = $this->input->post('menuproduk');
+            $namp = $this->model_products->getProductData($idproduct);
+            if ($namp) {
+                $namamnu = $namp['name'];
+            } else {
+                $namamnu = '';
+            }
+            $this->form_validation->set_rules('menuproduk', 'Nama Menu', 'trim|required');
+        } else {
+            $idproduct = 0;
+            $namamnu = $this->input->post('menu');
+            $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required');
+        }
 
         if ($this->form_validation->run() == TRUE) {
 
@@ -283,8 +314,9 @@ class penjualan extends Admin_Controller
             if ($au == $ay) {
 
                 $data = array(
-                    'nama_menu' => $this->input->post('menu'),
-                    'store_id' => $this->input->post('store')
+                    'nama_menu' => $namamnu,
+                    'store_id' => $this->input->post('store'),
+                    'idproduct' => $idproduct
                 );
                 $this->db->where('id', $id);
                 $this->db->update('penjualan_resep', $data);
@@ -337,6 +369,7 @@ class penjualan extends Admin_Controller
         if ($getresep) {
             $this->data['namaresep'] = $getresep['nama_menu'];
             $this->data['stores'] = $getresep['store_id'];
+            $this->data['idproduct'] = $getresep['idproduct'];
             $this->data['dt'] = $this->model_penjualan->getresepitemid($getresep['id']);
         } else {
             $this->data['namaresep'] = '';
@@ -346,6 +379,7 @@ class penjualan extends Admin_Controller
 
 
         $this->data['store'] = $this->model_stores->getStoresoutlet();
+        $this->data['prodctjdi'] = $this->model_penjualan->getProductjadi();
         $this->render_template('penjualan/resepedit', $this->data);
     }
 
@@ -437,11 +471,13 @@ class penjualan extends Admin_Controller
                 }
             }
 
+            $store = $this->model_stores->getStoresData($value['store_id']);
 
             $ttl = "Rp " . number_format($jmlh, 0, ',', '.');
             $result['data'][$key] = array(
                 $no++,
                 $buttons,
+                $store['name'],
                 $value['nama_menu'],
                 $ttl
             );
@@ -479,9 +515,22 @@ class penjualan extends Admin_Controller
                     $harga = $dt['harga'];
                     $satuan = $dt['satuan'];
                 } else {
-                    $nama = 'Item dihapus';
-                    $harga = '';
-                    $satuan = '';
+                    if ($value['idproduct']) {
+                        $pro = $this->model_products->getProductData($value['idproduct']);
+                        if ($pro) {
+                            $nama = $pro['name'];
+                            $harga = $pro['price'];
+                            $satuan = $pro['satuan'];
+                        } else {
+                            $nama = 'Item dihapus';
+                            $harga = '';
+                            $satuan = '';
+                        }
+                    } else {
+                        $nama = 'Item dihapus';
+                        $harga = '';
+                        $satuan = '';
+                    }
                 }
                 echo '
             <tr>

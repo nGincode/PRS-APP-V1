@@ -126,6 +126,151 @@ class Dapro extends Admin_Controller
     }
 
 
+    public function fatchorderstock()
+    {
+
+        $result = array('data' => array());
+
+        $productid = $this->model_dapro->getproduct_id();
+
+        if ($productid) {
+            foreach ($productid as $key => $value) {
+
+                $data = $this->model_dapro->getdaproid($value['product_id']);
+
+                if ($productid) {
+                    $qty = 0;
+                    $satuan = $data[0]['satuan'];
+                    $harga = $data[0]['harga'];
+                    $tipe = $data[0]['tipe'];
+                    foreach ($data as $val) {
+                        $qty += $val['qty'];
+                    }
+
+                    if ($tipe) {
+                        $t = 'Bahan Baku';
+                    } else {
+                        $t = 'Reguler';
+                    }
+
+                    $total = $harga * $qty;
+
+                    $result['data'][$key] = array(
+                        $value['nama_produk'],
+                        $t,
+                        $qty,
+                        $harga . '/' . $satuan,
+                        $total
+                    );
+                } else {
+                    $result['data'] = array();
+                }
+            }
+        } else {
+            $result['data'] = array();
+        }
+        echo json_encode($result);
+    }
+
+    public function inputbrngjdi()
+    {
+        $jml = $this->input->post('jml');
+        $id = $this->input->post('id');
+        $max = $this->input->post('max');
+        $harga = $this->input->post('harganya');
+        $nama = $this->input->post('nama');
+
+        if ($jml <= $max && $id && $jml && $harga && $nama) {
+
+            $data = array(
+                'nama' => $nama,
+                'idproduct' => $id,
+                'qty' => $jml,
+                'harga' => $harga
+            );
+
+            $this->model_dapro->insertbahanjadi($data);
+
+            echo 1;
+        }
+    }
+
+    public function fatchbrngjdi()
+    {
+
+        $result = array('data' => array());
+
+        $data = $this->model_dapro->getdapro_bahanjadi();
+        foreach ($data as $key => $value) {
+
+            $total = $value['qty'] * $value['harga'];
+
+            $result['data'][$key] = array(
+                $value['nama'],
+                $value['qty'],
+                $value['harga'],
+                $total
+            );
+        }
+        echo json_encode($result);
+    }
+    public function fatchresep()
+    {
+
+        $result = array('data' => array());
+
+        $productid = $this->model_dapro->getresepstore();
+
+        if ($productid) {
+            foreach ($productid as $key => $value) {
+                $data = $this->model_dapro->getitemresep($value['id']);
+
+                if ($data) {
+                    $hasil = array();
+                    $harga = 0;
+                    foreach ($data as $key1 => $val) {
+                        //qty stock
+                        $id = $this->model_dapro->getdaproid($val['idproduct']);
+                        if ($id) {
+                            $qty = 0;
+                            foreach ($id as $key2 => $v) {
+                                $qty += $v['qty'];
+                                $harga += $v['harga'] * $v['qty'];
+                            }
+                            //qty resep
+                            $qtyrsp = $val['qty'];
+                            $qty;
+                            $hasil[] = floor($qty / $qtyrsp);
+                        } else {
+                            $hasil[] = 0;
+                        }
+                    }
+                    $hitung =  min($hasil);
+                }
+
+                $total = $hitung * $harga;
+                $input = '
+                <input type="hidden" value="' . $value['id'] . '" name="id" id="indent">
+                <input type="hidden" value="' . $hitung . '" name="max" id="keleb">
+                <input type="hidden" value="' . $value['nama_menu'] . '" name="nmmnu" id="nmmnu">
+                <input type="hidden" value="' . $harga . '" name="harganya" id="harganya">
+                <input class="form-control" name="jml" type="number" max="' . $hitung . '" id="jml"><button onclick="kirimbrngjdi()" class="btn btn-success">Kirim</button>
+                ';
+                $result['data'][$key] = array(
+                    $value['nama_menu'],
+                    $hitung,
+                    $input,
+                    $harga,
+                    $total
+                );
+            }
+        } else {
+            $result['data'] = array();
+        }
+        echo json_encode($result);
+    }
+
+
     public function status_up()
     {
 

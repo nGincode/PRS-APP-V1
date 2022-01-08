@@ -60,22 +60,34 @@
 
               <?php echo validation_errors(); ?>
 
-              <div class="form-group">
-                <div class="col-sm-7">
-                  <label for="nama">Nama Menu </label>
-                  <input type="text" class="form-control" id="nama" required name="menu" placeholder="Nama Menu Harus Sama Dengan Moka" autocomplete="off" />
-
-                </div>
-              </div>
 
               <div class="form-group">
                 <div class="col-sm-7">
                   <label for="store_resep">Store </label>
-                  <select name="store" class="form-control" id="store_resep" onchange="kosongkan()">
+                  <select name="store" class="form-control" id="store_resep" onchange="kosongkan(this.value)">
                     <?php foreach ($store as $k => $v) : ?>
                       <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
                     <?php endforeach ?>
                   </select>
+                </div>
+              </div>
+
+              <div class="form-group" id="selectmn" style="display: none;">
+                <div class="col-sm-7">
+                  <label for="nama1">Nama Produk Jadi</label>
+                  <select class="form-control select_group" id="nama1" name="menuproduk">
+                    <option> Pilih </option>
+                    <?php foreach ($prodctjdi as $val) { ?>
+                      <option value="<?= $val['id'] ?>"><?= $val['name'] ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group" id="mnslec" style="display: none;">
+                <div class="col-sm-7">
+                  <label for="nama">Nama Menu </label>
+                  <input type="text" class="form-control" id="nama" name="menu" placeholder="Nama Menu Harus Sama Dengan Moka" autocomplete="off" />
                 </div>
               </div>
 
@@ -142,6 +154,7 @@
             <tr>
               <th style="width: 10px;">No</th>
               <th style="width: 10px;">Action</th>
+              <th>Store</th>
               <th>Nama</th>
               <th>Total HPP</th>
             </tr>
@@ -381,17 +394,17 @@
     $("#gross_amount").val(totalSubAmount);
     $("#gross_amount_value").val(totalSubAmount);
 
-    // vat
-    var vat = (Number($("#gross_amount").val()) / 100) * vat_charge;
-    vat = vat.toFixed(0);
-    $("#vat_charge").val(vat);
-    $("#vat_charge_value").val(vat);
+    // // vat
+    // var vat = (Number($("#gross_amount").val()) / 100) * vat_charge;
+    // vat = vat.toFixed(0);
+    // $("#vat_charge").val(vat);
+    // $("#vat_charge_value").val(vat);
 
-    // service
-    var service = (Number($("#gross_amount").val()) / 100) * service_charge;
-    service = service.toFixed(0);
-    $("#service_charge").val(service);
-    $("#service_charge_value").val(service);
+    // // service
+    // var service = (Number($("#gross_amount").val()) / 100) * service_charge;
+    // service = service.toFixed(0);
+    // $("#service_charge").val(service);
+    // $("#service_charge_value").val(service);
 
   } // /sub total amount
 
@@ -402,8 +415,18 @@
   }
 
 
-  function kosongkan() {
-    $("#product_info_table tbody tr").html('');
+  function kosongkan(id) {
+    $("#product_info_table tbody").html('');
+
+    if (id == 7) {
+      $('#selectmn').show();
+      $('#mnslec').hide();
+    } else {
+      $('#mnslec').show();
+      $('#selectmn').hide();
+    }
+
+
   }
 
   function lihat(id) {

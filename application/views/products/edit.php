@@ -90,6 +90,8 @@ endif; ?>
                                                   echo "Umum";
                                                 } else if ($product_data['tipe'] == '1') {
                                                   echo "Bahan Baku";
+                                                } else if ($product_data['tipe'] == '2') {
+                                                  echo "Barang Jadi";
                                                 } ?>)</label>
                 <select class="form-control" name="tipe">
                   <option value="0" <?php if ($product_data['tipe'] == '0') {
@@ -98,6 +100,9 @@ endif; ?>
                   <option value="1" <?php if ($product_data['tipe'] == '1') {
                                       echo "selected=''";
                                     } ?>>Bahan Baku</option>
+                  <option value="2" <?php if ($product_data['tipe'] == '2') {
+                                      echo "selected=''";
+                                    } ?>>Barang Jadi</option>
                 </select>
 
               </div>

@@ -60,20 +60,10 @@
 
               <?php echo validation_errors(); ?>
 
-              <div class="col-md-4 col-xs-15 ">
-                <div class="form-group">
-                  <label for="nama">Nama Menu </label>
-                  <input type="text" class="form-control" value="<?php echo $namaresep ?>" id="nama" required name="menu" placeholder="Nama Menu Harus Sama Dengan Moka" autocomplete="off" />
-                  <input type="hidden" class="form-control" value="<?php echo $this->input->get('id') ?>" id="id" name="id" autocomplete="off" />
-                </div>
-              </div>
-
-
-
               <div class="form-group">
                 <div class="col-sm-7">
                   <label for="store_resep">Store </label>
-                  <select name="store" class="form-control" onchange="kosongkan()" id="store_resep">
+                  <select name="store" class="form-control" onchange="kosongkan(this.value)" id="store_resep">
                     <?php foreach ($store as $k => $v) : ?>
                       <option value="<?php echo $v['id'] ?>" <?php if ($v['id'] == $stores) {
                                                                 echo "selected='selected'";
@@ -82,6 +72,59 @@
                   </select>
                 </div>
               </div>
+
+              <?php if ($stores == 7) { ?>
+
+                <div class="form-group" id="selectmn" style="display: block;">
+                  <div class="col-sm-7">
+                    <label for="nama1">Nama Produk Jadi</label>
+                    <select class="form-control select_group" id="nama1" name="menuproduk">
+                      <option> Pilih </option>
+                      <?php foreach ($prodctjdi as $val) { ?>
+                        <option value="<?= $val['id'] ?>" <?php if ($val['id'] == $idproduct) {
+                                                            echo 'selected';
+                                                          } ?>><?= $val['name'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group" id="mnslec" style="display: none;">
+                  <div class="col-sm-7">
+                    <label for="nama">Nama Menu </label>
+                    <input type="text" class="form-control" value="<?php echo $namaresep ?>" id="nama" name="menu" placeholder="Nama Menu Harus Sama Dengan Moka" autocomplete="off" />
+
+                  </div>
+                </div><input type="hidden" class="form-control" value="<?php echo $this->input->get('id') ?>" id="id" name="id" autocomplete="off" />
+              <?php } else { ?>
+
+                <div class="form-group" id="selectmn" style="display: none;">
+                  <div class="col-sm-7">
+                    <label for="nama1">Nama Produk Jadi</label>
+                    <select class="form-control select_group" id="nama1" name="menuproduk">
+                      <option> Pilih </option>
+                      <?php foreach ($prodctjdi as $val) { ?>
+                        <option value="<?= $val['id'] ?>" <?php if ($val['id'] == $idproduct) {
+                                                            echo 'selected';
+                                                          } ?>><?= $val['name'] ?></option>
+                      <?php } ?>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" id="mnslec" style="display: block;">
+                  <div class="col-sm-7">
+                    <label for="nama">Nama Menu </label>
+                    <input type="text" class="form-control" value="<?php echo $namaresep ?>" id="nama" name="menu" placeholder="Nama Menu Harus Sama Dengan Moka" autocomplete="off" />
+                  </div>
+                </div>
+                <input type="hidden" class="form-control" value="<?php echo $this->input->get('id') ?>" id="id" name="id" autocomplete="off" />
+
+              <?php } ?>
+
+
+
 
               <table class="table table-bordered" id="product_info_table" style="overflow-x: scroll;display:block;">
                 <thead>
@@ -171,7 +214,7 @@
                           <input type="text" name="amount[]" id="amount_<?php echo $x; ?>" value="<?php echo $jjmlh ?>" class="form-control" disabled autocomplete="off">
                           <input type="hidden" name="amount_value[]" id="amount_value_<?php echo $x; ?>" value="<?php echo $jjmlh ?>" class=" form-control" autocomplete="off">
                         </td>
-                        <td><button type="button" class="btn btn-default" onclick="removeRow('<?php echo $x; ?>'')"><i class="fa fa-close"></i></button></td>
+                        <td><button type="button" class="btn btn-default" onclick="removeRow('<?php echo $x; ?>')"><i class="fa fa-close"></i></button></td>
                       </tr>
                       <?php $x++; ?>
                     <?php endforeach; ?>
@@ -364,8 +407,18 @@
 
 
     } else {
+
+
+      var idoutlet = $('#store_resep').val();
+
+      if (idoutlet == 7) {
+        var almt = '/penjualan/getProductValueByIdLogistik/';
+      } else {
+        var almt = '/penjualan/getProductValueById/';
+      }
+
       $.ajax({
-        url: base_url + 'penjualan/getProductValueById',
+        url: base_url + almt,
         type: 'post',
         data: {
           product_id: product_id
@@ -374,13 +427,19 @@
         success: function(response) {
           // setting the rate value into the rate input field
 
-          $("#rate_value_" + row_id).val(response.harga);
-          $("#rate_" + row_id).val(response.harga);
-
-          $("#satuan_" + row_id).val(response.satuan);
-          $("#satuan_value_" + row_id).val(response.satuan);
-
-          $("#nama_produk_" + row_id).val(response.nama);
+          if (idoutlet == 7) {
+            $("#rate_value_" + row_id).val(response.price);
+            $("#rate_" + row_id).val(response.price);
+            $("#satuan_" + row_id).val(response.satuan);
+            $("#satuan_value_" + row_id).val(response.satuan);
+            $("#nama_produk_" + row_id).val(response.name);
+          } else {
+            $("#rate_value_" + row_id).val(response.harga);
+            $("#rate_" + row_id).val(response.harga);
+            $("#satuan_" + row_id).val(response.satuan);
+            $("#satuan_value_" + row_id).val(response.satuan);
+            $("#nama_produk_" + row_id).val(response.nama);
+          }
 
           $("#qty_" + row_id).val();
           $("#qty_" + row_id).focus();
@@ -425,22 +484,21 @@
     } // /for
 
     totalSubAmount = totalSubAmount.toFixed(0);
-
     // sub total
     $("#gross_amount").val(totalSubAmount);
     $("#gross_amount_value").val(totalSubAmount);
 
-    // vat
-    var vat = (Number($("#gross_amount").val()) / 100) * vat_charge;
-    vat = vat.toFixed(0);
-    $("#vat_charge").val(vat);
-    $("#vat_charge_value").val(vat);
+    // // vat
+    // var vat = (Number($("#gross_amount").val()) / 100) * vat_charge;
+    // vat = vat.toFixed(0);
+    // $("#vat_charge").val(vat);
+    // $("#vat_charge_value").val(vat);
 
-    // service
-    var service = (Number($("#gross_amount").val()) / 100) * service_charge;
-    service = service.toFixed(0);
-    $("#service_charge").val(service);
-    $("#service_charge_value").val(service);
+    // // service
+    // var service = (Number($("#gross_amount").val()) / 100) * service_charge;
+    // service = service.toFixed(0);
+    // $("#service_charge").val(service);
+    // $("#service_charge_value").val(service);
 
   } // /sub total amount
 
@@ -462,8 +520,15 @@
     }
   }
 
-  function kosongkan() {
-    $("#product_info_table tbody tr").html('');
+  function kosongkan(id) {
+    $("#product_info_table tbody").html('');
+    if (id == 7) {
+      $('#selectmn').show();
+      $('#mnslec').hide();
+    } else {
+      $('#mnslec').show();
+      $('#selectmn').hide();
+    }
   }
 
   // remove functions 

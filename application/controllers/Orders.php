@@ -268,19 +268,15 @@ class Orders extends Admin_Controller
 				if ($au == $ay) {
 					$order_id = $this->model_orders->create();
 					if ($order_id) {
-						$this->session->set_flashdata('success', 'Berhasil Dipesan');
-						redirect('orders/', 'refresh');
+						echo 1;
 					} else {
-						$this->session->set_flashdata('error', 'Terjadi Kesalahan!!');
-						redirect('orders/create/', 'refresh');
+						echo 9;
 					}
 				} else {
-					$this->session->set_flashdata('error', 'Maaf.. ! Produk Pesanan Anda Ada Yang Ganda');
-					redirect('orders/create', 'refresh');
+					echo 2;
 				}
 			} else {
-				$this->session->set_flashdata('error', 'Maaf Jam Order Telah Habis, 18:00 - 05:00!!');
-				redirect('orders/create', 'refresh');
+				echo 3;
 			}
 		} else {
 			// false case

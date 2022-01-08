@@ -45,7 +45,7 @@
             <!-- /.box-tools -->
           </div>
           <!-- /.box-header -->
-          <form role="form" action="<?php echo base_url('orders/create') ?>" method="post" class="form-horizontal">
+          <form role="form" id="createorder" method="post" class="form-horizontal">
             <div class="box-body">
 
               <?php echo validation_errors(); ?>
@@ -98,7 +98,7 @@
                   <th style="width:10%;min-width:100px;text-align: center;">Hrg/1</th>
                   <th style="width:10%;min-width:70px;text-align: center;">Satuan</th>
                   <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
-                  <th style="width:10%"><button type="button" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button></th>
+                  <th style="width:10%;text-align: center;"><i class="fa fa-trash"></i></th>
                   </tr>
                 </thead>
 
@@ -129,6 +129,11 @@
                     <td><button type="button" class="btn btn-default" onclick="removeRow('1')"><i class="fa fa-close"></i></button></td>
                   </tr>
                 </tbody>
+                <tfoot>
+                  <th colspan="6">
+                    <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                  </th>
+                </tfoot>
               </table>
               <br /> <br />
 
@@ -384,4 +389,63 @@
     $("#product_info_table tbody tr#row_" + tr_id).remove();
     subAmount();
   }
+
+
+  $(document).ready(function() {
+    $("#createorder").submit(function(event) {
+      event.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url('orders/create') ?>",
+        data: $('#createorder').serialize(),
+        success: function(data) {
+
+          if (data == 1) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil...!',
+              text: '',
+              showConfirmButton: false,
+              timer: 4000
+            });
+
+            setTimeout(
+              function() {
+                window.location = "<?php echo base_url('orders/') ?>"
+              },
+              4000);
+          } else if (data == 9) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal...!',
+              text: 'Terjadi Kesalahan Silahkan Hubungi Bng Fembi',
+              showConfirmButton: false,
+              timer: 4000
+            });
+
+          } else if (data == 2) {
+            Swal.fire({
+              icon: 'info',
+              title: 'Sory Bro...!',
+              text: 'Produk Pesanan Anda Ada Yang Duplikat',
+              showConfirmButton: false,
+              timer: 4000
+            });
+
+          } else if (data == 3) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Sorry Bray...!',
+              text: 'Jam Order Telah Habis, 18:00 - 05:00!!',
+              showConfirmButton: false,
+              timer: 4000
+            });
+
+          }
+
+
+        }
+      });
+    });
+  });
 </script>

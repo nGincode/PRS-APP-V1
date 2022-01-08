@@ -82,6 +82,7 @@ endif; ?>
                 <select class="form-control" name="tipe">
                   <option value="0">Umum</option>
                   <option value="1">Bahan Baku</option>
+                  <option value="2">Barang Jadi</option>
                 </select>
               </div>
 

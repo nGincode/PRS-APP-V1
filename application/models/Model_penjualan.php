@@ -194,6 +194,12 @@ class Model_penjualan extends CI_Model
 		return $query->result_array();
 	}
 
+	public function getProductjadi()
+	{
+		$sql = "SELECT * FROM products where tipe = 2";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 
 	public function removepenjualan_import()
 	{
