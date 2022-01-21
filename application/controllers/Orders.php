@@ -324,11 +324,13 @@ class Orders extends Admin_Controller
 			if ($div == 0) {
 				$products = $this->model_products->getProductDataGudang($gudang_id);
 			} else {
-				$products = $this->model_products->getActiveProductDatagudang($store_id, $gudang_id);
-				echo json_encode($products);
+				$products = $this->model_products->getActiveProductDatagudang($gudang_id);
 			}
 		} else {
+
+			$products = $this->model_products->getProductDataGudang($store_id);
 		}
+		echo json_encode($products);
 	}
 
 	public function update($id)
@@ -355,13 +357,18 @@ class Orders extends Admin_Controller
 			$ay = array_values($hitung);
 
 			if ($au == $ay) {
-				$update = $this->model_orders->update($id);
+
+				if ($this->input->post('net_amount_value') === 'NaN') {
+					$update = '';
+				} else {
+					$update = $this->model_orders->update($id);
+				}
 
 				if ($update == true) {
 					$this->session->set_flashdata('success', 'Data Berhasil Masuk');
 					redirect('orders/update/' . $id, 'refresh');
 				} else {
-					$this->session->set_flashdata('errors', 'Error occurred!!');
+					$this->session->set_flashdata('errors', 'Terjadi Kegagalan!!');
 					redirect('orders/update/' . $id, 'refresh');
 				}
 			} else {
@@ -377,6 +384,8 @@ class Orders extends Admin_Controller
 
 			$result = array();
 			$orders_data = $this->model_orders->getOrdersData($id);
+			$this->data['store_id'] = $store_id;
+			$this->data['logistik'] = $this->model_stores->getlogistiksoutlet();
 
 			if (isset($orders_data)) {
 				$result['order'] = $orders_data;
@@ -389,9 +398,9 @@ class Orders extends Admin_Controller
 				$this->data['order_data'] = $result;
 
 				if ($div == 0) {
-					$this->data['products'] = $this->model_products->getProductData();
+					$this->data['products'] = $this->model_products->getProductDataGudang($orders_data['gudang_id']);
 				} else {
-					$this->data['products'] = $this->model_products->getActiveProductData($store_id);
+					$this->data['products'] = $this->model_products->getActiveProductDatagudang($orders_data['gudang_id']);
 				}
 			} else {
 				$this->session->set_flashdata('error', 'Maaf.. ! Anda Tidak Punya Hak Akses');

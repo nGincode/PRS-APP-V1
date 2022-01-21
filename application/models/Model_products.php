@@ -75,7 +75,7 @@ class Model_products extends CI_Model
 		return $query->result_array();
 	}
 
-	public function getActiveProductDatagudang($ke, $gudang)
+	public function getActiveProductDatagudang($gudang)
 	{
 		$sql = "SELECT * FROM products WHERE gudang_id = $gudang AND availability = 1 ORDER BY id DESC";
 		$query = $this->db->query($sql);

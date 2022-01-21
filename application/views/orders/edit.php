@@ -634,6 +634,32 @@ if ($div > 0) :
                         </div>
                       </div>
 
+
+                      <?php
+
+
+                      if ($div == 1 or $div == 2 or $div == 3 or $div == 11) :
+                      ?>
+
+                        <div class="form-group">
+                          <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Logistik</label>
+                          <div class="col-sm-7">
+                            <select disabled class="form-control">
+                              <?php foreach ($logistik as $s => $l) : ?>
+                                <option value="<?php echo $l['id'] ?>"><?php if ($order_data['order']['gudang_id'] == $l['id']) {
+                                                                          echo $l['name'];
+                                                                        } ?></option>
+                              <?php endforeach ?>
+                            </select>
+
+                          </div>
+                        </div>
+
+
+                        <input type="hidden" class="form-control" id="gudang_id" name="gudang_id" value="<?php echo $order_data['order']['gudang_id'] ?>" autocomplete="off" />
+
+                      <?php endif; ?>
+
                     </div>
 
 
@@ -801,9 +827,14 @@ if ($div > 0) :
             var row_id = count_table_tbody_tr + 1;
             var tambah = $('#add_row');
 
+
+            var gudang_id = $('#gudang_id').val();
             $.ajax({
               url: base_url + '/orders/getTableProductRow/',
               type: 'post',
+              data: {
+                gudang_id: gudang_id
+              },
               dataType: 'json',
               beforeSend: function() {
                 tambah.attr('disabled', 'disabled');
@@ -872,10 +903,13 @@ if ($div > 0) :
             $("#amount_value_" + row_id).val("");
 
           } else {
+            var gudang_id = $('#gudang_id').val();
+            alert(gudang_id)
             $.ajax({
               url: base_url + 'orders/getProductValueById',
               type: 'post',
               data: {
+                gudang_id: gudang_id,
                 product_id: product_id
               },
               dataType: 'json',
