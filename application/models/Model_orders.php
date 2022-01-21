@@ -28,6 +28,21 @@ class Model_orders extends CI_Model
 		return $query->result_array();
 	}
 
+
+	public function getOrdersakhir($id)
+	{
+		$sql = "SELECT * FROM orders WHERE gudang_id=$id  ORDER BY id DESC LIMIT 1";
+		$query = $this->db->query($sql);
+		return $query->row_array();
+	}
+
+	public function getOrdersDatabyallgudang($dari, $sampai, $id)
+	{
+		$sql = "SELECT * FROM orders WHERE gudang_id=$id AND kasir = 0 and date_time BETWEEN $dari AND  $sampai ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
 	public function getOrdersDatabyuserid($user_id)
 	{
 		$sql = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY id DESC";
@@ -42,9 +57,16 @@ class Model_orders extends CI_Model
 		return $query->result_array();
 	}
 
-	public function getOrdersDatabyoutlet($store_id, $dari, $sampai)
+	public function getOrdersDatabyoutlet($store_id, $dari, $sampai, $id)
 	{
-		$sql = "SELECT * FROM orders WHERE store_id = $store_id AND date_time BETWEEN '$dari' AND '$sampai' ORDER BY id DESC";
+		$sql = "SELECT * FROM orders WHERE store_id = $store_id AND gudang_id=$id AND kasir=0 AND date_time BETWEEN '$dari' AND '$sampai' ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	public function getOrdersDatabyoutletgudang($store_id, $dari, $sampai, $id)
+	{
+		$sql = "SELECT * FROM orders WHERE gudang_id=$id and store_id = $store_id AND date_time BETWEEN '$dari' AND '$sampai' ORDER BY id DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -106,17 +128,28 @@ class Model_orders extends CI_Model
 		$date = new DateTime();
 		$date->setTimeZone($timezone);
 
-		if (!$div == 0) {
+		if (!$div == 0 or $this->input->post('kasir')) {
 			$store_id = $this->session->userdata('store_id');
 			$customer_address = $this->input->post('customer_address');
+			$kasir = $this->input->post('kasir');
+			if ($kasir) {
+				$baca = 0;
+			} else {
+				$baca = 1;
+			}
 		} else {
 			$add = $this->input->post('customer_address');
 			$stores = $this->model_stores->getStoresData($add);
 			$store_id = $add;
 			$customer_address = $stores['name'];
+			$kasir = 0;
+			$baca = 1;
 		}
 
 		$bill_no = 'BILPR-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
+
+
+		$gudang_id = $this->input->post('gudang_id');
 
 
 		//$dataambl = $this->model_orders->getOrdersDatabystoreid1($date->format('Y-m-d'), $store_id);
@@ -139,6 +172,9 @@ class Model_orders extends CI_Model
 			'user_id' => $user_id,
 			'store_id' => $store_id,
 			'store' => $store,
+			'kasir' => $kasir,
+			'gudang_id' => $gudang_id,
+			'tunai' => $this->input->post('tunai'),
 		);
 
 		$this->db->insert('orders', $data);
@@ -163,7 +199,7 @@ class Model_orders extends CI_Model
 				'user_id' => $user_id,
 				'store_id' => $store_id,
 				'store' => $store,
-				'baca' => 1,
+				'baca' => $baca,
 				'product_id' => $this->input->post('product')[$x],
 				'qty' => $this->input->post('qty')[$x],
 				'satuan' => $this->input->post('satuan_value[]')[$x],
@@ -172,7 +208,9 @@ class Model_orders extends CI_Model
 				'rate' => $this->input->post('rate_value')[$x],
 				'amount' => $this->input->post('amount_value')[$x],
 				'nama_produk' => $nmp,
-				'tipe' => $tipe
+				'tipe' => $tipe,
+				'kasir' => $kasir,
+				'gudang_id' => $gudang_id
 			);
 
 			$this->db->insert('orders_item', $items);
@@ -423,10 +461,10 @@ class Model_orders extends CI_Model
 		return $query->num_rows();
 	}
 
-	public function cetakpertanggal($store_id, $tgl_awal, $tgl_akhir)
+	public function cetakpertanggal($store_id, $tgl_awal, $tgl_akhir, $id)
 	{
 
-		$query = $this->db->query("SELECT * FROM orders_item WHERE store_id = $store_id AND status_up=1 AND tgl_order BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl_order ASC");
+		$query = $this->db->query("SELECT * FROM orders_item WHERE gudang_id=$id and store_id = $store_id AND status_up=1 AND tgl_order BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl_order ASC");
 		return $query->result();
 	}
 

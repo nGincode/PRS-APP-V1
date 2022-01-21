@@ -39,6 +39,7 @@ class Belanja extends Admin_Controller
 
 		$this->form_validation->set_rules('product[]', 'Product name', 'trim|required');
 
+		$store_id = $this->session->userdata('store_id');
 		if ($this->form_validation->run() == TRUE) {
 			$hitung = $this->input->post('product');
 			$clear_array = array_count_values($hitung);
@@ -51,6 +52,7 @@ class Belanja extends Admin_Controller
 				// if ($cektgl < 1) {
 				$bill_no = 'BILBLJ-' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
 				$judulbelanja = array(
+					'gudang_id' => $store_id,
 					'tgl' =>  $this->input->post('tgl'),
 					'total' =>  $this->input->post('net_amount_value'),
 					'bill_no' =>  $bill_no
@@ -67,6 +69,7 @@ class Belanja extends Admin_Controller
 						for ($x = 0; $x < $count_product; $x++) {
 							$nama_produk = $this->model_products->getProductData($this->input->post('product[]')[$x]);
 							array_push($items, array(
+								'gudang_id' => $store_id,
 								'tgl' =>  $this->input->post('tgl'),
 								'product_id' => $this->input->post('product[]')[$x],
 								'nama_produk' => $nama_produk['name'],
@@ -111,7 +114,7 @@ class Belanja extends Admin_Controller
 			$this->data['is_service_enabled'] = ($company['service_charge_value'] > 0) ? true : false;
 
 			if ($div == 0) {
-				$this->data['products'] = $this->model_products->getActiveProductDataall();
+				$this->data['products'] = $this->model_products->getActiveProductDataallgudang($store_id);
 			} else {
 				$this->data['products'] = $this->model_products->getActiveProductData($store_id);
 			}
@@ -142,7 +145,8 @@ class Belanja extends Admin_Controller
 	{
 		$result = array('data' => array());
 
-		$data = $this->model_belanja->getbelanjaData();
+		$store_id = $this->session->userdata('store_id');
+		$data = $this->model_belanja->getbelanjaDataBelanja($store_id);
 
 
 		foreach ($data as $key => $value) {
@@ -312,7 +316,7 @@ class Belanja extends Admin_Controller
 				}
 
 				$this->data['order_data'] = $result;
-				$this->data['products'] = $this->model_products->getProductData();
+				$this->data['products'] = $this->model_products->getActiveProductDataallgudang($store_id);
 			} else {
 				$this->session->set_flashdata('error', 'Maaf.. ! Anda Tidak Punya Hak Akses');
 				redirect('belanja', 'refresh');
@@ -410,7 +414,8 @@ class Belanja extends Admin_Controller
 		$spreadsheet->getActiveSheet()->mergeCells('A2:G2');
 
 
-		$tgl = $this->model_belanja->belanjaData($tgl_awal, $tgl_akhir);
+		$store_id = $this->session->userdata('store_id');
+		$tgl = $this->model_belanja->belanjaDatagudang($tgl_awal, $tgl_akhir, $store_id);
 		$baris = 4;
 		$count = 4;
 		$hasil = 0;

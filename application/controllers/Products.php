@@ -27,6 +27,7 @@ class Products extends Admin_Controller
         $this->load->model('model_attributes');
         $this->load->model('model_company');
         $this->load->model('model_belanja');
+        $this->load->model('model_dapro');
     }
 
     public function index()
@@ -53,13 +54,14 @@ class Products extends Admin_Controller
 
     public function fetchProductData()
     {
+        $store_id = $this->session->userdata('store_id');
         $filter = $this->input->post('filter');
         $result = array('data' => array());
 
         if ($filter) {
-            $data = $this->model_products->getProductDatatampil($filter);
+            $data = $this->model_products->getProductDatatampil($store_id, $filter);
         } else {
-            $data = $this->model_products->getProductData();
+            $data = $this->model_products->getProductDataGudang($store_id);
         }
 
         foreach ($data as $key => $value) {
@@ -134,56 +136,62 @@ class Products extends Admin_Controller
             redirect('dashboard', 'refresh');
         }
 
-        $this->form_validation->set_rules('product_name', 'Product name', 'trim|required|is_unique[products.name]', [
-            'is_unique' => 'Nama Data Telah Ada !'
-        ]);
         $this->form_validation->set_rules('availability', 'Availability', 'trim|required');
         $this->form_validation->set_rules('satuan', 'satuan', 'trim|required');
 
 
+        $store_id = $this->session->userdata('store_id');
         if ($this->form_validation->run() == TRUE) {
-            // true case
-            $upload_image = $this->upload_image();
-            $user_id = $this->session->userdata('id');
 
-            $i_kadaluarsa  = $this->input->post('kadaluarsa');
-            $kds = date("Y-m-d", strtotime($i_kadaluarsa));
-            if ($kds == '1970-01-01') {
-                $kadaluarsa = '';
-            } else {
-                $kadaluarsa = $kds;
-            }
-
-            if ($this->input->post('ke')) {
-                $ke = implode(",", $this->input->post('ke'));
-            } else {
-                $ke = '';
-            }
-
-            $data = array(
-                'name' => $this->input->post('product_name'),
-                'sku' => $this->input->post('sku'),
-                'tgl_input' => $this->input->post('tgl_input'),
-                'price' => $this->input->post('price'),
-                'qty' => $this->input->post('qty'),
-                'hpp' => $this->input->post('hpp'),
-                'ke' =>  $ke,
-                'satuan' => $this->input->post('satuan'),
-                'image' => $upload_image,
-                'description' => $this->input->post('description'),
-                'availability' => $this->input->post('availability'),
-                'kadaluarsa' => $kadaluarsa,
-                'user_id' => $user_id,
-                'tipe' => $this->input->post('tipe'),
-            );
-
-            $create = $this->model_products->create($data);
-            if ($create == true) {
-                $this->session->set_flashdata('success', 'Produk Ditambahkan');
+            $cek = $this->model_products->ceknamaproduk($store_id, $this->input->post('product_name'));
+            if ($cek > 0) {
+                $this->session->set_flashdata('error', 'Nama Telah Ada!!');
                 redirect('products/create', 'refresh');
             } else {
-                $this->session->set_flashdata('error', 'Terjadi Kesalahan Penambahan!!');
-                redirect('products/create', 'refresh');
+                // true case
+                $upload_image = $this->upload_image();
+                $user_id = $this->session->userdata('id');
+
+                $i_kadaluarsa  = $this->input->post('kadaluarsa');
+                $kds = date("Y-m-d", strtotime($i_kadaluarsa));
+                if ($kds == '1970-01-01') {
+                    $kadaluarsa = '';
+                } else {
+                    $kadaluarsa = $kds;
+                }
+
+                if ($this->input->post('ke')) {
+                    $ke = implode(",", $this->input->post('ke'));
+                } else {
+                    $ke = '';
+                }
+
+                $data = array(
+                    'gudang_id' => $store_id,
+                    'name' => $this->input->post('product_name'),
+                    'sku' => $this->input->post('sku'),
+                    'tgl_input' => $this->input->post('tgl_input'),
+                    'price' => $this->input->post('price'),
+                    'qty' => $this->input->post('qty'),
+                    'hpp' => $this->input->post('hpp'),
+                    'ke' =>  $ke,
+                    'satuan' => $this->input->post('satuan'),
+                    'image' => $upload_image,
+                    'description' => $this->input->post('description'),
+                    'availability' => $this->input->post('availability'),
+                    'kadaluarsa' => $kadaluarsa,
+                    'user_id' => $user_id,
+                    'tipe' => $this->input->post('tipe'),
+                );
+
+                $create = $this->model_products->create($data);
+                if ($create == true) {
+                    $this->session->set_flashdata('success', 'Produk Ditambahkan');
+                    redirect('products/create', 'refresh');
+                } else {
+                    $this->session->set_flashdata('error', 'Terjadi Kesalahan Penambahan!!');
+                    redirect('products/create', 'refresh');
+                }
             }
         } else {
             // false case       
@@ -228,60 +236,73 @@ class Products extends Admin_Controller
             redirect('dashboard', 'refresh');
         }
 
-        $this->form_validation->set_rules('product_name', 'Product name', 'trim|required');
         $this->form_validation->set_rules('sku', 'SKU', 'trim|required');
         $this->form_validation->set_rules('price', 'Price', 'trim|required');
         $this->form_validation->set_rules('qty', 'Qty', 'trim|required');
         $this->form_validation->set_rules('availability', 'Availability', 'trim|required');
 
+        $store_id = $this->session->userdata('store_id');
         if ($this->form_validation->run() == TRUE) {
-            // true case
-            $i_kadaluarsa  = $this->input->post('kadaluarsa');
-            $kds = date("Y-m-d", strtotime($i_kadaluarsa));
-
-            if ($kds == '1970-01-01') {
-                $kadaluarsa = '';
+            $product_data = $this->model_products->getProductData($product_id);
+            if ($product_data['name'] === $this->input->post('product_name')) {
+                $cek = 0;
             } else {
-                $kadaluarsa = $kds;
+                $cek = $this->model_products->ceknamaproduk($store_id, $this->input->post('product_name'));
             }
 
-            if ($this->input->post('ke')) {
-                $ke = implode(",", $this->input->post('ke'));
+            if ($cek > 0) {
+                $this->session->set_flashdata('error', 'Nama Telah Ada!!');
+                redirect('products/create', 'refresh');
             } else {
-                $ke = '';
-            }
+                // true case
+                $i_kadaluarsa  = $this->input->post('kadaluarsa');
+                $kds = date("Y-m-d", strtotime($i_kadaluarsa));
+
+                if ($kds == '1970-01-01') {
+                    $kadaluarsa = '';
+                } else {
+                    $kadaluarsa = $kds;
+                }
+
+                if ($this->input->post('ke')) {
+                    $ke = implode(",", $this->input->post('ke'));
+                } else {
+                    $ke = '';
+                }
 
 
-            $data = array(
-                'name' => $this->input->post('product_name'),
-                'sku' => $this->input->post('sku'),
-                'satuan' => $this->input->post('satuan'),
-                'tgl_input' => $this->input->post('tgl_input'),
-                'price' => $this->input->post('price'),
-                'qty' => $this->input->post('qty'),
-                'ke' => $ke,
-                'hpp' => $this->input->post('hpp'),
-                'description' => $this->input->post('description'),
-                'availability' => $this->input->post('availability'),
-                'kadaluarsa' => $kadaluarsa,
-                'tipe' => $this->input->post('tipe'),
-            );
+                $data = array(
+                    'gudang_id' => $store_id,
+                    'name' => $this->input->post('product_name'),
+                    'sku' => $this->input->post('sku'),
+                    'satuan' => $this->input->post('satuan'),
+                    'tgl_input' => $this->input->post('tgl_input'),
+                    'price' => $this->input->post('price'),
+                    'qty' => $this->input->post('qty'),
+                    'ke' => $ke,
+                    'hpp' => $this->input->post('hpp'),
+                    'description' => $this->input->post('description'),
+                    'availability' => $this->input->post('availability'),
+                    'kadaluarsa' => $kadaluarsa,
+                    'tipe' => $this->input->post('tipe'),
+                );
 
 
-            if ($_FILES['product_image']['size'] > 0) {
-                $upload_image = $this->upload_image();
-                $upload_image = array('image' => $upload_image);
+                if ($_FILES['product_image']['size'] > 0) {
+                    $upload_image = $this->upload_image();
+                    $upload_image = array('image' => $upload_image);
 
-                $this->model_products->update($upload_image, $product_id);
-            }
+                    $this->model_products->update($upload_image, $product_id);
+                }
 
-            $update = $this->model_products->update($data, $product_id);
-            if ($update == true) {
-                $this->session->set_flashdata('success', 'Produk Diupdate');
-                redirect('products/', 'refresh');
-            } else {
-                $this->session->set_flashdata('error', 'Terjadi Kesalahan Update!!');
-                redirect('products/update/' . $product_id, 'refresh');
+                $update = $this->model_products->update($data, $product_id);
+                if ($update == true) {
+                    $this->session->set_flashdata('success', 'Produk Diupdate');
+                    redirect('products/', 'refresh');
+                } else {
+                    $this->session->set_flashdata('error', 'Terjadi Kesalahan Update!!');
+                    redirect('products/update/' . $product_id, 'refresh');
+                }
             }
         } else {
             $product_data = $this->model_products->getProductData($product_id);
@@ -365,6 +386,7 @@ class Products extends Admin_Controller
         $this->form_validation->set_rules('product_name', 'Product name', 'trim|required');
         $this->form_validation->set_rules('qty', 'Qty', 'trim|required');
 
+        $store_id = $this->session->userdata('store_id');
         if ($this->form_validation->run() == TRUE) {
             $id = $this->input->post('product_name');
             $qtypost = $this->input->post('qty');
@@ -385,6 +407,7 @@ class Products extends Admin_Controller
 
             $data1 = array(
                 // 'tgl_bmasuk' => $date->format('Y-m-d'),
+                'gudang_id' => $store_id,
                 'tgl_bmasuk' =>  $tgl_bmasuk,
                 'name' => $product_name,
                 'satuan' => $satuan,
@@ -428,7 +451,7 @@ class Products extends Admin_Controller
         $this->data['store'] = $this->model_stores->getStoresoutlet();
         $this->data['div'] = $this->session->userdata('divisi');
         $this->data['namastore'] = $this->session->userdata('store');
-        $this->data['products'] = $this->model_products->getActiveProductDataall();
+        $this->data['products'] = $this->model_products->getActiveProductDataallgudang($store_id);
 
 
         $this->render_template('products/bmasuk', $this->data);
@@ -444,6 +467,7 @@ class Products extends Admin_Controller
         $this->form_validation->set_rules('product_name', 'Product name', 'trim|required');
         $this->form_validation->set_rules('qty', 'Qty', 'trim|required');
 
+        $store_id = $this->session->userdata('store_id');
         if ($this->form_validation->run() == TRUE) {
             $id = $this->input->post('product_name');
             $qtypost = $this->input->post('qty');
@@ -464,6 +488,7 @@ class Products extends Admin_Controller
 
             $data1 = array(
                 // 'tgl_bmasuk' => $date->format('Y-m-d'),
+                'gudang_id' => $store_id,
                 'tgl_bmasuk' =>  $tgl_bmasuk,
                 'name' => $product_name,
                 'satuan' => $satuan,
@@ -507,7 +532,7 @@ class Products extends Admin_Controller
         $this->data['store'] = $this->model_stores->getStoresoutlet();
         $this->data['div'] = $this->session->userdata('divisi');
         $this->data['namastore'] = $this->session->userdata('store');
-        $this->data['products'] = $this->model_products->getActiveProductDataall();
+        $this->data['products'] = $this->model_products->getActiveProductDataallgudang($store_id);
 
 
         $this->render_template('products/rmasuk', $this->data);
@@ -517,7 +542,8 @@ class Products extends Admin_Controller
     {
         $result = array('data' => array());
 
-        $data = $this->model_products->getProductstockData();
+        $store_id = $this->session->userdata('store_id');
+        $data = $this->model_products->getProductstockDatagudang($store_id);
 
         foreach ($data as $key => $value) {
 
@@ -548,7 +574,8 @@ class Products extends Admin_Controller
     {
         $result = array('data' => array());
 
-        $data = $this->model_products->getProductstockDataRusak();
+        $store_id = $this->session->userdata('store_id');
+        $data = $this->model_products->getProductstockDataRusakGudang($store_id);
 
         foreach ($data as $key => $value) {
 
@@ -620,7 +647,8 @@ class Products extends Admin_Controller
     {
         $result = array('data' => array());
 
-        $data = $this->model_products->getProductData();
+        $store_id = $this->session->userdata('store_id');
+        $data = $this->model_products->getProductDataGudang($store_id);
 
         foreach ($data as $key => $value) {
 
@@ -672,6 +700,7 @@ class Products extends Admin_Controller
         $var = $this->input->post('tgl');
         $div = $this->session->userdata('divisi');
         $id_user = $this->session->userdata('id');
+        $store_id = $this->session->userdata('store_id');
 
 
         if ($var) {
@@ -682,9 +711,9 @@ class Products extends Admin_Controller
                 $sampai = strtotime("+1 day", strtotime($hasil[1]));
 
                 if ($filter) {
-                    $data = $this->model_orders->getOrdersDatabyoutlet($filter, $dari, $sampai);
+                    $data = $this->model_orders->getOrdersDatabyoutletgudang($filter, $dari, $sampai, $store_id);
                 } else {
-                    $data = $this->model_orders->getOrdersDatabyall($dari, $sampai);
+                    $data = $this->model_orders->getOrdersDatabyallgudang($dari, $sampai, $store_id);
                 }
 
                 foreach ($data as $key => $value) {
@@ -919,7 +948,8 @@ class Products extends Admin_Controller
     {
         $result = array('data' => array());
 
-        $data = $this->model_products->cekkadaluarsa();
+        $store_id = $this->session->userdata('store_id');
+        $data = $this->model_products->cekkadaluarsa($store_id);
 
         foreach ($data as $key => $value) {
 
@@ -939,7 +969,8 @@ class Products extends Admin_Controller
     {
         $result = array('data' => array());
 
-        $data = $this->model_products->qtylow();
+        $store_id = $this->session->userdata('store_id');
+        $data = $this->model_products->qtylow($store_id);
 
         foreach ($data as $key => $value) {
 
@@ -1243,6 +1274,7 @@ class Products extends Admin_Controller
 
         $var = $this->input->post('tgl');
 
+        $store_id = $this->session->userdata('store_id');
 
         if ($var) {
             $tgl = str_replace('/', '-', $var);
@@ -1250,7 +1282,7 @@ class Products extends Admin_Controller
             $dari = date('Y-m-d', strtotime("-1 day", strtotime($hasil[0])));
             $sampai =  date('Y-m-d', strtotime("+1 day", strtotime($hasil[1])));
 
-            $data = $this->model_belanja->getbelanjaterimabyall($dari, $sampai);
+            $data = $this->model_belanja->getbelanjaterimabyall($dari, $sampai, $store_id);
 
             foreach ($data as $key => $value) {
                 // button
@@ -1285,6 +1317,7 @@ class Products extends Admin_Controller
     {
 
         $id = $this->input->post('id');
+        $store_id = $this->session->userdata('store_id');
         // $id = 15;
 
         $belanja = $this->model_belanja->getbelanjaData($id);
@@ -1305,6 +1338,7 @@ class Products extends Admin_Controller
 
 
             $data1 = array(
+                'gudang_id' => $store_id,
                 'tgl_bmasuk' => $tglbmasuk,
                 'name' => $name,
                 'satuan' => $satuan,
@@ -1335,6 +1369,355 @@ class Products extends Admin_Controller
             echo $status;
         } else {
             $this->model_belanja->uploadsukses($id);
+        }
+    }
+
+
+    public function uploadbarangjadi()
+    {
+
+        $id = $this->input->post('id');
+        $store_id = $this->session->userdata('store_id');
+
+        $brng = $this->model_dapro->getdaprojadiid($id);
+
+        $status = '';
+        if ($brng) {
+            $produk = $this->model_products->getProductData($brng['idproduct']);
+
+            $name = $produk['name'];
+            $sku = $produk['sku'];
+            $price = $produk['price'];
+            $satuan = $produk['satuan'];
+            $qtysblm = $produk['qty'];
+            $qtymasuk = $brng['qty'];
+            $qtytotal = $qtysblm + $qtymasuk;
+            $tglbmasuk = $brng['tgl'];
+
+
+            $data1 = array(
+                'gudang_id' => $store_id,
+                'tgl_bmasuk' => $tglbmasuk,
+                'name' => $name,
+                'satuan' => $satuan,
+                'sku' => $sku,
+                'price' => $price,
+                'qtymasuk' => $qtymasuk,
+                'qtysblm' => $qtysblm,
+                'qtytotal' => $qtytotal,
+            );
+
+            $data2 = array(
+                'qty' => $qtytotal,
+            );
+
+            $create = $this->model_products->createstock($data1);
+            if ($create == true) {
+                $update = $this->model_products->update($data2, $brng['idproduct']);
+                if ($update == true) {
+                    $this->model_dapro->uploadsuksesitem($brng['id']);
+                    $status .= '';
+                } else {
+                    $status .= $name . ' ';
+                }
+            }
+        }
+
+        if ($status) {
+            echo $status;
+        }
+    }
+
+    public function masukbarangjadi()
+    {
+        $result = array('data' => array());
+
+        $var = $this->input->post('tgl');
+
+
+        if ($var) {
+            $tgl = str_replace('/', '-', $var);
+            $hasil = explode(" - ", $tgl);
+            $dari = date('Y-m-d', strtotime("-1 day", strtotime($hasil[0])));
+            $sampai =  date('Y-m-d', strtotime("+1 day", strtotime($hasil[1])));
+
+            $data = $this->model_belanja->getbarangjadibyall($dari, $sampai);
+
+            foreach ($data as $key => $value) {
+                // button
+
+                $status = $value['up'];
+
+                if ($status == 0) {
+                    $buttons = ' <div class="btn-group dropleft">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+                                <ul class="dropdown-menu">';
+                    $buttons .= '<li><a style="cursor:pointer;" onclick="upload1(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
+                    $buttons .= '</ul></div>';
+                } elseif ($status == 1) {
+                    $buttons = '<span class="label label-success">Terupload</span>';
+                }
+
+                $total = $value['qty'] * $value['harga'];
+                $result['data'][$key] = array(
+                    $buttons,
+                    $value['tgl'],
+                    $value['nama'],
+                    $value['qty'],
+                    $value['harga'],
+                    $total
+                );
+            } // /foreach
+        } else {
+            $result['data'] = array();
+        }
+        echo json_encode($result);
+    }
+
+
+
+
+    public function kasir()
+    {
+        if (!in_array('createOrder', $this->permission)) {
+            redirect('dashboard', 'refresh');
+        }
+
+        $div = $this->session->userdata('divisi');
+        $store_id = $this->session->userdata('store_id');
+        $div = $this->session->userdata('divisi');
+        $store = $this->session->userdata('store');
+        $user_id = $this->session->userdata('id');
+
+
+        $this->form_validation->set_rules('product[]', 'Product name', 'trim|required');
+        if ($this->form_validation->run() == TRUE) {
+            $hitung = $this->input->post('product');
+            $clear_array = array_count_values($hitung);
+            $au = array_keys($clear_array);
+            $ay = array_values($hitung);
+
+            if ($au == $ay) {
+                $order_id = $this->model_orders->create();
+                if ($order_id) {
+                    $akhir = $this->model_orders->getOrdersakhir($store_id);
+                    echo $akhir['id'];
+                } else {
+                    echo 'ere';
+                }
+            } else {
+                echo 'dup';
+            }
+        } else {
+            // false case
+            $company = $this->model_company->getCompanyData(1);
+            $this->data['company_data'] = $company;
+            $this->data['is_vat_enabled'] = ($company['vat_charge_value'] > 0) ? true : false;
+            $this->data['is_service_enabled'] = ($company['service_charge_value'] > 0) ? true : false;
+
+            if ($div == 0) {
+                $this->data['products'] = $this->model_products->getProductData();
+            } else {
+                $this->data['products'] = $this->model_products->getActiveProductData($store_id);
+            }
+            $this->data['page_title'] = 'Point Of Sales (POS)';
+
+            $this->data['outlet'] = $store;
+            $this->data['div'] = $div;
+            $this->data['store_id'] = $store_id;
+            $this->data['user'] = $this->model_users->getUserData($user_id);
+            $this->data['store'] = $this->model_stores->getStoresoutlet();
+
+            $this->render_template('products/kasir', $this->data);
+        }
+    }
+
+    public function kasir_print()
+    {
+
+        $id = $this->input->post('id');
+
+        if (!$id) {
+            redirect('dashboard', 'refresh');
+        }
+
+        if ($id) {
+            $order_data = $this->model_orders->getOrdersData($id);
+            $orders_items = $this->model_orders->getOrdersItemData($id);
+            $company_info = $this->model_company->getCompanyData(1);
+
+            $order_date = date('d/m/Y', $order_data['date_time']);
+            $paid_status = ($order_data['paid_status'] == 1) ? "Paid" : "Unpaid";
+
+            $html = '<!-- Main content -->
+			<!DOCTYPE html>
+			<html>
+			<head>
+			  <meta charset="utf-8">
+			  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+			  <title>Invoice Order</title>
+			  <!-- Tell the browser to be responsive to screen width -->
+			  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+			  <!-- Bootstrap 3.3.7 -->
+			  <link rel="stylesheet" href="' . base_url('assets/bower_components/bootstrap/dist/css/bootstrap.min.css') . '">
+			  <!-- Font Awesome -->
+			  <link rel="stylesheet" href="' . base_url('assets/bower_components/font-awesome/css/font-awesome.min.css') . '">
+			  <link rel="stylesheet" href="' . base_url('assets/dist/css/AdminLTE.min.css') . '">
+			</head>
+			<body onload="window.print();">
+			<style>html, body {height:unset;}</style>
+			<div class="wrapper" style="width: 55mm;height:unset;">
+			  <section class="invoice">
+			    <!-- title row -->
+			    <div class="row">
+			      <div class="col-xs-12">
+			        <h2 class="page-header" style="font-size: 18px; text-align:center;margin-top: -7px;">
+					<img style="filter: grayscale(100%);" width="100px" src="' . base_url() . '/assets/images/logo/prslogin.png"><br> 
+			          ' . $company_info['company_name'] . '
+			          <small class="pull-right"><br>' . $order_date . '</small>
+			        </h2>
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- info row -->
+			    <div class="row invoice-info">
+			      
+			      <div class="col-sm-4 invoice-col" style="font-size: 12px; width:100%;">
+			        
+			        <b>Bill ID:</b> ' . $order_data['bill_no'] . '<br>
+			        <b>Penerima:</b> ' . $order_data['customer_name'] . '<br>
+			        <b>Dari :</b> ' . $order_data['customer_address'] . ' <br />
+			        <b>No Hp:</b> ' . $order_data['customer_phone'] . '
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- /.row -->
+
+			    <!-- Table row -->
+			    <div class="row">
+			      <div class="col-xs-12 table-responsive">
+			        <table class="table"  style="font-size: 12px; width:100%;">
+			        
+			          <tbody>';
+            $no = 1;
+            $jmltotal = 0;
+            foreach ($orders_items as $k => $v) {
+
+                $product_data = $this->model_products->getProductData($v['product_id']);
+
+
+                if ($v['rate']) {
+                    $hrg = $v['rate'];
+                } else {
+                    $hrg = 0;
+                }
+
+                if ($v['qty']) {
+                    $qtydb = $v['qty'];
+                } else {
+                    $qtydb = 0;
+                }
+
+                if ($v['qtydeliv']) {
+                    $jumlah = $v['qtydeliv'] * $hrg;
+                } else {
+                    $jumlah = $qtydb * $hrg;
+                }
+
+                if ($v['qtydeliv']) {
+                    $qty = $v['qtydeliv'];
+                } else {
+                    $qty = $qtydb;
+                }
+
+                if ($v['qtydeliv'] == '0') {
+                    $qty = $v['qtydeliv'];
+                    $jumlah = $v['qtydeliv'] * $hrg;
+                }
+
+                if (isset($product_data['name'])) {
+                    $nama = $product_data['name'];
+                } else {
+                    $nama = $v['nama_produk'];
+                }
+
+                $jmltotal += $jumlah;
+
+                $html .= '<tr style="border-bottom: 1px dashed ;">
+				            <td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">' . $nama . '<br>' . $qty . ' X ' . $hrg . '/' . $v['satuan'] . ' = Rp.' . number_format($jumlah, 0, ',', '.') . '</td>
+			          	</tr>';
+            }
+
+            $html .= '</tbody>
+			        </table>
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- /.row -->
+
+			    <div class="row">
+			      
+			      <div class="col-xs-6 pull pull-right" style="font-size: 12px; width:100%; margin-top: -20px;">
+
+			        <div class="table-responsive">
+			          <table class="table" >
+			           ';
+
+            if ($order_data['service_charge'] > 0) {
+                $html .= '<tr>
+				              <th>Service Charge (' . $order_data['service_charge_rate'] . '%)</th>
+				              <td>Rp. ' . $order_data['service_charge'] . '</td>
+				            </tr>';
+            }
+
+            if ($order_data['vat_charge'] > 0) {
+                $html .= '<tr>
+				              <th>Vat Charge (' . $order_data['vat_charge_rate'] . '%)</th>
+				              <td>' . $order_data['vat_charge'] . '</td>
+				            </tr>';
+            }
+
+
+            $html .= ' 
+			            <tr style="border-bottom: 1px dashed ;">
+			              <th>Total:</th>
+			              <td>Rp. ' . number_format($jmltotal, 0, ',', '.') . '</td>
+			            </tr>
+
+			            <tr style="border-bottom: 1px dashed ;">
+			              <th>Tunai:</th>
+			              <td>Rp. ' . number_format($order_data['tunai'], 0, ',', '.') . '</td>
+			            </tr>
+			           
+			            <tr style="border-bottom: 1px dashed ;">
+			              <th>Kembalian:</th>
+			              <td>Rp. ' . number_format($order_data['tunai'] - $jmltotal, 0, ',', '.') . '</td>
+			            </tr>
+
+			          </table>
+                      <center>*Terima Kasih*<br>------------------------</center>
+			      <!-- /.col -->
+			    </div>
+			    <!-- /.row -->
+			  </section>
+			  <!-- /.content -->
+			</div>
+			</body>
+			</html>';
+
+            echo $html;
+        }
+    }
+
+    public function kembalian()
+    {
+        $id = $this->input->post('id');
+        $order_data = $this->model_orders->getOrdersData($id);
+        $hasil = $order_data['tunai'] - $order_data['gross_amount'];
+        if ($hasil) {
+            echo 'Rp.' . number_format($hasil, 0, ',', '.');
+        } else {
+            echo 'Lunas';
         }
     }
 }

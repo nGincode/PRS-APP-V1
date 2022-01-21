@@ -522,7 +522,7 @@ if ($store_id == 1) :
         confirmButtonText: 'Hapus'
       }).then((result) => {
         if (result.isConfirmed) {
-          $("#product_info_table tbody tr#row_" + tr_id).remove();
+          $("#product_info_table tbody tr#row_" + tr_id).html('<td hidden><input type="hidden" id="amount_' + tr_id + '" value="0" class="form-control" disabled="" autocomplete="off"></td>');
           subAmount();
           Swal.fire(
             'Deleted!',
@@ -984,7 +984,7 @@ if ($div > 0) :
             confirmButtonText: 'Hapus'
           }).then((result) => {
             if (result.isConfirmed) {
-              $("#product_info_table tbody tr#row_" + tr_id).remove();
+              $("#product_info_table tbody tr#row_" + tr_id).html('<td hidden><input type="hidden" id="amount_' + tr_id + '" value="0" class="form-control" disabled="" autocomplete="off"></td>');
               subAmount();
               Swal.fire(
                 'Deleted!',
@@ -1488,7 +1488,7 @@ if ($store_id > 1 && $div == 0) :
         confirmButtonText: 'Hapus'
       }).then((result) => {
         if (result.isConfirmed) {
-          $("#product_info_table tbody tr#row_" + tr_id).remove();
+          $("#product_info_table tbody tr#row_" + tr_id).html('<td hidden><input type="hidden" id="amount_' + tr_id + '" value="0" class="form-control" disabled="" autocomplete="off"></td>');
           subAmount();
           Swal.fire(
             'Deleted!',

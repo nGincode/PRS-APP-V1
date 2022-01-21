@@ -105,11 +105,28 @@ endif; ?>
                     <!-- /.box-header -->
                     <div class="box-body" id='penyesuaian'>
 
+                        <div style="position:relative;z-index: 9; margin:10px; display: flex;">
+
+                            <div style="margin-right:10px;">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                    <?= $namastore; ?>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <input type="text" id="jadi" onchange="ubah()" name="datefilter" required>
+                            <span class="highlight"></span>
+                            <span class="bar"></span>
+                            <label class="labeljudul">Pilih Tanggal</label>
+                        </div>
+                        <hr>
 
                         <table id="manageTable2" class="table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <!-- <th style="width: 30px;">Opsi</th> -->
+                                    <th>Tgl </th>
                                     <th>Nama </th>
                                     <th>Qty</th>
                                     <th>Harga</th>
@@ -168,28 +185,44 @@ endif; ?>
     var base_url = "<?php echo base_url(); ?>";
 
 
+
+    function ubah() {
+
+        $(document).ready(function() {
+
+            var da = $('#jadi').val();
+            var validasiAngka = /^[0-9]+$/;
+            if (da) {
+                manageTable = $('#manageTable2').DataTable({
+                    processing: false,
+                    serverSide: false,
+                    destroy: true,
+                    "ajax": {
+                        url: base_url + 'dapro/fatchbrngjdi',
+                        type: "POST",
+                        beforeSend: function() {
+                            $("#load").css("display", "block");
+                        },
+                        data: {
+                            tgl: da
+                        },
+                        complete: function() {
+                            $("#load").css("display", "none");
+                        }
+                    }
+                });
+            } else {
+                alert('Tanggal harus dipilih');
+            }
+        });
+    }
+
     $(document).ready(function() {
 
         $(".select_group").select2();
         $("#maindaproNav").addClass('active');
         $("#hasil").addClass('active');
 
-
-        manageTable = $('#manageTable2').DataTable({
-            processing: false,
-            serverSide: false,
-            destroy: true,
-            "ajax": {
-                url: base_url + 'dapro/fatchbrngjdi',
-                type: "POST",
-                beforeSend: function() {
-                    $("#load").css("display", "block");
-                },
-                complete: function() {
-                    $("#load").css("display", "none");
-                }
-            }
-        });
 
         manageTable = $('#manageTable1').DataTable({
             processing: false,
@@ -224,6 +257,7 @@ endif; ?>
             }
         });
     });
+
 
     $(function() {
 
@@ -336,6 +370,7 @@ endif; ?>
 
     function kirimbrngjdi() {
         var $id = $('#indent').val();
+        var $idproduct = $('#idproduct').val();
         var $max = $('#keleb').val();
         var $jml = $('#jml').val();
         var $harganya = $('#harganya').val();
@@ -376,7 +411,8 @@ endif; ?>
                             'max': $max,
                             'jml': $jml,
                             'harganya': $harganya,
-                            'nama': $nmmnu
+                            'nama': $nmmnu,
+                            'idproduct': $idproduct
                         },
                         cache: false,
                         beforeSend: function() {

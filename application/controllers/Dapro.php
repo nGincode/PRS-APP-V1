@@ -25,6 +25,7 @@ class Dapro extends Admin_Controller
         $this->load->model('model_groups');
         $this->load->model('model_stores');
         $this->load->model('model_dapro');
+        $this->load->model('model_products');
     }
 
 
@@ -179,10 +180,41 @@ class Dapro extends Admin_Controller
         $max = $this->input->post('max');
         $harga = $this->input->post('harganya');
         $nama = $this->input->post('nama');
+        $idproduct = $this->input->post('idproduct');
 
-        if ($jml <= $max && $id && $jml && $harga && $nama) {
+        if ($jml <= $max && $id && $jml && $harga && $nama && $idproduct) {
+
+
+            $data = $this->model_dapro->getitemresep($id);
+
+            if ($data) {
+                foreach ($data as $key1 => $val) {
+                    //qty stock
+                    $qty = $val['qty'];
+                    $idp = $val['idproduct'];
+
+                    $product = $this->model_products->getProductData($idp);
+                    $nama = $product['name'];
+                    $harga = $product['price'];
+                    $tipe = $product['tipe'];
+                    $satuan = $product['satuan'];
+
+                    $hsl = $qty * $jml;
+                    $input = array(
+                        'tgl' => date('Y-m-d'),
+                        'nama_produk' => $nama,
+                        'product_id' => $idp,
+                        'qty' => -$hsl,
+                        'harga' => $harga,
+                        'tipe' => $tipe,
+                        'satuan' => $satuan
+                    );
+                    $data = $this->model_dapro->upbahanmetah($input);
+                }
+            }
 
             $data = array(
+                'tgl' => date('Y-m-d'),
                 'nama' => $nama,
                 'idproduct' => $id,
                 'qty' => $jml,
@@ -199,18 +231,31 @@ class Dapro extends Admin_Controller
     {
 
         $result = array('data' => array());
+        $var = $this->input->post('tgl');
 
-        $data = $this->model_dapro->getdapro_bahanjadi();
-        foreach ($data as $key => $value) {
 
-            $total = $value['qty'] * $value['harga'];
+        if ($var) {
 
-            $result['data'][$key] = array(
-                $value['nama'],
-                $value['qty'],
-                $value['harga'],
-                $total
-            );
+            $tgl = str_replace('/', '-', $var);
+            $hasil = explode(" - ", $tgl);
+            $dari = date('Y-m-d', strtotime("-1 day", strtotime($hasil[0])));
+            $sampai = date('Y-m-d', strtotime("+1 day", strtotime($hasil[1])));
+
+            $data = $this->model_dapro->getdapro_bahanjadi($dari, $sampai);
+            foreach ($data as $key => $value) {
+
+                $total = $value['qty'] * $value['harga'];
+
+                $result['data'][$key] = array(
+                    $value['tgl'],
+                    $value['nama'],
+                    $value['qty'],
+                    $value['harga'],
+                    $total
+                );
+            }
+        } else {
+            $result['data'] = array();
         }
         echo json_encode($result);
     }
@@ -250,19 +295,22 @@ class Dapro extends Admin_Controller
 
                 $total = $hitung * $harga;
                 $input = '
+                <input type="hidden" value="' . $value['idproduct'] . '" name="idproduct" id="idproduct">
                 <input type="hidden" value="' . $value['id'] . '" name="id" id="indent">
                 <input type="hidden" value="' . $hitung . '" name="max" id="keleb">
                 <input type="hidden" value="' . $value['nama_menu'] . '" name="nmmnu" id="nmmnu">
                 <input type="hidden" value="' . $harga . '" name="harganya" id="harganya">
                 <input class="form-control" name="jml" type="number" max="' . $hitung . '" id="jml"><button onclick="kirimbrngjdi()" class="btn btn-success">Kirim</button>
                 ';
-                $result['data'][$key] = array(
-                    $value['nama_menu'],
-                    $hitung,
-                    $input,
-                    $harga,
-                    $total
-                );
+                if ($hitung > 0) {
+                    $result['data'][$key] = array(
+                        $value['nama_menu'],
+                        $hitung,
+                        $input,
+                        $harga,
+                        $total
+                    );
+                }
             }
         } else {
             $result['data'] = array();
@@ -314,5 +362,10 @@ class Dapro extends Admin_Controller
     {
         $this->data['namastore'] = $_SESSION['store'];
         $this->render_template('dapro/hasil', $this->data);
+    }
+
+    public function laporan()
+    {
+        $this->render_template('dapro/laporan', $this->data);
     }
 }

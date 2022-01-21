@@ -56,7 +56,8 @@
                     <th><center>Total Harga</center></th>
                     </tr>';
 
-                $cetak = $this->model_orders->cetakpertanggal($s['store_id'], $tgl_awal, $tgl_akhir);
+                $store_id = $this->session->userdata('store_id');
+                $cetak = $this->model_orders->cetakpertanggal($s['store_id'], $tgl_awal, $tgl_akhir, $store_id);
 
                 $Jumlah = 0;
                 $qty = 0;

@@ -23,28 +23,41 @@ class Model_products extends CI_Model
 		return $query->result_array();
 	}
 
-	public function qtylow()
+	public function getProductDataGudang($gudang)
+	{
+		$sql = "SELECT * FROM products where gudang_id = $gudang ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+	public function ceknamaproduk($store_id, $id)
+	{
+		$sql = "SELECT * FROM products where gudang_id = $store_id AND name = '$id' ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->num_rows();
+	}
+
+	public function qtylow($id)
 	{
 
-		$sql = "SELECT * FROM products WHERE qty BETWEEN -1000000000 AND 10 ORDER BY qty ASC";
+		$sql = "SELECT * FROM products WHERE gudang_id=$id AND qty BETWEEN -1000000000 AND 10 ORDER BY qty ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
 
-	public function cekkadaluarsa()
+	public function cekkadaluarsa($id)
 	{
 		$hariini = date('Y-m-d');
 		$tglex = date('Y-m-d', strtotime($hariini . ' + 20 days'));
 
-		$sql = "SELECT * FROM products WHERE kadaluarsa BETWEEN '$hariini' AND '$tglex' ORDER BY kadaluarsa ASC";
+		$sql = "SELECT * FROM products WHERE gudang_id=$id AND kadaluarsa BETWEEN '$hariini' AND '$tglex' ORDER BY kadaluarsa ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
-	public function getProductDatatampil($id)
+	public function getProductDatatampil($store_id, $id)
 	{
-		$sql = "SELECT * FROM products WHERE ke LIKE  '%$id%' OR ke=0  ORDER BY name DESC";
+		$sql = "SELECT * FROM products WHERE gudang_id = $store_id AND ke LIKE  '%$id%' OR ke=0  ORDER BY name DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -60,6 +73,12 @@ class Model_products extends CI_Model
 	public function getActiveProductDataall()
 	{
 		$sql = "SELECT * FROM products WHERE availability = 1 ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+	public function getActiveProductDataallgudang($id)
+	{
+		$sql = "SELECT * FROM products WHERE gudang_id = $id and availability = 1 ORDER BY id DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -151,6 +170,12 @@ class Model_products extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
+	public function getProductstockDatagudang($id)
+	{
+		$sql = "SELECT * FROM products_l_stock_masuk WHERE gudang_id = $id ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 	public function getProductstockDataRusak($id = null)
 	{
 		if ($id) {
@@ -160,6 +185,12 @@ class Model_products extends CI_Model
 		}
 
 		$sql = "SELECT * FROM products_l_stock_rusak ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+	public function getProductstockDataRusakGudang($id)
+	{
+		$sql = "SELECT * FROM products_l_stock_rusak WHERE gudang_id=$id ORDER BY id DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}

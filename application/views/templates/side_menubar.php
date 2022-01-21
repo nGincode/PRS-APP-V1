@@ -10,7 +10,7 @@ $user_data = $this->model_users->getUserData($id_user);
   <section class="sidebar">
     <div class="user-panel">
       <div class="pull-left image">
-        <img src=" <?php if (file_exists('./uploads/logo/' . $this->session->userdata('logo'))) {
+        <img src=" <?php if (file_exists('/uploads/logo/' . $this->session->userdata('logo'))) {
                       echo base_url('/uploads/logo/' . $this->session->userdata('logo'));
                     } else {
                       echo base_url('/uploads/ivn_image/unnamed.png');
@@ -45,6 +45,15 @@ $user_data = $this->model_users->getUserData($id_user);
       </li>
 
       <?php if ($user_permission) : ?>
+
+        <?php if (in_array('createProduct', $user_permission) || in_array('updateProduct', $user_permission) || in_array('viewProduct', $user_permission) || in_array('deleteProduct', $user_permission)) : ?>
+          <li id="kasir">
+            <a href="<?php echo base_url('products/kasir') ?>">
+              <i class="fa fa-calculator"></i>
+              <span>Point Of Sales</span>
+            </a>
+          </li>
+        <?php endif; ?>
 
         <?php if (in_array('createpos', $user_permission) || in_array('updatepos', $user_permission) || in_array('viewpos', $user_permission) || in_array('deletepos', $user_permission)) : ?>
           <li class="treeview" id="mainposNav">
@@ -150,32 +159,24 @@ $user_data = $this->model_users->getUserData($id_user);
             <ul class="treeview-menu">
               <?php if (in_array('createProduct', $user_permission)) : ?>
 
-                <?php if ($id_user  == 2) { ?>
-                  <li id="addProductNav"><a href="<?php echo base_url('products/create') ?>"><i class="fa fa-plus"></i> Barang Baru</a>
-                  </li>
-                <?php } ?>
+                <li id="addProductNav"><a href="<?php echo base_url('products/create') ?>"><i class="fa fa-plus"></i> Barang Baru</a>
+                </li>
               <?php endif; ?>
 
-              <?php if (in_array('viewProduct', $user_permission)) : ?>
-                <?php if ($id_user == 2) { ?>
-                  <li id="ProductmasukNav"><a href="<?php echo base_url('products/bmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Masuk</a></li>
-                <?php } ?>
+              <?php if (in_array('createProduct', $user_permission)) : ?>
+                <li id="ProductmasukNav"><a href="<?php echo base_url('products/bmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Masuk</a></li>
               <?php endif; ?>
 
-              <?php if (in_array('viewProduct', $user_permission)) : ?>
-                <?php if ($id_user == 2) { ?>
-                  <li id="ProductrusakNav"><a href="<?php echo base_url('products/rmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Rusak</a></li>
-                <?php } ?>
+              <?php if (in_array('createProduct', $user_permission)) : ?>
+                <li id="ProductrusakNav"><a href="<?php echo base_url('products/rmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Rusak</a></li>
               <?php endif; ?>
 
-              <?php if (in_array('viewProduct', $user_permission)) : ?>
+              <?php if (in_array('createProduct', $user_permission)) : ?>
                 <li id="ProductkeluarNav"><a href="<?php echo base_url('products/lkeluar') ?>"><i class="fa fa-sign-out"></i> Barang Keluar</a></li>
               <?php endif; ?>
 
               <?php if (in_array('updateProduct', $user_permission) || in_array('viewProduct', $user_permission) || in_array('deleteProduct', $user_permission)) : ?>
-                <?php if ($id_user == 2) { ?>
-                  <li id="manageProductNav"><a href="<?php echo base_url('products') ?>"><i class="fa fa-gear"></i> Manage Barang</a></li>
-                <?php } ?>
+                <li id="manageProductNav"><a href="<?php echo base_url('products') ?>"><i class="fa fa-gear"></i> Manage Barang</a></li>
               <?php endif; ?>
 
               <li class="treeview" id="laporanp">
@@ -200,6 +201,8 @@ $user_data = $this->model_users->getUserData($id_user);
             </ul>
           </li>
         <?php endif; ?>
+
+
 
         <?php if (in_array('createpengadaan', $user_permission) || in_array('updatepengadaan', $user_permission) || in_array('viewpengadaan', $user_permission) || in_array('deletepengadaan', $user_permission)) : ?>
           <li class="treeview" id="mainpengadaanNav">
@@ -637,9 +640,15 @@ $user_data = $this->model_users->getUserData($id_user);
                 </li>
               <?php endif; ?>
 
+
               <?php if (in_array('viewdapro', $user_permission)) : ?>
-                <li id="managedaproNav"><a href="<?php echo base_url('dapro') ?>"><i class="fa fa-gear"></i>Manage</a></li>
+                <li id="laporan"><a href="<?php echo base_url('dapro/laporan') ?>"><i class="fa fa-file-text-o"></i> Laporan</a>
+                </li>
               <?php endif; ?>
+
+              <!-- <?php if (in_array('viewdapro', $user_permission)) : ?>
+                <li id="managedaproNav"><a href="<?php echo base_url('dapro') ?>"><i class="fa fa-gear"></i>Manage</a></li>
+              <?php endif; ?> -->
 
             </ul>
           </li>

@@ -85,9 +85,9 @@ class Orders extends Admin_Controller
 
 				if ($div == 0) {
 					if ($filter) {
-						$data = $this->model_orders->getOrdersDatabyoutlet($filter, $dari, $sampai);
+						$data = $this->model_orders->getOrdersDatabyoutlet($filter, $dari, $sampai, $store_id);
 					} else {
-						$data = $this->model_orders->getOrdersDatabyall($dari, $sampai);
+						$data = $this->model_orders->getOrdersDatabyallgudang($dari, $sampai, $store_id);
 					}
 				} else {
 					if ($store_id == 7) {

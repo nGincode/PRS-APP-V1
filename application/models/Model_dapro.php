@@ -17,10 +17,10 @@ class Model_dapro extends CI_Model
 		return $query->result_array();
 	}
 
-	public function getdapro_bahanjadi()
+	public function getdapro_bahanjadi($tgl_awal, $tgl_akhir)
 	{
 
-		$sql = "SELECT * FROM dapro_bahanjadi";
+		$sql = "SELECT * FROM dapro_bahanjadi WHERE tgl BETWEEN '$tgl_awal' AND '$tgl_akhir'  ORDER BY tgl ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -40,6 +40,26 @@ class Model_dapro extends CI_Model
 		$sql = "SELECT * FROM dapro_bahanbaku WHERE product_id=$id";
 		$query = $this->db->query($sql);
 		return $query->result_array();
+	}
+
+
+	public function getdaprojadiid($id)
+	{
+
+		$sql = "SELECT * FROM dapro_bahanjadi WHERE id=$id";
+		$query = $this->db->query($sql);
+		return $query->row_array();
+	}
+
+
+	public function uploadsuksesitem($id)
+	{
+		$data = array(
+			'up' => 1
+		);
+		$this->db->where('id', $id);
+		$update = $this->db->update('dapro_bahanjadi', $data);
+		return ($update == true) ? true : false;
 	}
 
 	public function status_up($id)

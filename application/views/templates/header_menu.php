@@ -28,7 +28,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <!-- The user image in the navbar-->
             <img width="18.5px" src="
-            <?php if (file_exists('./uploads/logo/' . $this->session->userdata('logo'))) {
+            <?php if (file_exists('/uploads/logo/' . $this->session->userdata('logo'))) {
               echo base_url('/uploads/logo/' . $this->session->userdata('logo'));
             } else {
               echo base_url('/uploads/ivn_image/unnamed.png');
@@ -40,7 +40,7 @@
           <ul class="dropdown-menu">
             <!-- The user image in the menu -->
             <li class="user-header">
-              <?php if (file_exists('./uploads/logo/' . $this->session->userdata('logo'))) {
+              <?php if (file_exists('/uploads/logo/' . $this->session->userdata('logo'))) {
                 echo '<img src="' . base_url('/uploads/logo/' . $this->session->userdata('logo')) . '" class="img-circle" alt="User Image">';
               } else {
                 echo '<img src="' . base_url('/uploads/ivn_image/unnamed.png') . '" class="img-circle" alt="User Image">';

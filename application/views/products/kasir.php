@@ -10,12 +10,12 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Tambah
-      <small>Orders</small>
+      Point Of Sales
+      <small>(POS)</small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-      <li class="active">Orders</li>
+      <li class="active">POS</li>
     </ol>
   </section>
 
@@ -25,18 +25,11 @@
     <div class="row">
       <div class="col-md-12 col-xs-12">
         <div id="messages"></div>
-        <?php
-        if ($this->data['sekarang'] > $this->data['mulai'] or $this->data['sekarang'] < $this->data['sampai'] or $div == 0) {
-        } else { ?>
-          <div class="alert alert-error alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            Anda Hanya Dapat Order Dijam <?= $mulai ?> - <?= $sampai ?> (<?= $sekarang ?>)
-          </div>
-        <?php } ?>
 
-        <div class="box box-success box-solid">
+
+        <div class="box box-white box-solid">
           <div class="box-header with-border">
-            <h3 class="box-title"><b><i class="fa fa-shopping-cart"></i> <?= $page_title ?></b></h3>
+            <h3 class="box-title"><b><i class="fa fa-shopping-cart"></i> Point Of Sales</b></h3>
 
             <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -56,35 +49,26 @@
                 <div class="form-group">
                   <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Nama Pengorder</label>
                   <div class="col-sm-7">
-                    <input type="text" class="form-control" id="customer_name" required name="customer_name" placeholder="Nama Penerima" autocomplete="off" value="<?php echo $user['firstname'] ?>" />
+                    <input type="text" class="form-control" id="customer_name" required name="customer_name" placeholder="Nama Penerima" autocomplete="off" />
+                    <input type="hidden" class="form-control" id="store_id" name="gudang_id" value="<?= $store_id ?>" autocomplete="off" />
+                    <input type="hidden" class="form-control" id="kasir" name="kasir" value="1" autocomplete="off" />
+                    <input type="hidden" class="form-control" id="customer_address" name="customer_address" autocomplete="off" value="<?php echo $outlet ?>">
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Outlet</label>
-                  <div class="col-sm-7">
-                    <?php
-
-
-                    if ($div == 1 or $div == 2 or $div == 3 or $div == 11) :
-                    ?>
-                      <input type="text" class="form-control" name="customer_address" placeholder="<?php echo $outlet ?>" autocomplete="off" value="<?php echo $outlet ?>" disabled>
-                      <input type="hidden" class="form-control" id="customer_address" name="customer_address" placeholder="<?php echo $outlet ?>" autocomplete="off" value="<?php echo $outlet ?>">
-                      <input type="hidden" class="form-control" name="store_id" value="<?php echo $store_id ?>">
-                    <?php elseif ($div == 0) : ?>
-                      <select name="customer_address" class="form-control">
-                        <?php foreach ($store as $k => $v) : ?>
-                          <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
-                        <?php endforeach ?>
-                      </select>
-                    <?php endif; ?>
-                  </div>
-                </div>
 
                 <div class="form-group">
                   <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">No Hp</label>
                   <div class="col-sm-7">
-                    <input type="number" class="form-control" required value="<?php echo $user['phone'] ?>" id="customer_phone" name="customer_phone" placeholder="No Hp" autocomplete="off">
+                    <input type="number" class="form-control" id="customer_phone" name="customer_phone" placeholder="No Hp" autocomplete="off">
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                  <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Barcode</label>
+                  <div class="col-sm-7">
+                    <input type="number" class="form-control" id="barcode" name="barcode" placeholder="Input No Barcode" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -126,12 +110,12 @@
                       <input type="text" name="amount[]" id="amount_1" class="form-control" disabled autocomplete="off">
                       <input type="hidden" name="amount_value[]" id="amount_value_1" class="form-control" autocomplete="off">
                     </td>
-                    <td><button type="button" class="btn btn-default" onclick="removeRow('1')"><i class="fa fa-close"></i></button></td>
+                    <td><button type="button" class="btn btn-danger" onclick="removeRow('1')"><i class="fa fa-close"></i></button></td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <th colspan="6">
-                    <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                    <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-success"><i class="fa fa-plus"></i></button>
                   </th>
                 </tfoot>
               </table>
@@ -140,10 +124,16 @@
               <div class="col-md-6 col-xs-12 pull pull-right">
 
                 <div class="form-group">
-                  <label for="gross_amount" class="col-sm-5 control-label">Jumlah Harga</label>
+                  <label for="gross_amount" class="col-sm-5 control-label">Jumlah</label>
                   <div class="col-sm-7">
                     <input type="text" class="form-control" id="gross_amount" name="gross_amount" disabled autocomplete="off">
                     <input type="hidden" class="form-control" id="gross_amount_value" name="gross_amount_value" autocomplete="off">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="gross_amount" class="col-sm-5 control-label">Tunai</label>
+                  <div class="col-sm-7">
+                    <input type="number" class="form-control" required id="tunai" name="tunai" autocomplete="off">
                   </div>
                 </div>
                 <?php if ($is_service_enabled == true) : ?>
@@ -185,8 +175,7 @@
             <div class="box-footer">
               <input type="hidden" name="service_charge_rate" value="<?php echo $company_data['service_charge_value'] ?>" autocomplete="off">
               <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
-              <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Pesan</button>
-              <a href="<?php echo base_url('orders/') ?>" class="btn btn-warning"><i class="fa fa-close"></i> Batal</a>
+              <button type="submit" style="width: 100%;height: 80px;" class="btn btn-primary"><i class="fa fa-sign-in"></i> Submit</button>
             </div>
           </form>
           <!-- /.box-body -->
@@ -195,13 +184,37 @@
       </div>
       <!-- col-md-12 -->
     </div>
-    <!-- /.row -->
-
-
   </section>
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+<!-- remove brand modal -->
+<div class="modal fade" tabindex="-1" role="dialog" id="print" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><b>Transaksi Berhasil</b></h4>
+      </div>
+
+      <form>
+        <div class="modal-body">
+          <center>
+            <h2><b>~Kembalian~</b></h2>
+            <h2 id="kembalian" style="color: green;">123</h2><br>
+            <button type="button" id="idprint" class="btn btn-primary" onclick="print(this.value)" value=""><i class="fa fa-print"></i> Print</button>
+          </center>
+        </div>
+        <div class="modal-footer">
+          <button type="button" style="width: 100%;" class="btn btn-success" data-dismiss="modal" onClick="window.location.reload()">Kembali</button>
+        </div>
+      </form>
+
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div id="printaera" style="position: absolute; z-index: -1;"></div>
 
 <script type="text/javascript">
   var base_url = "<?php echo base_url(); ?>";
@@ -210,8 +223,7 @@
     $(".select_group").select2();
     // $("#description").wysihtml5();
 
-    $("#mainOrdersNav").addClass('active');
-    $("#addOrderNav").addClass('active');
+    $("#kasir").addClass('active');
 
     var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' +
       'onclick="alert(\'Call your custom code here.\')">' +
@@ -252,7 +264,7 @@
             '<td><input type="text" name="rate[]" id="rate_' + row_id + '" class="form-control" disabled><input type="hidden" name="rate_value[]" id="rate_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="text" name="satuan[]" id="satuan_' + row_id + '" class="form-control" disabled><input type="hidden" name="satuan_value[]" id="satuan_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="text" name="amount[]" id="amount_' + row_id + '" class="form-control" disabled><input type="hidden" name="amount_value[]" id="amount_value_' + row_id + '" class="form-control"></td>' +
-            '<td><button type="button" class="btn btn-default" onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
+            '<td><button type="button" class="btn btn-danger" onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
             '</tr>';
 
           if (count_table_tbody_tr >= 1) {
@@ -391,61 +403,110 @@
   }
 
 
+  function print(id) {
+
+
+    $.ajax({
+      type: "POST",
+      url: "<?php echo base_url('products/kasir_print') ?>",
+      data: {
+        id: id
+      },
+      success: function(data) {
+
+        if (data) {
+
+          document.getElementById("printaera").innerHTML = data;
+          $.print("#printaera");
+        } else {
+          alert('Isi Belum Lengkap');
+        }
+      }
+    });
+
+
+  }
+
+
   $(document).ready(function() {
     $("#createorder").submit(function(event) {
       event.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: "<?php echo base_url('orders/create') ?>",
-        data: $('#createorder').serialize(),
-        success: function(data) {
 
-          if (data == 1) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Berhasil...!',
-              text: '',
-              showConfirmButton: false,
-              timer: 4000
-            });
+      $jml = $("#gross_amount_value").val();
+      $tunai = $("#tunai").val();
 
-            setTimeout(
-              function() {
-                window.location = "<?php echo base_url('orders/') ?>"
-              },
-              4000);
-          } else if (data == 9) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Gagal...!',
-              text: 'Terjadi Kesalahan Silahkan Hubungi Bng Fembi',
-              showConfirmButton: false,
-              timer: 4000
-            });
 
-          } else if (data == 2) {
-            Swal.fire({
-              icon: 'info',
-              title: 'Sory Bro...!',
-              text: 'Produk Pesanan Anda Ada Yang Duplikat',
-              showConfirmButton: false,
-              timer: 4000
-            });
+      if ($tunai > $jml) {
+        $.ajax({
+          type: "POST",
+          url: "<?php echo base_url('products/kasir') ?>",
+          data: $('#createorder').serialize(),
+          success: function(data) {
 
-          } else if (data == 3) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Sorry Bray...!',
-              text: 'Jam Order Telah Habis, 18:00 - 05:00!!',
-              showConfirmButton: false,
-              timer: 4000
-            });
+            if (data > 0) {
+              $('#print').modal('show');
+              $('#idprint').val(data);
+              document.getElementById("createorder").reset();
+
+
+              $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('products/kembalian') ?>",
+                data: {
+                  id: data
+                },
+                success: function(hasil) {
+                  document.getElementById("kembalian").innerHTML = hasil;
+                }
+              });
+
+
+              // Swal.fire({
+              //   icon: 'success',
+              //   title: 'Berhasil...!',
+              //   text: data,
+              //   showConfirmButton: false,
+              //   timer: 4000
+              // });
+
+              // setTimeout(
+              //   function() {
+              //     window.location = "<?php echo base_url('products/kasir') ?>"
+              //   },
+              //   4000);
+            } else if (data === 'ere') {
+              Swal.fire({
+                icon: 'error',
+                title: 'Gagal...!',
+                text: 'Terjadi Kesalahan Silahkan Hubungi Bng Fembi',
+                showConfirmButton: false,
+                timer: 4000
+              });
+
+            } else if (data === 'dup') {
+              Swal.fire({
+                icon: 'info',
+                title: 'Sory Bro...!',
+                text: 'Produk Pesanan Anda Ada Yang Duplikat',
+                showConfirmButton: false,
+                timer: 4000
+              });
+
+            }
+
 
           }
-
-
-        }
-      });
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal...!',
+          text: 'Uang yang dibayarkan kurang',
+          showConfirmButton: false,
+          timer: 4000
+        });
+      }
     });
   });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/jQuery.print@1.5.1/jQuery.print.min.js"></script>

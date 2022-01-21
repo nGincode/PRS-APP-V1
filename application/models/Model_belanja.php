@@ -56,9 +56,15 @@ class Model_belanja extends CI_Model
 	}
 
 
-	public function getbelanjaterimabyall($tgl_awal, $tgl_akhir)
+	public function getbelanjaterimabyall($tgl_awal, $tgl_akhir, $store_id)
 	{
-		$sql = "SELECT * FROM belanja WHERE status=1 AND tgl BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY id DESC ";
+		$sql = "SELECT * FROM belanja WHERE gudang_id=$store_id AND status=1 AND tgl BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY id DESC ";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+	public function getbarangjadibyall($tgl_awal, $tgl_akhir)
+	{
+		$sql = "SELECT * FROM dapro_bahanjadi WHERE  tgl BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY id DESC ";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
@@ -82,10 +88,23 @@ class Model_belanja extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
+	public function getbelanjaDataBelanja($id)
+	{
+
+		$sql = "SELECT * FROM belanja WHERE gudang_id = $id ORDER BY id DESC, tgl DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 
 	public function belanjaData($tgl_awal, $tgl_akhir)
 	{
 		$sql = " SELECT * FROM belanja WHERE tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+	public function belanjaDatagudang($tgl_awal, $tgl_akhir, $id)
+	{
+		$sql = " SELECT * FROM belanja WHERE gudang_id = $id AND tgl  BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}

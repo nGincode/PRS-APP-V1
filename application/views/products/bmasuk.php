@@ -134,6 +134,61 @@ endif; ?>
       </div>
 
 
+      <?php if ($this->session->userdata('id') == 1) { ?>
+        <div class="box box-warning box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title"><b><i class="fa fa-th"></i> Barang Jadi Dapro</b></h3>
+
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <!-- /.box-tools -->
+          </div>
+
+
+          <!-- /.box-header -->
+          <div class="box-body" id='penyesuaian'>
+
+            <div style="position:relative;z-index: 9; margin:10px; display: flex;">
+
+
+              <div style="margin-right:10px;">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                  <?= $namastore; ?>
+                </button>
+              </div>
+            </div>
+
+            <div class="group">
+              <input type="text" id="jadi" onchange="ubah1()" name="datefilter" required>
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="labeljudul">Pilih Tanggal</label>
+            </div>
+            <hr>
+
+
+
+            <table id="manageTable2" class="table table-bordered table-striped" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="width: 3px;">Opsi</th>
+                  <th>Tanggal</th>
+                  <th>Nama</th>
+                  <th>Qty</th>
+                  <th>Harga</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+
+            </table>
+          </div>
+          <!-- /.box-body -->
+        </div>
+      <?php } ?>
+
+
 
 
       <div class="box  box-solid">
@@ -242,6 +297,41 @@ endif; ?>
   }
 
 
+  function ubah1() {
+
+    $(document).ready(function() {
+      var da = $('#jadi').val();
+      var validasiAngka = /^[0-9]+$/;
+
+      $("#mainProductNav").addClass('active');
+
+      if (da) {
+        manageTable = $('#manageTable2').DataTable({
+          processing: false,
+          serverSide: false,
+          destroy: true,
+          "ajax": {
+            url: base_url + 'products/masukbarangjadi',
+            type: "POST",
+            beforeSend: function() {
+              $("#load").css("display", "block");
+            },
+            data: {
+              tgl: da
+            },
+            complete: function() {
+              $("#load").css("display", "none");
+            }
+          }
+        });
+
+      } else {
+        alert('Tanggal harus dipilih');
+      }
+    });
+
+  }
+
   $(function() {
 
     $('input[name="datefilter"]').daterangepicker({
@@ -314,6 +404,65 @@ endif; ?>
                 timer: 1500
               });
               manageTable.ajax.reload(null, false);
+            }
+          }
+        });
+
+
+
+
+      }
+    })
+
+
+  }
+
+
+  function upload1(id) {
+    Swal.fire({
+      title: 'Yakin ingin Upload?',
+      text: "Data akan langsung menambah stock & tidak bisa diubah",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Upload'
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        $.ajax({
+          type: "POST",
+          url: "<?= base_url() ?>products/uploadbarangjadi",
+          data: {
+            'id': id
+          },
+          cache: false,
+          beforeSend: function() {
+            Swal.fire({
+              title: 'Memproses!',
+              didOpen: () => {
+                Swal.showLoading()
+              },
+            })
+          },
+          success: function(data) {
+            if (data) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Kesalahan...!',
+                text: 'Item ' + data + ' Tidak Bisa diupload',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            } else {
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil...!',
+                text: 'Item Berhasil ditambah',
+                showConfirmButton: false,
+                timer: 1500
+              });
+              $('#manageTable2').ajax.reload(null, false);
             }
           }
         });
