@@ -71,12 +71,17 @@
                       <input type="text" class="form-control" name="customer_address" placeholder="<?php echo $outlet ?>" autocomplete="off" value="<?php echo $outlet ?>" disabled>
                       <input type="hidden" class="form-control" id="customer_address" name="customer_address" placeholder="<?php echo $outlet ?>" autocomplete="off" value="<?php echo $outlet ?>">
                       <input type="hidden" class="form-control" name="store_id" value="<?php echo $store_id ?>">
+
+                      <input type="hidden" class="form-control" id="tunai" name="tunai" autocomplete="off" value="0">
+                      <input type="hidden" class="form-control" id="kasir" name="kasir" autocomplete="off" value="0">
                     <?php elseif ($div == 0) : ?>
                       <select name="customer_address" class="form-control">
                         <?php foreach ($store as $k => $v) : ?>
                           <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
                         <?php endforeach ?>
                       </select>
+                      <input type="hidden" class="form-control" id="gudang_id" name="gudang_id" autocomplete="off" value="<?php echo $store_id ?>">
+                      <input type="hidden" class="form-control" id="tunai" name="tunai" autocomplete="off" value="0">
                     <?php endif; ?>
                   </div>
                 </div>
@@ -87,6 +92,27 @@
                     <input type="number" class="form-control" required value="<?php echo $user['phone'] ?>" id="customer_phone" name="customer_phone" placeholder="No Hp" autocomplete="off">
                   </div>
                 </div>
+
+
+                <?php
+
+
+                if ($div == 1 or $div == 2 or $div == 3 or $div == 11) :
+                ?>
+
+                  <div class="form-group">
+                    <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Logistik</label>
+                    <div class="col-sm-7">
+                      <select name="gudang_id" id="gudang_id" onchange="gudang()" class="form-control">
+                        <?php foreach ($logistik as $s => $l) : ?>
+                          <option value="<?php echo $l['id'] ?>"><?php echo $l['name'] ?></option>
+                        <?php endforeach ?>
+                      </select>
+
+                    </div>
+                  </div>
+
+                <?php endif; ?>
               </div>
 
 
@@ -98,36 +124,11 @@
                   <th style="width:10%;min-width:100px;text-align: center;">Hrg/1</th>
                   <th style="width:10%;min-width:70px;text-align: center;">Satuan</th>
                   <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
-                  <th style="width:10%;text-align: center;"><i class="fa fa-trash"></i></th>
+                  <th style="width0:10%;text-align: center;"><i class="fa fa-trash"></i></th>
                   </tr>
                 </thead>
 
                 <tbody>
-
-                  <tr id="row_1">
-                    <td>
-                      <select class="form-control select_group product" data-row-id="row_1" id="product_1" name="product[]" style="width:100%;" onchange="getProductData(1)" required>
-                        <option selected="true" disabled="disabled">Pilih Produk</option>
-                        <?php foreach ($products as $k => $v) : ?>
-                          <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
-                        <?php endforeach ?>
-                      </select>
-                    </td>
-                    <td><input type="number" step="any" name="qty[]" id="qty_1" class="form-control" required onkeyup="getTotal(1)"></td>
-                    <td>
-                      <input type="text" name="rate[]" id="rate_1" class="form-control" disabled autocomplete="off">
-                      <input type="hidden" name="rate_value[]" id="rate_value_1" class="form-control" autocomplete="off">
-                    </td>
-                    <td>
-                      <input type="text" name="satuan[]" id="satuan_1" class="form-control" disabled autocomplete="off">
-                      <input type="hidden" name="satuan_value[]" id="satuan_value_1" class="form-control" autocomplete="off">
-                    </td>
-                    <td>
-                      <input type="text" name="amount[]" id="amount_1" class="form-control" disabled autocomplete="off">
-                      <input type="hidden" name="amount_value[]" id="amount_value_1" class="form-control" autocomplete="off">
-                    </td>
-                    <td><button type="button" class="btn btn-default" onclick="removeRow('1')"><i class="fa fa-close"></i></button></td>
-                  </tr>
                 </tbody>
                 <tfoot>
                   <th colspan="6">
@@ -226,9 +227,13 @@
 
       var tambah = $('#add_row');
 
+      var gudang_id = $('#gudang_id').val();
       $.ajax({
         url: base_url + '/orders/getTableProductRow/',
         type: 'post',
+        data: {
+          gudang_id: gudang_id
+        },
         dataType: 'json',
         beforeSend: function() {
           tambah.attr('disabled', 'disabled');
@@ -286,6 +291,10 @@
     }
   }
 
+  function gudang() {
+    $("#product_info_table tbody tr").html('');
+  }
+
   // get the product information from the server
   function getProductData(row_id) {
     var product_id = $("#product_" + row_id).val();
@@ -302,10 +311,12 @@
       $("#amount_value_" + row_id).val("");
 
     } else {
+      var gudang_id = $('#gudang_id').val();
       $.ajax({
         url: base_url + 'orders/getProductValueById',
         type: 'post',
         data: {
+          gudang_id: gudang_id,
           product_id: product_id
         },
         dataType: 'json',
@@ -419,6 +430,15 @@
               icon: 'error',
               title: 'Gagal...!',
               text: 'Terjadi Kesalahan Silahkan Hubungi Bng Fembi',
+              showConfirmButton: false,
+              timer: 4000
+            });
+
+          } else if (data == 8) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal...!',
+              text: 'Ada data tidak ditampilkan dengan benar',
               showConfirmButton: false,
               timer: 4000
             });

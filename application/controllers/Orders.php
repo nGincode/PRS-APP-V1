@@ -266,11 +266,15 @@ class Orders extends Admin_Controller
 				$ay = array_values($hitung);
 
 				if ($au == $ay) {
-					$order_id = $this->model_orders->create();
-					if ($order_id) {
-						echo 1;
+					if ($this->input->post('net_amount_value') === 'NaN') {
+						echo 8;
 					} else {
-						echo 9;
+						$order_id = $this->model_orders->create();
+						if ($order_id) {
+							echo 1;
+						} else {
+							echo 9;
+						}
 					}
 				} else {
 					echo 2;
@@ -286,11 +290,10 @@ class Orders extends Admin_Controller
 			$this->data['is_service_enabled'] = ($company['service_charge_value'] > 0) ? true : false;
 
 			if ($div == 0) {
-				$this->data['products'] = $this->model_products->getProductData();
 				$this->data['page_title'] = 'Tambah Order Dari Logistik';
 			} else {
-				$this->data['products'] = $this->model_products->getActiveProductData($store_id);
 				$this->data['page_title'] = 'BUAT ORDER ' . $store;
+				$this->data['logistik'] = $this->model_stores->getlogistiksoutlet();
 			}
 
 			$this->data['outlet'] = $store;
@@ -316,12 +319,16 @@ class Orders extends Admin_Controller
 	{
 		$div = $this->session->userdata('divisi');
 		$store_id = $this->session->userdata('store_id');
-		if ($div == 0) {
-			$products = $this->model_products->getProductData();
+		$gudang_id = $this->input->post('gudang_id');
+		if ($gudang_id) {
+			if ($div == 0) {
+				$products = $this->model_products->getProductDataGudang($gudang_id);
+			} else {
+				$products = $this->model_products->getActiveProductDatagudang($store_id, $gudang_id);
+				echo json_encode($products);
+			}
 		} else {
-			$products = $this->model_products->getActiveProductData($store_id);
 		}
-		echo json_encode($products);
 	}
 
 	public function update($id)

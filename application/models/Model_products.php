@@ -29,6 +29,12 @@ class Model_products extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
+	public function getProductDataGudangid($id, $gudang)
+	{
+		$sql = "SELECT * FROM products where id=$id And gudang_id = $gudang ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 	public function ceknamaproduk($store_id, $id)
 	{
 		$sql = "SELECT * FROM products where gudang_id = $store_id AND name = '$id' ORDER BY id DESC";
@@ -64,11 +70,17 @@ class Model_products extends CI_Model
 
 	public function getActiveProductData($ke)
 	{
-		$sql = "SELECT * FROM products WHERE availability = 1 AND ke=0  OR ke LIKE '%$ke%'  ORDER BY id DESC";
+		$sql = "SELECT * FROM products WHERE  availability = 1 AND ke=0  OR ke LIKE '%$ke%'  ORDER BY id DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
+	public function getActiveProductDatagudang($ke, $gudang)
+	{
+		$sql = "SELECT * FROM products WHERE gudang_id = $gudang AND availability = 1 ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 
 	public function getActiveProductDataall()
 	{

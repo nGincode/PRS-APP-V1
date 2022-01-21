@@ -1516,7 +1516,7 @@ class Products extends Admin_Controller
             $this->data['is_service_enabled'] = ($company['service_charge_value'] > 0) ? true : false;
 
             if ($div == 0) {
-                $this->data['products'] = $this->model_products->getProductData();
+                $this->data['products'] = $this->model_products->getProductDataGudang($store_id);
             } else {
                 $this->data['products'] = $this->model_products->getActiveProductData($store_id);
             }
