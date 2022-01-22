@@ -157,47 +157,59 @@ $user_data = $this->model_users->getUserData($id_user);
               </span>
             </a>
             <ul class="treeview-menu">
-              <?php if (in_array('createProduct', $user_permission)) : ?>
 
-                <li id="addProductNav"><a href="<?php echo base_url('products/create') ?>"><i class="fa fa-plus"></i> Barang Baru</a>
+              <?php
+
+              $CI = &get_instance();
+              $CI->load->model('model_stores');
+              $store_id = $this->session->userdata('store_id');
+              $cek = $this->model_stores->getStoresData($store_id);
+              if ($cek['tipe'] == 2) { ?>
+                <?php if (in_array('createProduct', $user_permission)) : ?>
+
+                  <li id="addProductNav"><a href="<?php echo base_url('products/create') ?>"><i class="fa fa-plus"></i> Barang Baru</a>
+                  </li>
+                <?php endif; ?>
+
+                <?php if (in_array('createProduct', $user_permission)) : ?>
+                  <li id="ProductmasukNav"><a href="<?php echo base_url('products/bmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Masuk</a></li>
+                <?php endif; ?>
+
+                <?php if (in_array('createProduct', $user_permission)) : ?>
+                  <li id="ProductrusakNav"><a href="<?php echo base_url('products/rmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Rusak</a></li>
+                <?php endif; ?>
+
+                <?php if (in_array('createProduct', $user_permission)) : ?>
+                  <li id="ProductkeluarNav"><a href="<?php echo base_url('products/lkeluar') ?>"><i class="fa fa-sign-out"></i> Barang Keluar</a></li>
+                <?php endif; ?>
+
+                <?php if (in_array('updateProduct', $user_permission) || in_array('viewProduct', $user_permission) || in_array('deleteProduct', $user_permission)) : ?>
+                  <li id="manageProductNav"><a href="<?php echo base_url('products') ?>"><i class="fa fa-gear"></i> Manage Barang</a></li>
+                <?php endif; ?>
+
+                <li class="treeview" id="laporanp">
+                  <a href="#"><i class="fa fa-arrow-right"></i> Laporan
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+
+                    <?php if (in_array('viewProduct', $user_permission)) : ?>
+                      <li id="stocklaporanp"><a href="<?php echo base_url('products/laporanstockproduk') ?>"><i class="fa fa-window-maximize"></i> Arsip Barang</a></li>
+                    <?php endif; ?>
+
+                    <?php if (in_array('viewProduct', $user_permission)) : ?>
+                      <li id="laporanproduk"><a href="<?php echo base_url('products/laporan') ?>"><i class="fa fa-print"></i> Print</a></li>
+                    <?php endif; ?>
+
+                  </ul>
                 </li>
-              <?php endif; ?>
+              <?php } else { ?>
 
-              <?php if (in_array('createProduct', $user_permission)) : ?>
-                <li id="ProductmasukNav"><a href="<?php echo base_url('products/bmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Masuk</a></li>
-              <?php endif; ?>
-
-              <?php if (in_array('createProduct', $user_permission)) : ?>
-                <li id="ProductrusakNav"><a href="<?php echo base_url('products/rmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Rusak</a></li>
-              <?php endif; ?>
-
-              <?php if (in_array('viewProduct', $user_permission)) : ?>
                 <li id="ProductkeluarNav"><a href="<?php echo base_url('products/lkeluar') ?>"><i class="fa fa-sign-out"></i> Barang Keluar</a></li>
-              <?php endif; ?>
 
-              <?php if (in_array('updateProduct', $user_permission) || in_array('viewProduct', $user_permission) || in_array('deleteProduct', $user_permission)) : ?>
-                <li id="manageProductNav"><a href="<?php echo base_url('products') ?>"><i class="fa fa-gear"></i> Manage Barang</a></li>
-              <?php endif; ?>
-
-              <li class="treeview" id="laporanp">
-                <a href="#"><i class="fa fa-arrow-right"></i> Laporan
-                  <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                </a>
-                <ul class="treeview-menu">
-
-                  <?php if (in_array('viewProduct', $user_permission)) : ?>
-                    <li id="stocklaporanp"><a href="<?php echo base_url('products/laporanstockproduk') ?>"><i class="fa fa-window-maximize"></i> Arsip Barang</a></li>
-                  <?php endif; ?>
-
-                  <?php if (in_array('viewProduct', $user_permission)) : ?>
-                    <li id="laporanproduk"><a href="<?php echo base_url('products/laporan') ?>"><i class="fa fa-print"></i> Print</a></li>
-                  <?php endif; ?>
-
-                </ul>
-              </li>
-
+              <?php } ?>
             </ul>
           </li>
         <?php endif; ?>
