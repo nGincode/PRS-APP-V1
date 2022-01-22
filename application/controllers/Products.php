@@ -710,10 +710,19 @@ class Products extends Admin_Controller
                 $dari = strtotime("-1 day", strtotime($hasil[0]));
                 $sampai = strtotime("+1 day", strtotime($hasil[1]));
 
+                $cek = $this->model_stores->getStoresData($store_id);
                 if ($filter) {
-                    $data = $this->model_orders->getOrdersDatabyoutletgudang($filter, $dari, $sampai, $store_id);
+                    if ($cek['tipe'] == 2) {
+                        $data = $this->model_orders->getOrdersDatabyoutletgudang($filter, $dari, $sampai, $store_id);
+                    } else {
+                        $data = $this->model_orders->getOrdersDatabystoreid($filter, $dari, $sampai);
+                    }
                 } else {
-                    $data = $this->model_orders->getOrdersDatabyallgudang($dari, $sampai, $store_id);
+                    if ($cek['tipe'] == 2) {
+                        $data = $this->model_orders->getOrdersDatabyallgudang($dari, $sampai, $store_id);
+                    } else {
+                        $data = $this->model_orders->getOrdersDatabyall($dari, $sampai);
+                    }
                 }
 
                 foreach ($data as $key => $value) {

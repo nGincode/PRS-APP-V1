@@ -46,7 +46,7 @@ $user_data = $this->model_users->getUserData($id_user);
 
       <?php if ($user_permission) : ?>
 
-        <?php if (in_array('createProduct', $user_permission) || in_array('updateProduct', $user_permission) || in_array('viewProduct', $user_permission) || in_array('deleteProduct', $user_permission)) : ?>
+        <?php if (in_array('createOrder', $user_permission)) : ?>
           <li id="kasir">
             <a href="<?php echo base_url('products/kasir') ?>">
               <i class="fa fa-calculator"></i>
