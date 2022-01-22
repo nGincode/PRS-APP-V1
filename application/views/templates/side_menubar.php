@@ -171,7 +171,7 @@ $user_data = $this->model_users->getUserData($id_user);
                 <li id="ProductrusakNav"><a href="<?php echo base_url('products/rmasuk') ?>"><i class="fa fa-sign-in"></i> Barang Rusak</a></li>
               <?php endif; ?>
 
-              <?php if (in_array('createProduct', $user_permission)) : ?>
+              <?php if (in_array('viewProduct', $user_permission)) : ?>
                 <li id="ProductkeluarNav"><a href="<?php echo base_url('products/lkeluar') ?>"><i class="fa fa-sign-out"></i> Barang Keluar</a></li>
               <?php endif; ?>
 
