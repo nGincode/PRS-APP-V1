@@ -91,8 +91,7 @@ class Orders extends Admin_Controller
 					}
 				} else {
 					if ($store_id == 7) {
-						// $data = $this->model_orders->getOrdersDatabyall($dari, $sampai);
-						$data = $this->model_orders->getOrdersDatabystoreid($store_id, $dari, $sampai);
+						$data = $this->model_orders->getOrdersDatabyall($dari, $sampai);
 					} else {
 						$data = $this->model_orders->getOrdersDatabystoreid($store_id, $dari, $sampai);
 					}

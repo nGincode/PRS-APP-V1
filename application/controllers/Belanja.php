@@ -146,7 +146,12 @@ class Belanja extends Admin_Controller
 		$result = array('data' => array());
 
 		$store_id = $this->session->userdata('store_id');
-		$data = $this->model_belanja->getbelanjaDataBelanja($store_id);
+		$cek = $this->model_stores->getStoresData($store_id);
+		if ($cek['tipe'] == 2) {
+			$data = $this->model_belanja->getbelanjaDataBelanja($store_id);
+		} else {
+			$data = $this->model_belanja->getbelanjaData();
+		}
 
 
 		foreach ($data as $key => $value) {
