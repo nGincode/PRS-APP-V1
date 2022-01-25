@@ -46,14 +46,6 @@ $user_data = $this->model_users->getUserData($id_user);
 
       <?php if ($user_permission) : ?>
 
-        <?php if (in_array('createOrder', $user_permission)) : ?>
-          <li id="kasir">
-            <a href="<?php echo base_url('products/kasir') ?>">
-              <i class="fa fa-calculator"></i>
-              <span>Point Of Sales</span>
-            </a>
-          </li>
-        <?php endif; ?>
 
         <?php if (in_array('createpos', $user_permission) || in_array('updatepos', $user_permission) || in_array('viewpos', $user_permission) || in_array('deletepos', $user_permission)) : ?>
           <li class="treeview" id="mainposNav">
@@ -67,7 +59,7 @@ $user_data = $this->model_users->getUserData($id_user);
             <ul class="treeview-menu">
 
               <?php if (in_array('createpos', $user_permission)) : ?>
-                <li id="addposNav"><a href="<?php echo base_url('pos') ?>"><i class="fa fa-sign-in"></i> Transaksi</a>
+                <li id="addposNav"><a href="<?php echo base_url('products/kasir') ?>"><i class="fa fa-sign-in"></i> Transaksi</a>
                 </li>
               <?php endif; ?>
 

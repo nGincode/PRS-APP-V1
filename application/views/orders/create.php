@@ -80,7 +80,6 @@
                           <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
                         <?php endforeach ?>
                       </select>
-                      <input type="hidden" class="form-control" id="gudang_id" name="gudang_id" autocomplete="off" value="<?php echo $store_id ?>">
                       <input type="hidden" class="form-control" id="tunai" name="tunai" autocomplete="off" value="0">
                     <?php endif; ?>
                   </div>
@@ -94,25 +93,18 @@
                 </div>
 
 
-                <?php
+                <div class="form-group">
+                  <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Logistik</label>
+                  <div class="col-sm-7">
+                    <select name="gudang_id" id="gudang_id" onchange="gudang()" class="form-control">
+                      <?php foreach ($logistik as $s => $l) : ?>
+                        <option value="<?php echo $l['id'] ?>"><?php echo $l['name'] ?></option>
+                      <?php endforeach ?>
+                    </select>
 
-
-                if ($div == 1 or $div == 2 or $div == 3 or $div == 11) :
-                ?>
-
-                  <div class="form-group">
-                    <label for="gross_amount" class="col-sm-5 control-label" style="text-align:left;">Logistik</label>
-                    <div class="col-sm-7">
-                      <select name="gudang_id" id="gudang_id" onchange="gudang()" class="form-control">
-                        <?php foreach ($logistik as $s => $l) : ?>
-                          <option value="<?php echo $l['id'] ?>"><?php echo $l['name'] ?></option>
-                        <?php endforeach ?>
-                      </select>
-
-                    </div>
                   </div>
+                </div>
 
-                <?php endif; ?>
               </div>
 
 

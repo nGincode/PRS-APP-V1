@@ -90,11 +90,8 @@ class Orders extends Admin_Controller
 						$data = $this->model_orders->getOrdersDatabyallgudang($dari, $sampai, $store_id);
 					}
 				} else {
-					if ($store_id == 7) {
-						$data = $this->model_orders->getOrdersDatabyall($dari, $sampai);
-					} else {
-						$data = $this->model_orders->getOrdersDatabystoreid($store_id, $dari, $sampai);
-					}
+					// $data = $this->model_orders->getOrdersDatabyall($dari, $sampai);
+					$data = $this->model_orders->getOrdersDatabystoreid($store_id, $dari, $sampai);
 				}
 
 				if ($data) {
@@ -292,9 +289,9 @@ class Orders extends Admin_Controller
 				$this->data['page_title'] = 'Tambah Order Dari Logistik';
 			} else {
 				$this->data['page_title'] = 'BUAT ORDER ' . $store;
-				$this->data['logistik'] = $this->model_stores->getlogistiksoutlet();
 			}
 
+			$this->data['logistik'] = $this->model_stores->getlogistiksoutlet();
 			$this->data['outlet'] = $store;
 			$this->data['div'] = $div;
 			$this->data['store_id'] = $store_id;
