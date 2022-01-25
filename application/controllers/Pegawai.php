@@ -233,7 +233,7 @@ class Pegawai extends Admin_Controller
         $this->data['dt_store'] = $this->model_stores->getStoresData($store_id);
         $div = $this->session->userdata('divisi');
         $cek = $this->model_stores->getStoresData($store_id);
-        if (!$cek == 0) {
+        if (!$cek['tipe'] == 0) {
             $pegawai_data = $this->model_pegawai->getpegawaiDataaktiv($store_id);
         } else {
             $pegawai_data = $this->model_pegawai->getpegawai();
@@ -926,7 +926,7 @@ class Pegawai extends Admin_Controller
 
 
         $cek = $this->model_stores->getStoresData($store_id);
-        if ($cek == 0) {
+        if ($cek['tipe'] == 0) {
             if ($filter) {
                 $absen_data = $this->model_pegawai->getabsenDatabyoutlet($filter, $dari, $sampai);
             } else {
@@ -997,7 +997,7 @@ class Pegawai extends Admin_Controller
             } else if ($value['sift'] == 6) {
                 $shf = 'Akustik';
             }
-            if ($cek == 0) {
+            if ($cek['tipe'] == 0) {
                 if ($value['waktu_masuk'] == 1) {
                     $result['data'][] = array(
                         $buttons,
