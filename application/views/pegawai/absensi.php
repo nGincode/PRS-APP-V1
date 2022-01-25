@@ -397,7 +397,7 @@ endif; ?>
 
             <div style="position:relative;z-index: 9; margin:20px; display: flex;">
 
-              <?php if ($div == 0) { ?>
+              <?php if ($cek == 0) { ?>
                 <div style="margin-right:10px;">
                   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                     <?= $pilih; ?>
@@ -431,22 +431,22 @@ endif; ?>
                     </th>
                   <?php endif; ?>
                   <th style='width:70px'>Tanggal</th>
-                  <?php if ($div == 0) : ?>
+                  <?php if ($cek == 0) : ?>
                     <th>Outlet</th>
                   <?php endif; ?>
                   <th>Nama</th>
                   <th>Sift</th>
-                  <?php if ($div == 0) : ?>
+                  <?php if ($cek == 0) : ?>
                     <th style='width:70px'>
                       <center>G.Masuk</center>
                     </th>
                   <?php endif; ?>
-                  <?php if ($div != 0) : ?>
+                  <?php if ($cek != 0) : ?>
                     <th style='width:70px'>
                       <center>Gambar</center>
                     </th>
                   <?php endif; ?>
-                  <?php if ($div == 0) : ?>
+                  <?php if ($cek == 0) : ?>
                     <th style='width:70px'>
                       <center>G.Keluar</center>
                     </th>

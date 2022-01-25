@@ -997,7 +997,7 @@ class Pegawai extends Admin_Controller
             } else if ($value['sift'] == 6) {
                 $shf = 'Akustik';
             }
-            if ($div == 0) {
+            if ($cek == 0) {
                 if ($value['waktu_masuk'] == 1) {
                     $result['data'][] = array(
                         $buttons,
