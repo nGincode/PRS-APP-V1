@@ -925,7 +925,8 @@ class Pegawai extends Admin_Controller
         $sampai = date('Y-m-d', strtotime($hasil[1]));
 
 
-        if ($div == 0) {
+        $cek = $this->model_stores->getStoresData($store_id);
+        if ($cek == 0) {
             if ($filter) {
                 $absen_data = $this->model_pegawai->getabsenDatabyoutlet($filter, $dari, $sampai);
             } else {
