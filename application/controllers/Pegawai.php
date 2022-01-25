@@ -232,7 +232,8 @@ class Pegawai extends Admin_Controller
         $store_id = $this->session->userdata('store_id');
         $this->data['dt_store'] = $this->model_stores->getStoresData($store_id);
         $div = $this->session->userdata('divisi');
-        if (!$div == 0) {
+        $cek = $this->model_stores->getStoresData($store_id);
+        if (!$cek == 0) {
             $pegawai_data = $this->model_pegawai->getpegawaiDataaktiv($store_id);
         } else {
             $pegawai_data = $this->model_pegawai->getpegawai();
@@ -253,8 +254,7 @@ class Pegawai extends Admin_Controller
             $this->data['pilih'] = 'SEMUA';
         };
 
-
-
+        $this->data['cek'] = $cek;
         $this->render_template('pegawai/absensi', $this->data);
     }
 

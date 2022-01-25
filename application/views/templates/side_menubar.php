@@ -2,6 +2,19 @@
 $divisi = $this->session->userdata['divisi'];
 $id_user = $this->session->userdata['id'];
 $user_data = $this->model_users->getUserData($id_user);
+
+
+
+$CI = &get_instance();
+$CI->load->model('model_stores');
+$CI->load->model('model_orders');
+$CI->load->model('model_users');
+
+$store_id = $this->session->userdata('store_id');
+$cek = $this->model_stores->getStoresData($store_id);
+
+$countbaca = $CI->model_orders->countbaca(1);
+
 ?>
 
 <aside class="main-sidebar">
@@ -151,11 +164,6 @@ $user_data = $this->model_users->getUserData($id_user);
             <ul class="treeview-menu">
 
               <?php
-
-              $CI = &get_instance();
-              $CI->load->model('model_stores');
-              $store_id = $this->session->userdata('store_id');
-              $cek = $this->model_stores->getStoresData($store_id);
               if ($cek['tipe'] == 2) { ?>
                 <?php if (in_array('createProduct', $user_permission)) : ?>
 
@@ -248,7 +256,8 @@ $user_data = $this->model_users->getUserData($id_user);
                 <li id="absensiNav"><a href="<?php echo base_url('Pegawai/absensi') ?>"><i class="fa fa-address-card-o"></i>Absensi</a></li>
               <?php endif; ?>
 
-              <?php if ($divisi == 0) : ?>
+              <?php
+              if ($cek['tipe'] == 0) {  ?>
                 <?php if (in_array('createPegawai', $user_permission)) : ?>
                   <li id="addPegawaiNav"><a href="<?php echo base_url('Pegawai/datapegawai') ?>"><i class="fa fa-sign-in"></i>Tambah</a>
                   </li>
@@ -262,7 +271,7 @@ $user_data = $this->model_users->getUserData($id_user);
                 <?php if (in_array('viewPegawai', $user_permission)) : ?>
                   <li id="managePegawaiNav"><a href="<?php echo base_url('Pegawai') ?>"><i class="fa fa-gear"></i>Manage</a></li>
                 <?php endif; ?>
-              <?php endif; ?>
+              <?php } ?>
 
             </ul>
           </li>
@@ -408,11 +417,6 @@ $user_data = $this->model_users->getUserData($id_user);
               <span>Orders</span>
               <span class="pull-right-container">
                 <?php
-                $CI = &get_instance();
-                $CI->load->model('model_orders');
-                $CI->load->model('model_users');
-                $countbaca = $CI->model_orders->countbaca(1);
-
                 if ($countbaca) {
                   if ($divisi == 0) {
                     echo ' <span class="label label-primary pull-right">' . $countbaca . '</span>';

@@ -16,7 +16,7 @@ endif; ?>
   </section>
 
   <!-- Main content -->
-  <?php if (!$div == 0) : ?>
+  <?php if ($cek > 0) : ?>
     <section class="content">
       <!-- Small boxes (Stat box) -->
       <div class="row">
@@ -475,7 +475,7 @@ endif; ?>
 
 
 
-  <?php if ($div == 0) : ?>
+  <?php if ($cek == 0) : ?>
     <section class="content">
       <!-- Small boxes (Stat box) -->
       <div class="row">
@@ -539,7 +539,7 @@ endif; ?>
   <?php endif; ?>
 
 
-  <?php if ($div == 0) : ?>
+  <?php if ($cek == 0) : ?>
     <section class="content">
       <!-- Small boxes (Stat box) -->
       <div class="row">
