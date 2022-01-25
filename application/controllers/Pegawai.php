@@ -254,7 +254,7 @@ class Pegawai extends Admin_Controller
             $this->data['pilih'] = 'SEMUA';
         };
 
-        $this->data['cek'] = $cek;
+        $this->data['cek'] = $cek['tipe'];
         $this->render_template('pegawai/absensi', $this->data);
     }
 
