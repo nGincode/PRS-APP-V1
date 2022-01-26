@@ -12,7 +12,7 @@ $CI->load->model('model_users');
 
 $store_id = $this->session->userdata('store_id');
 if ($store_id) {
-  $cek = $this->model_stores->getStoresData($store_id);
+  $cek = $CI->model_stores->getStoresData($store_id);
 } else {
   $cek = '';
 }
