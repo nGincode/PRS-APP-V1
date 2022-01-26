@@ -178,7 +178,7 @@
             <div class="box-footer">
               <input type="hidden" name="service_charge_rate" value="<?php echo $company_data['service_charge_value'] ?>" autocomplete="off">
               <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
-              <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Pesan</button>
+              <button type="submit" class="btn btn-success" id="tblsmt"><i class="fa fa-sign-in"></i> Pesan</button>
               <a href="<?php echo base_url('orders/') ?>" class="btn btn-warning"><i class="fa fa-close"></i> Batal</a>
             </div>
           </form>
@@ -409,14 +409,14 @@
               title: 'Berhasil...!',
               text: '',
               showConfirmButton: false,
-              timer: 4000
+              timer: 3000
             });
-
+            $('#tblsmt').attr("disabled", true);
             setTimeout(
               function() {
                 window.location = "<?php echo base_url('orders/') ?>"
               },
-              4000);
+              3000);
           } else if (data == 9) {
             Swal.fire({
               icon: 'error',
