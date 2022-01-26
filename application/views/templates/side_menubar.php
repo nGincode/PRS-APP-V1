@@ -11,7 +11,11 @@ $CI->load->model('model_orders');
 $CI->load->model('model_users');
 
 $store_id = $this->session->userdata('store_id');
-$cek = $this->model_stores->getStoresData($store_id);
+if ($store_id) {
+  $cek = $this->model_stores->getStoresData($store_id);
+} else {
+  $cek = '';
+}
 
 $countbaca = $CI->model_orders->countbaca(1);
 

@@ -223,7 +223,8 @@
     $(".select_group").select2();
     // $("#description").wysihtml5();
 
-    $("#kasir").addClass('active');
+    $("#mainposNav").addClass('active');
+    $("#addposNav").addClass('active');
 
     var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' +
       'onclick="alert(\'Call your custom code here.\')">' +
