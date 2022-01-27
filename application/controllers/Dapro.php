@@ -109,16 +109,17 @@ class Dapro extends Admin_Controller
                     $buttons = 'Terupload';
                 }
 
-
-                $result['data'][$key] = array(
-                    $buttons,
-                    $value['tgl_laporan'],
-                    $value['nama_produk'],
-                    $value['qty'],
-                    $value['rate'] . '/' . $value['satuan'],
-                    $tipe,
-                    $status
-                );
+                if ($value['qtyarv']) {
+                    $result['data'][$key] = array(
+                        $buttons,
+                        $value['tgl_laporan'],
+                        $value['nama_produk'],
+                        $value['qty'],
+                        $value['rate'] . '/' . $value['satuan'],
+                        $tipe,
+                        $status
+                    );
+                }
             }
         } else {
             $result['data'] = array();
@@ -213,10 +214,11 @@ class Dapro extends Admin_Controller
                 }
             }
 
+            $productsat = $this->model_products->getProductData($idproduct);
             $data = array(
                 'tgl' => date('Y-m-d'),
-                'nama' => $nama,
-                'idproduct' => $id,
+                'nama' => $productsat['name'],
+                'idproduct' => $idproduct,
                 'qty' => $jml,
                 'harga' => $harga
             );

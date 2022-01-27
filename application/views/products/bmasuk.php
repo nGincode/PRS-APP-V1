@@ -134,7 +134,7 @@ endif; ?>
       </div>
 
 
-      <?php if ($this->session->userdata('id') == 1) { ?>
+      <?php if ($this->session->userdata('store_id') == 1) { ?>
         <div class="box box-warning box-solid">
           <div class="box-header with-border">
             <h3 class="box-title"><b><i class="fa fa-th"></i> Barang Jadi Dapro</b></h3>
@@ -463,6 +463,7 @@ endif; ?>
                 timer: 1500
               });
               $('#manageTable2').ajax.reload(null, false);
+              $('#manageTable').ajax.reload(null, false);
             }
           }
         });
