@@ -810,13 +810,15 @@ class penjualan extends Admin_Controller
                             $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . '<br>';
                         }
                     } else {
-                        $qtytotalrsp[$ambiliditem['name']] = $v['qty'] * $value['qty'];
-                        if ($ambiliditem['price']) {
-                            $qtyresep .= '(' . $ambiliditem['name'] . ' ' . '@' . $v['qty'] . ' ' . $ambiliditem['satuan'] . '/' . $ambiliditem['price'] . ')<br>';
-                            $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . ' (Rp.' . $ambiliditem['price'] * $value['qty'] . ')<br>';
-                        } else {
-                            $qtyresep .= '(' . $ambiliditem['name'] . ' ' . $v['qty'] . ' ' . $ambiliditem['satuan']  . ')<br>';
-                            $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . '<br>';
+                        if ($ambiliditem) {
+                            $qtytotalrsp[$ambiliditem['name']] = $v['qty'] * $value['qty'];
+                            if ($ambiliditem['price']) {
+                                $qtyresep .= '(' . $ambiliditem['name'] . ' ' . '@' . $v['qty'] . ' ' . $ambiliditem['satuan'] . '/' . $ambiliditem['price'] . ')<br>';
+                                $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . ' (Rp.' . $ambiliditem['price'] * $value['qty'] . ')<br>';
+                            } else {
+                                $qtyresep .= '(' . $ambiliditem['name'] . ' ' . $v['qty'] . ' ' . $ambiliditem['satuan']  . ')<br>';
+                                $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . '<br>';
+                            }
                         }
                     }
                 }
@@ -916,9 +918,9 @@ class penjualan extends Admin_Controller
                 foreach ($itemrsp as $v) {
                     $iditemresep = $this->model_penjualan->getitemresepid($v['iditemresep']);
                     $ambiliditem = $this->model_penjualan->getitemprod($v['idproduct']);
-                    if ($v['iditemresep']) {
+                    if ($v['iditemresep'] && $iditemresep) {
                         $dt1[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
-                    } else {
+                    } else if ($v['iditemresep'] && $ambiliditem) {
                         $dt1[$ambiliditem['name']] =  $v['qty'] * $value['qty'];
                     }
                 }
