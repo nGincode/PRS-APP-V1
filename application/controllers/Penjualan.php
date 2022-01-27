@@ -325,23 +325,22 @@ class penjualan extends Admin_Controller
                 $this->db->where('idpenjualanresep', $id);
                 $this->db->delete('penjualan_resep_id');
 
-                $idresep = $this->model_penjualan->idresep();
 
                 $count_product = count($this->input->post('product'));
                 $items = array();
                 for ($x = 0; $x < $count_product; $x++) {
                     if ($this->input->post('store') == 7) {
-                        $idproduct = $this->input->post('product[]')[$x];
+                        $idproducts = $this->input->post('product[]')[$x];
                         $iditemresep = 0;
                     } else {
                         $iditemresep = $this->input->post('product[]')[$x];
-                        $idproduct = 0;
+                        $idproducts = 0;
                     }
 
                     array_push($items, array(
-                        'idpenjualanresep' => $idresep['id'],
+                        'idpenjualanresep' => $id,
                         'iditemresep' => $iditemresep,
-                        'idproduct' => $idproduct,
+                        'idproduct' => $idproducts,
                         'qty' => $this->input->post('qty[]')[$x],
                     ));
                 }
