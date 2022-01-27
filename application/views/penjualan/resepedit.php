@@ -175,6 +175,7 @@
                           $totaljumlah += 0;
                         }
                       }
+
                     ?>
                       <tr id="row_<?php echo $x; ?>">
                         <td>

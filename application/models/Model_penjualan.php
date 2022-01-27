@@ -213,4 +213,12 @@ class Model_penjualan extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->row_array();
 	}
+
+
+	public function cekresep($id)
+	{
+		$sql = "SELECT * FROM penjualan_resep_id WHERE iditemresep = $id";
+		$query = $this->db->query($sql);
+		return $query->num_rows();
+	}
 }

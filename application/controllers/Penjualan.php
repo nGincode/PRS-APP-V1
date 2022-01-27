@@ -184,19 +184,25 @@ class penjualan extends Admin_Controller
 
         $id = $this->input->post('id');
 
+        $cek = $this->model_penjualan->cekresep($id);
         $response = array();
-        if ($id) {
-            $delete = $this->model_penjualan->remove($id);
-            if ($delete == true) {
-                $response['success'] = true;
-                $response['messages'] = "Berhasil Terhapus";
+        if ($cek) {
+            $response['success'] = false;
+            $response['messages'] = "Item Resep Ini Masih digunakan diresep";
+        } else {
+            if ($id) {
+                $delete = $this->model_penjualan->remove($id);
+                if ($delete == true) {
+                    $response['success'] = true;
+                    $response['messages'] = "Berhasil Terhapus";
+                } else {
+                    $response['success'] = false;
+                    $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+                }
             } else {
                 $response['success'] = false;
-                $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+                $response['messages'] = "Refersh kembali!!";
             }
-        } else {
-            $response['success'] = false;
-            $response['messages'] = "Refersh kembali!!";
         }
 
         echo json_encode($response);
@@ -578,7 +584,6 @@ class penjualan extends Admin_Controller
             $response['success'] = false;
             $response['messages'] = "Refersh kembali!!";
         }
-
         echo json_encode($response);
     }
 
