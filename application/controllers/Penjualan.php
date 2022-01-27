@@ -454,7 +454,7 @@ class penjualan extends Admin_Controller
             foreach ($dataresep as $v) {
                 if ($v['iditemresep']) {
                     $item1 = $this->model_penjualan->getitemresep($v['iditemresep']);
-                    if (isset($item1['harga'])) {
+                    if (isset($item1['harga']) && isset($v['qty'])) {
                         $jmlh += $item1['harga'] * $v['qty'];
                     } else {
                         $jmlh += 0;
