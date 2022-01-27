@@ -800,7 +800,7 @@ class penjualan extends Admin_Controller
                 foreach ($itemrsp as  $v) {
                     $iditemresep = $this->model_penjualan->getitemresep($v['iditemresep']);
                     $ambiliditem = $this->model_penjualan->getitemprod($v['idproduct']);
-                    if ($iditemresep) {
+                    if ($v['iditemresep']) {
                         $qtytotalrsp[$iditemresep['nama']] = $v['qty'] * $value['qty'];
                         if ($iditemresep['harga']) {
                             $qtyresep .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ')<br>';
@@ -916,7 +916,7 @@ class penjualan extends Admin_Controller
                 foreach ($itemrsp as $v) {
                     $iditemresep = $this->model_penjualan->getitemresepid($v['iditemresep']);
                     $ambiliditem = $this->model_penjualan->getitemprod($v['idproduct']);
-                    if ($iditemresep) {
+                    if ($v['iditemresep']) {
                         $dt1[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
                     } else {
                         $dt1[$ambiliditem['name']] =  $v['qty'] * $value['qty'];
