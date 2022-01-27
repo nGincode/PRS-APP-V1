@@ -76,7 +76,7 @@
 
               <div class="form-group">
                 <label for="harga">Harga</label>
-                <input type="text" class="form-control" id="harga" name="harga" placeholder="Masukkan Harga" autocomplete="off" />
+                <input type="number" step="any" class="form-control" id="harga" name="harga" placeholder="Masukkan Harga" autocomplete="off" />
               </div>
 
 
@@ -202,7 +202,7 @@
 
               <div class="form-group">
                 <label for="harga">Harga</label>
-                <input type="number" class="form-control" id="hargaedit" name="harga" placeholder="Masukkan Harga" autocomplete="off" />
+                <input type="number" step="any" class="form-control" id="hargaedit" name="harga" placeholder="Masukkan Harga" autocomplete="off" />
               </div>
 
 
