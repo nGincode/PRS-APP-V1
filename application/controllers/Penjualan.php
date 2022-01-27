@@ -799,13 +799,15 @@ class penjualan extends Admin_Controller
                 $qtytotalrsp = array();
                 foreach ($itemrsp as  $v) {
                     $iditemresep = $this->model_penjualan->getitemresep($v['iditemresep']);
-                    $qtytotalrsp[$iditemresep['nama']] = $v['qty'] * $value['qty'];
-                    if ($iditemresep['harga']) {
-                        $qtyresep .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ')<br>';
-                        $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . ' (Rp.' . $iditemresep['harga'] * $value['qty'] . ')<br>';
-                    } else {
-                        $qtyresep .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ')<br>';
-                        $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . '<br>';
+                    if ($iditemresep) {
+                        $qtytotalrsp[$iditemresep['nama']] = $v['qty'] * $value['qty'];
+                        if ($iditemresep['harga']) {
+                            $qtyresep .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ')<br>';
+                            $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . ' (Rp.' . $iditemresep['harga'] * $value['qty'] . ')<br>';
+                        } else {
+                            $qtyresep .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ')<br>';
+                            $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . '<br>';
+                        }
                     }
                 }
             } else {
