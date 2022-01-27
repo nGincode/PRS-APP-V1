@@ -809,16 +809,14 @@ class penjualan extends Admin_Controller
                             $qtyresep .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ')<br>';
                             $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . '<br>';
                         }
-                    } else {
-                        if ($ambiliditem) {
-                            $qtytotalrsp[$ambiliditem['name']] = $v['qty'] * $value['qty'];
-                            if ($ambiliditem['price']) {
-                                $qtyresep .= '(' . $ambiliditem['name'] . ' ' . '@' . $v['qty'] . ' ' . $ambiliditem['satuan'] . '/' . $ambiliditem['price'] . ')<br>';
-                                $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . ' (Rp.' . $ambiliditem['price'] * $value['qty'] . ')<br>';
-                            } else {
-                                $qtyresep .= '(' . $ambiliditem['name'] . ' ' . $v['qty'] . ' ' . $ambiliditem['satuan']  . ')<br>';
-                                $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . '<br>';
-                            }
+                    } else if ($v['idproduct'] && $ambiliditem) {
+                        $qtytotalrsp[$ambiliditem['name']] = $v['qty'] * $value['qty'];
+                        if ($ambiliditem['price']) {
+                            $qtyresep .= '(' . $ambiliditem['name'] . ' ' . '@' . $v['qty'] . ' ' . $ambiliditem['satuan'] . '/' . $ambiliditem['price'] . ')<br>';
+                            $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . ' (Rp.' . $ambiliditem['price'] * $value['qty'] . ')<br>';
+                        } else {
+                            $qtyresep .= '(' . $ambiliditem['name'] . ' ' . $v['qty'] . ' ' . $ambiliditem['satuan']  . ')<br>';
+                            $total .= $ambiliditem['name'] . ' '  . $v['qty'] * $value['qty'] . '/' . $ambiliditem['satuan'] . '<br>';
                         }
                     }
                 }
