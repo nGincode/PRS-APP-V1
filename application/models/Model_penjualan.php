@@ -221,4 +221,12 @@ class Model_penjualan extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->num_rows();
 	}
+
+
+	public function cekmenudupli($store, $id)
+	{
+		$sql = "SELECT * FROM penjualan_resep WHERE store_id = $store AND nama_menu = $id";
+		$query = $this->db->query($sql);
+		return $query->num_rows();
+	}
 }

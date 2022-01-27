@@ -227,58 +227,64 @@ class penjualan extends Admin_Controller
         } else {
             $idproduct = 0;
             $namamnu = $this->input->post('menu');
-            $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required|is_unique[penjualan_resep.nama_menu]');
+            $this->form_validation->set_rules('menu', 'Nama Menu', 'trim|required');
         }
 
 
         if ($this->form_validation->run() == TRUE) {
 
+            $cek = $this->model_penjualan->cekmenudupli($this->input->post('store'), $namamnu);
+            if ($cek) {
+                $this->session->set_flashdata('error', 'Maaf.. ! Nama Item Telah di Gunakan');
+                redirect('penjualan/resep', 'refresh');
+            } else {
 
-            $hitung = $this->input->post('product');
-            $clear_array = array_count_values($hitung);
-            $au = array_keys($clear_array);
-            $ay = array_values($hitung);
-            if ($au == $ay) {
+                $hitung = $this->input->post('product');
+                $clear_array = array_count_values($hitung);
+                $au = array_keys($clear_array);
+                $ay = array_values($hitung);
+                if ($au == $ay) {
 
 
-                $data = array(
-                    'nama_menu' => $namamnu,
-                    'store_id' => $this->input->post('store'),
-                    'idproduct' => $idproduct
-                );
-                $this->model_penjualan->createresep($data);
-                $idresep = $this->model_penjualan->idresep();
+                    $data = array(
+                        'nama_menu' => $namamnu,
+                        'store_id' => $this->input->post('store'),
+                        'idproduct' => $idproduct
+                    );
+                    $this->model_penjualan->createresep($data);
+                    $idresep = $this->model_penjualan->idresep();
 
-                $count_product = count($this->input->post('product'));
-                $items = array();
-                for ($x = 0; $x < $count_product; $x++) {
-                    if ($this->input->post('store') == 7) {
-                        $idproduct = $this->input->post('product[]')[$x];
-                        $iditemresep = 0;
-                    } else {
-                        $iditemresep = $this->input->post('product[]')[$x];
-                        $idproduct = 0;
+                    $count_product = count($this->input->post('product'));
+                    $items = array();
+                    for ($x = 0; $x < $count_product; $x++) {
+                        if ($this->input->post('store') == 7) {
+                            $idproduct = $this->input->post('product[]')[$x];
+                            $iditemresep = 0;
+                        } else {
+                            $iditemresep = $this->input->post('product[]')[$x];
+                            $idproduct = 0;
+                        }
+
+                        array_push($items, array(
+                            'idpenjualanresep' => $idresep['id'],
+                            'iditemresep' => $iditemresep,
+                            'idproduct' => $idproduct,
+                            'qty' => $this->input->post('qty[]')[$x],
+                        ));
                     }
 
-                    array_push($items, array(
-                        'idpenjualanresep' => $idresep['id'],
-                        'iditemresep' => $iditemresep,
-                        'idproduct' => $idproduct,
-                        'qty' => $this->input->post('qty[]')[$x],
-                    ));
-                }
-
-                $create = $this->model_penjualan->createitem($items);
-                if ($create == true) {
-                    $this->session->set_flashdata('success', 'Item Ditambahkan');
-                    redirect('penjualan/resep', 'refresh');
+                    $create = $this->model_penjualan->createitem($items);
+                    if ($create == true) {
+                        $this->session->set_flashdata('success', 'Item Ditambahkan');
+                        redirect('penjualan/resep', 'refresh');
+                    } else {
+                        $this->session->set_flashdata('error', 'Terjadi Kesalahan Penambahan!!');
+                        redirect('penjualan/resep', 'refresh');
+                    }
                 } else {
-                    $this->session->set_flashdata('error', 'Terjadi Kesalahan Penambahan!!');
+                    $this->session->set_flashdata('error', 'Maaf.. ! Item Anda Ada Yang Ganda');
                     redirect('penjualan/resep', 'refresh');
                 }
-            } else {
-                $this->session->set_flashdata('error', 'Maaf.. ! Item Anda Ada Yang Ganda');
-                redirect('penjualan/resep', 'refresh');
             }
         } else {
 
