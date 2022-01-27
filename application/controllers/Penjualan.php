@@ -918,7 +918,7 @@ class penjualan extends Admin_Controller
                     $ambiliditem = $this->model_penjualan->getitemprod($v['idproduct']);
                     if ($v['iditemresep'] && $iditemresep) {
                         $dt1[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
-                    } else if ($v['iditemresep'] && $ambiliditem) {
+                    } else if ($v['idproduct'] && $ambiliditem) {
                         $dt1[$ambiliditem['name']] =  $v['qty'] * $value['qty'];
                     }
                 }
