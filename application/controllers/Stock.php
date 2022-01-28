@@ -377,6 +377,7 @@ class Stock extends Admin_Controller
                 }
             } else {
                 $nama_produk = 'tak diketahui';
+                $img = '';
             }
 
             if ($value['bagian'] == 1) {
