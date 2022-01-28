@@ -325,7 +325,8 @@ class Stock extends Admin_Controller
 
         $filter = $this->input->post('filter');
 
-        $var = $this->input->post('tgl');
+        // $var = $this->input->post('tgl');
+        $var = '26/12/2021 - 25/01/2022';
         $tgl = str_replace('/', '-', $var);
         $hasil = explode(" - ", $tgl);
         $dari = date('Y-m-d', strtotime($hasil[0]));
