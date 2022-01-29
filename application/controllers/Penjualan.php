@@ -78,6 +78,7 @@ class penjualan extends Admin_Controller
 
         $data = array(
             'nama_menu' => $dt['nama_menu'] . '_duplicate',
+            'store_id' => $dt['store_id'] . '_duplicate',
         );
 
         $create = $this->model_penjualan->createresep($data);
@@ -90,6 +91,7 @@ class penjualan extends Admin_Controller
                 'iditemresep' => $v['iditemresep'],
                 'idproduct' => $v['idproduct'],
                 'qty' => $v['qty'],
+                'idproduct' => $v['idproduct'],
             ));
         }
 
