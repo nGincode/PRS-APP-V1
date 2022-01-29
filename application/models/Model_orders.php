@@ -23,7 +23,7 @@ class Model_orders extends CI_Model
 
 	public function getOrdersDatabyall($dari, $sampai)
 	{
-		$sql = "SELECT * FROM orders WHERE date_time BETWEEN $dari AND  $sampai ORDER BY id DESC";
+		$sql = "SELECT * FROM orders WHERE kasir = 0 AND date_time BETWEEN $dari AND  $sampai ORDER BY id DESC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
