@@ -1106,13 +1106,15 @@ class penjualan extends Admin_Controller
                     $qtytotalrsp = array();
                     foreach ($itemrsp as  $v) {
                         $iditemresep = $this->model_penjualan->getitemresep($v['iditemresep']);
-                        $qtytotalrsp[$iditemresep['nama']] = $v['qty'] * $value['qty'];
-                        if ($iditemresep['harga']) {
-                            $qtyresep .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ') ';
-                            $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . ' (Rp.' . $iditemresep['harga'] * $value['qty'] . ') ';
-                        } else {
-                            $qtyresep .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ') ';
-                            $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . ' ';
+                        if ($iditemresep) {
+                            $qtytotalrsp[$iditemresep['nama']] = $v['qty'] * $value['qty'];
+                            if ($iditemresep['harga']) {
+                                $qtyresep .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ') ';
+                                $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . ' (Rp.' . $iditemresep['harga'] * $value['qty'] . ') ';
+                            } else {
+                                $qtyresep .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ') ';
+                                $total .= $iditemresep['nama'] . ' '  . $v['qty'] * $value['qty'] . '/' . $iditemresep['satuan'] . ' ';
+                            }
                         }
                     }
                 } else {
@@ -1149,18 +1151,20 @@ class penjualan extends Admin_Controller
                     for ($i = 0; $i < $c; $i++) {
 
                         $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
-                        if ($dtnama_menu['harga']) {
-                            $total = $dtnama_menu['harga'] * $qty[$i];
-                            $ttl = "(Rp " . number_format($total, 0, ',', '.') . ')';
-                        } else {
-                            $ttl = '';
-                        }
-                        if ($c == $i + 1) {
-                            $totalqty =   $nama[$i] . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan']  . ' ' . $ttl . '';
-                            $sheet->setCellValue('G' . $baris++, $totalqty);
-                        } else {
-                            $totalqty =   $nama[$i]  . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan'] . ' '  . $ttl . '';
-                            $sheet->setCellValue('G' . $baris++, $totalqty);
+                        if ($dtnama_menu) {
+                            if ($dtnama_menu['harga']) {
+                                $total = $dtnama_menu['harga'] * $qty[$i];
+                                $ttl = "(Rp " . number_format($total, 0, ',', '.') . ')';
+                            } else {
+                                $ttl = '';
+                            }
+                            if ($c == $i + 1) {
+                                $totalqty =   $nama[$i] . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan']  . ' ' . $ttl . '';
+                                $sheet->setCellValue('G' . $baris++, $totalqty);
+                            } else {
+                                $totalqty =   $nama[$i]  . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan'] . ' '  . $ttl . '';
+                                $sheet->setCellValue('G' . $baris++, $totalqty);
+                            }
                         }
                     }
                 } else {
