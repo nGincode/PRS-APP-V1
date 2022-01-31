@@ -1246,7 +1246,9 @@ class penjualan extends Admin_Controller
                     $dt1 = array();
                     foreach ($itemrsp as $v) {
                         $iditemresep = $this->model_penjualan->getitemresepid($v['iditemresep']);
-                        $dt1[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
+                        if ($iditemresep) {
+                            $dt1[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
+                        }
                     }
 
                     $dt2 = array();
@@ -1254,8 +1256,10 @@ class penjualan extends Admin_Controller
                         $id_varian =  $dtnama_varian['id'];
                         $itemrspvarian = $this->model_penjualan->getresepitemid($id_varian);
                         foreach ($itemrspvarian as $v) {
-                            $iditemresep = $this->model_penjualan->getitemresepid($v['iditemresep']);
-                            $dt2[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
+                            $iditemresepvar = $this->model_penjualan->getitemresepid($v['iditemresep']);
+                            if ($iditemresepvar) {
+                                $dt2[$iditemresepvar['nama']] =  $v['qty'] * $value['qty'];
+                            }
                         }
                     }
 
@@ -1293,19 +1297,21 @@ class penjualan extends Admin_Controller
             for ($i = 0; $i < $c; $i++) {
 
                 $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
-                if ($dtnama_menu['harga']) {
-                    $jml += $dtnama_menu['harga'] * $qty[$i];
-                    $total = $dtnama_menu['harga'] * $qty[$i];
-                    $harga =  number_format($dtnama_menu['harga'], 0, ',', ',');
-                    $ttl =  number_format($total, 0, ',', ',');
-                } else {
-                    $harga = 0;
-                    $ttl = 0;
-                }
-                if ($c == $i + 1) {
-                    $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  ']';
-                } else {
-                    $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  '],';
+                if ($dtnama_menu) {
+                    if ($dtnama_menu['harga']) {
+                        $jml += $dtnama_menu['harga'] * $qty[$i];
+                        $total = $dtnama_menu['harga'] * $qty[$i];
+                        $harga =  number_format($dtnama_menu['harga'], 0, ',', ',');
+                        $ttl =  number_format($total, 0, ',', ',');
+                    } else {
+                        $harga = 0;
+                        $ttl = 0;
+                    }
+                    if ($c == $i + 1) {
+                        $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  ']';
+                    } else {
+                        $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  '],';
+                    }
                 }
             }
             $array .= ']';
