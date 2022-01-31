@@ -1331,11 +1331,11 @@ class penjualan extends Admin_Controller
         }
         $sheet->setCellValue('A' . $baris, 'Jumlah ');
         $sheet->setCellValue('E' . $baris, $jml);
-        // $writer = new Xlsx($spreadsheet);
-        // header('Content-Disposition: attachment;filename="' . $filename . '"');
-        // header('Content-Type: application/vnd.ms-excel');
-        // header('Cache-Control: max-age=0');
-        // $writer->save('php://output');
+        $writer = new Xlsx($spreadsheet);
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
     }
 
 
