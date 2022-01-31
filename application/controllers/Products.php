@@ -1511,6 +1511,26 @@ class Products extends Admin_Controller
                 if ($order_id) {
                     $akhir = $this->model_orders->getOrdersakhir($store_id);
                     echo $akhir['id'];
+                    if ($akhir['id']) {
+                        $count_product = count($this->input->post('product'));
+                        for ($x = 0; $x < $count_product; $x++) {
+                            $idpr = $this->input->post('product')[$x];
+                            $qtyinp = $this->input->post('qty')[$x];
+
+
+                            $datanya = $this->model_products->getProductData($idpr);
+                            if (isset($datanya['qty'])) {
+
+                                $qty = $datanya['qty'] - $qtyinp;
+                                $items = array(
+                                    'qty' => $qty,
+                                );
+
+                                $this->db->where('id', $datanya['id']);
+                                $this->db->update('products', $items);
+                            }
+                        }
+                    }
                 } else {
                     echo 'ere';
                 }

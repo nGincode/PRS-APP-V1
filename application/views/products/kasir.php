@@ -433,9 +433,8 @@
     $("#createorder").submit(function(event) {
       event.preventDefault();
 
-      $jml = $("#gross_amount_value").val();
-      $tunai = $("#tunai").val();
-
+      $jml = parseInt($("#gross_amount_value").val());
+      $tunai = parseInt($("#tunai").val());
 
       if ($tunai > $jml || $jml === $tunai) {
         $.ajax({
