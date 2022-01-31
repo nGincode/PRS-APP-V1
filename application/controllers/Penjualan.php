@@ -1255,10 +1255,10 @@ class penjualan extends Admin_Controller
                     if ($dtnama_varian) {
                         $id_varian =  $dtnama_varian['id'];
                         $itemrspvarian = $this->model_penjualan->getresepitemid($id_varian);
-                        foreach ($itemrspvarian as $v) {
-                            $iditemresepvar = $this->model_penjualan->getitemresepid($v['iditemresep']);
+                        foreach ($itemrspvarian as $val) {
+                            $iditemresepvar = $this->model_penjualan->getitemresepid($val['iditemresep']);
                             if ($iditemresepvar) {
-                                $dt2[$iditemresepvar['nama']] =  $v['qty'] * $value['qty'];
+                                $dt2[$iditemresepvar['nama']] =  $val['qty'] * $value['qty'];
                             }
                         }
                     }
