@@ -54,7 +54,7 @@ endif; ?>
                 <th style="text-align: center; ">Tgl Masuk</th>
                 <th style="text-align: center; ">ID Pegawai</th>
                 <th style="text-align: center; ">Barcode</th>
-                <th style="text-align: center; ">Limit Voc</th>
+                <th style="text-align: center; max-width:50px;">Limit Voc</th>
                 <th style="text-align: center; ">Used</th>
               </tr>
             </thead>
@@ -90,7 +90,12 @@ endif; ?>
                   <td style="text-align: center; ">
                     <?php
                     if (isset($pegawai['limit_voc'])) {
-                      echo $pegawai["limit_voc"];
+                      echo
+                      '<form method="POST"  action="voc_peg/ubahlimit">
+                        <input type="hidden" name="id" value="' . $employe->id . '">
+                        <input type="hidden" name="nama" value="' . $employe->nama . '" >
+                        <input type="number" style="width:80px" required name="limit" min="' . $pegawai["jml_voc"] . '" value="' . $pegawai["limit_voc"] . '">
+                      </form>';
                     } else {
                       echo '';
                     } ?>

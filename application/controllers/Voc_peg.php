@@ -394,6 +394,31 @@ class Voc_peg extends Admin_Controller
 			}
 		}
 	}
+
+	public function ubahlimit()
+	{
+		$id = $this->input->post('id');
+		$limit = $this->input->post('limit');
+		$nama = $this->input->post('nama');
+
+		if ($id && $limit && $nama) {
+			$data = array(
+				'limit_voc' => $limit,
+			);
+
+			$update = $this->model_vocpeg->ubahjmlvoc($id, $data);
+			if ($update == true) {
+				$this->session->set_flashdata('success', $nama . ' Berhasil di Ubah Limitnya');
+				redirect('voc_peg', 'refresh');
+			} else {
+				$this->session->set_flashdata('error', 'Terjadi Kesalahan !!');
+				redirect('voc_peg', 'refresh');
+			}
+		} else {
+			$this->session->set_flashdata('error', 'Data tidak diketahui');
+			redirect('voc_peg', 'refresh');
+		}
+	}
 }
 
 /* End of file employe.php */

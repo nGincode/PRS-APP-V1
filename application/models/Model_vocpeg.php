@@ -139,6 +139,15 @@ class Model_vocpeg extends CI_Model
 	}
 
 
+	public function ubahjmlvoc($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('voc_peg_data', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+
 
 	public function updategiv($id, $data)
 	{
