@@ -24,8 +24,6 @@
     <!-- Small boxes (Stat box) -->
     <div class="row">
       <div class="col-md-12 col-xs-12">
-        <div id="messages"></div>
-
 
         <div class="box box-white box-solid">
           <div class="box-header with-border">
@@ -71,6 +69,8 @@
                     <input type="number" class="form-control" id="barcode" name="barcode" placeholder="Input No Barcode" autocomplete="off">
                   </div>
                 </div>
+
+                *Proses ini akan mengurangi qty product
               </div>
 
 
@@ -180,10 +180,43 @@
           </form>
           <!-- /.box-body -->
         </div>
+
+
+
+        <div class="box box-solid">
+          <div class="box-header">
+            <h3 class="box-title"><b><i class="fa fa-shopping-cart"></i> History Transaksi</b></h3>
+          </div>
+
+
+          <!-- /.box-header -->
+          <div class="box-body" id='penyesuaian'>
+            <table id="manageTable" class="table table-bordered table-striped" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th style="width: 10px;">Opsi</th>
+                  <th>Tanggal</th>
+                  <th>Bill</th>
+                  <th>Nama</th>
+                  <th>Total</th>
+                  <th>Cash</th>
+                </tr>
+              </thead>
+
+            </table>
+          </div>
+          <!-- /.box-body -->
+
+        </div>
         <!-- /.box -->
       </div>
+
+
+
       <!-- col-md-12 -->
     </div>
+
+
   </section>
   <!-- /.content -->
 </div>
@@ -214,6 +247,29 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="lihatModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Produk Diorder</h4>
+      </div>
+
+      <div class="box-body" style="overflow: auto;">
+        <div id="lihatForm">
+          <div id="dataorder">
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <div id="printaera" style="position: absolute; z-index: -1;"></div>
 
 <script type="text/javascript">
@@ -225,6 +281,13 @@
 
     $("#mainposNav").addClass('active');
     $("#addposNav").addClass('active');
+
+
+    // initialize the datatable 
+    manageTable = $('#manageTable').DataTable({
+      'ajax': base_url + 'products/history',
+      'order': []
+    });
 
     var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' +
       'onclick="alert(\'Call your custom code here.\')">' +
@@ -428,6 +491,26 @@
 
   }
 
+
+  // lihat functions 
+  function lihatFunc(id) {
+    if (id) {
+      var lihatorder = "<?php echo base_url('orders/lihatorder'); ?>";
+
+      $.ajax({
+        url: lihatorder,
+        type: "POST",
+        data: {
+          id: id
+        },
+        success: function(data) {
+          $('#dataorder').html(data);
+        }
+      });
+
+      return false;
+    }
+  }
 
   $(document).ready(function() {
     $("#createorder").submit(function(event) {

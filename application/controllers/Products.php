@@ -1749,4 +1749,33 @@ class Products extends Admin_Controller
             echo 'Lunas';
         }
     }
+
+    public function history()
+    {
+        $result = array('data' => array());
+
+        $store_id = $this->session->userdata('store_id');
+        $data = $this->model_products->getkasir($store_id);
+
+        foreach ($data as $key => $value) {
+
+            $buttons = ' <div class="btn-group dropleft">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+            <ul class="dropdown-menu">';
+            $buttons .= '<li><a href="#" onclick="lihatFunc(' . $value['id'] . ')"  data-toggle="modal" data-target="#lihatModal"><i class="fa fa-file-text-o"></i> Cek Order</a></li>';
+            $buttons .= '<li><a href="#" onclick="print(' . $value['id'] . ')"><i class="fa fa-print"></i> Print Struk</a></li>';
+            $buttons .= '</ul></div>';
+
+            $result['data'][$key] = array(
+                $buttons,
+                $value['tgl_pesan'],
+                '#' . $value['bill_no'],
+                $value['customer_name'],
+                number_format($value['net_amount'], 0, ",", "."),
+                number_format($value['tunai'], 0, ",", "."),
+            );
+        } // /foreach
+
+        echo json_encode($result);
+    }
 }

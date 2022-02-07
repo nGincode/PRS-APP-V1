@@ -274,4 +274,12 @@ class Model_products extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
+
+
+	public function getkasir($id)
+	{
+		$sql = "SELECT * FROM orders WHERE gudang_id = $id AND kasir = 1 ORDER BY id DESC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 }
