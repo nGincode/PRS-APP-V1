@@ -1,6 +1,17 @@
 <?php if ($this->session->flashdata('success')) : echo "<script> Swal.fire({icon: 'success',title: 'Berhasil...!',text: '" . $this->session->flashdata('success') . "',showConfirmButton: false,timer: 4000});</script>";
 elseif ($this->session->flashdata('error')) : echo "<script> Swal.fire({icon: 'error',title: 'Maaf...!',text: '" . $this->session->flashdata('error') . "',showConfirmButton: false,timer: 4000});</script>";
 endif; ?>
+
+
+<?php
+$s1 = json_decode($dt_store['s1'], TRUE);
+$s2 = json_decode($dt_store['s2'], TRUE);
+$lembur = json_decode($dt_store['lembur'], TRUE);
+$khusus_s1 = json_decode($dt_store['khusus_s1'], TRUE);
+$khusus_s2 = json_decode($dt_store['khusus_s2'], TRUE);
+$akustik = json_decode($dt_store['akustik'], TRUE);
+?>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -33,116 +44,107 @@ endif; ?>
               </div>
               <!-- /.box-tools -->
             </div>
+            <center>
+              <form role="form" method="post" id="register">
+                <div class="box-body">
+                  <div style="width: 100%;text-align: center;">
+                    <div id="clock" style="font-size:xx-large;font-weight:bolder;">
+                    </div>
+                  </div><br>
 
-            <form role="form" method="post" id="register">
-              <div class="box-body">
+                  <div class="form-group" style="max-width:300px;">
+                    <label for=" nama">Nama Pegawai</label><br>
+                    <select name="nama" id="nama" class="form-control select_group" required style="max-width:270px;">
+                      <option selected=" true" value="" disabled="disabled">Pilih Pegawai</option>
+                      <?php foreach ($pegawai_data as $k => $v) : ?>
+                        <option value="<?php echo $v['id'] ?>"><?php echo $v['nama'] ?></option>
+                      <?php endforeach ?>
+                    </select>
+                  </div>
+                  <br>
+                  <div class="form-group" style="max-width:300px;">
+                    <label for=" sift">Sift</label>
+                    <select name="sift" id="sift" class="form-control" required>
+                      <option selected="true" value="" disabled="disabled">Pilih Sift</option>
+                      <?php
+                      if (date('D') == 'Sunday' or date('D') == 'Saturday') {
+                        if ($khusus_s1[0] or $khusus_s2[0]) {
 
-                <div style="width: 100%;text-align: center;">
-                  <div id="clock" style="font-size:x-large;font-weight:bolder;">
+                          if (date('D') == 'Sunday') {
+                            $hari = 'Minggu Shift 1';
+                          } else  if (date('D') == 'Saturday') {
+                            $hari = 'Sabtu Shift 1';
+                          }
+
+                          if (date('D') == 'Sunday') {
+                            $hari1 = 'Minggu Shift 2';
+                          } else  if (date('D') == 'Saturday') {
+                            $hari1 = 'Sabtu Shift 2';
+                          }
+
+                          if ($khusus_s1[0]) {
+                            echo '<option value="4">' . $hari . '</option>';
+                          }
+                          if ($khusus_s2[0]) {
+                            echo '<option value="5">' . $hari1 . '</option>';
+                          }
+                        } else {
+                          if ($s1[0]) {
+                            echo '<option value="1">Shift 1</option>';
+                          };
+                          if ($s2[0]) {
+                            echo '<option value="2">Shift 2</option>';
+                          };
+                        }
+                        if ($akustik[0]) {
+                          echo '<option value="6">Akustik</option>';
+                        }
+                      } else {  ?>
+
+                        <?php if ($s1[0]) { ?>
+                          <option value="1">Sift 1</option>
+                        <?php }  ?>
+                        <?php if ($s2[0]) { ?>
+                          <option value="2">Sift 2</option>
+                      <?php }
+                      } ?>
+
+                      <?php if ($lembur[0]) { ?>
+                        <option value="3">Lembur</option>
+                      <?php } ?>
+
+                      <?php if ($akustik[0]) { ?>
+                        <option value="6">Akustik</option>
+                      <?php } ?>
+
+                    </select>
+                  </div>
+                  <br>
+                  <div id="donate" style="float: unset;">
+                    <label style="float: unset;"><input type="radio" id="ket" name="ket" value="1" <?php if (date('His') < '150000') {
+                                                                                                      echo "checked";
+                                                                                                    } ?>><span>Masuk</span></label>
+                    <label style="float: unset;"><input type="radio" id="ket2" name="ket" value="2" <?php if (date('His') > '150000') {
+                                                                                                      echo "checked";
+                                                                                                    } ?>><span>Keluar</span></label>
+
+                  </div>
+                  <br>
+                  <div class="form-group">
+                    <label for="camera">Camera</label>
+                    <div id="my_camera">
+                    </div>
+
+
                   </div>
                 </div>
+                <!-- /.box-body -->
 
-                <div class="form-group">
-                  <label for="nama">Nama Pegawai</label>
-                  <select name="nama" id="nama" class="form-control select_group" required style="width:100%;">
-                    <option selected="true" value="" disabled="disabled">Pilih Pegawai</option>
-                    <?php foreach ($pegawai_data as $k => $v) : ?>
-                      <option value="<?php echo $v['id'] ?>"><?php echo $v['nama'] ?></option>
-                    <?php endforeach ?>
-                  </select>
+                <div class="box-footer">
+                  <button type="submit" class="btn btn-primary btn-lg"><i class="fa fa-smile-o"></i> Cisssss</button>
                 </div>
-
-                <div class="form-group">
-                  <label for="sift">Sift</label>
-                  <select name="sift" id="sift" class="form-control" required style="width:100%;">
-                    <option selected="true" value="" disabled="disabled">Pilih Sift</option>
-                    <?php
-                    $s1 = json_decode($dt_store['s1'], TRUE);
-                    $s2 = json_decode($dt_store['s2'], TRUE);
-                    $lembur = json_decode($dt_store['lembur'], TRUE);
-                    $khusus_s1 = json_decode($dt_store['khusus_s1'], TRUE);
-                    $khusus_s2 = json_decode($dt_store['khusus_s2'], TRUE);
-                    $akustik = json_decode($dt_store['akustik'], TRUE);
-                    ?>
-                    <?php
-                    if (date('D') == 'Sunday' or date('D') == 'Saturday') {
-                      if ($khusus_s1[0] or $khusus_s2[0]) {
-
-                        if (date('D') == 'Sunday') {
-                          $hari = 'Minggu Shift 1';
-                        } else  if (date('D') == 'Saturday') {
-                          $hari = 'Sabtu Shift 1';
-                        }
-
-                        if (date('D') == 'Sunday') {
-                          $hari1 = 'Minggu Shift 2';
-                        } else  if (date('D') == 'Saturday') {
-                          $hari1 = 'Sabtu Shift 2';
-                        }
-
-                        if ($khusus_s1[0]) {
-                          echo '<option value="4">' . $hari . '</option>';
-                        }
-                        if ($khusus_s2[0]) {
-                          echo '<option value="5">' . $hari1 . '</option>';
-                        }
-                      } else {
-                        if ($s1[0]) {
-                          echo '<option value="1">Shift 1</option>';
-                        };
-                        if ($s2[0]) {
-                          echo '<option value="2">Shift 2</option>';
-                        };
-                      }
-                      if ($akustik[0]) {
-                        echo '<option value="6">Akustik</option>';
-                      }
-                    } else {  ?>
-
-                      <?php if ($s1[0]) { ?>
-                        <option value="1">Sift 1</option>
-                      <?php }  ?>
-                      <?php if ($s2[0]) { ?>
-                        <option value="2">Sift 2</option>
-                    <?php }
-                    } ?>
-
-                    <?php if ($lembur[0]) { ?>
-                      <option value="3">Lembur</option>
-                    <?php } ?>
-
-                    <?php if ($akustik[0]) { ?>
-                      <option value="6">Akustik</option>
-                    <?php } ?>
-
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <div id="donate">
-                    <label><input type="radio" id="ket" name="ket" value="1" <?php if (date('His') < '150000') {
-                                                                                echo "checked";
-                                                                              } ?>><span>Masuk</span></label>
-                    <label><input type="radio" id="ket2" name="ket" value="2" <?php if (date('His') > '150000') {
-                                                                                echo "checked";
-                                                                              } ?>><span>Keluar</span></label>
-                  </div>
-                </div>
-                <br><br><br><br><br>
-                <div class="form-group">
-                  <label for="camera">Camera</label>
-                  <div id="my_camera">
-                  </div>
-
-
-                </div>
-              </div>
-              <!-- /.box-body -->
-
-              <div class="box-footer">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> Simpan</button>
-              </div>
-            </form>
+              </form>
+            </center>
           </div>
           <!-- /.box -->
         </div>
@@ -159,7 +161,8 @@ endif; ?>
         width: 320,
         height: 240,
         image_format: 'jpeg',
-        jpeg_quality: 90
+        jpeg_quality: 100,
+        enable_flash: true,
       });
       Webcam.attach('#my_camera');
     </script>
@@ -203,130 +206,150 @@ endif; ?>
                 } else {
                   var absen = 'Keluar';
                 }
-                Swal.fire({
-                  title: absen + '?',
-                  text: "Absen " + absen + " dengan nama " + namapegawai + " dengan shift " + sift,
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Kirim'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    Webcam.snap(function(data_uri) {
-                      image = data_uri;
-                      //$('#my_camera').html('<img src="' + data_uri + '"/>')
-                    });
-                    if (image) {
-                      $.ajax({
-                          url: '<?php echo site_url("Pegawai/saveabsensi"); ?>',
-                          type: 'POST',
-                          dataType: 'json',
-                          data: {
-                            nama: nama,
-                            image: image,
-                            ket: ket,
-                            sift: sift
-                          },
-                          beforeSend: function() {
-                            Swal.showLoading();
-                          },
-                          success: function(data) {
-                            if (data == 'q') {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Terjadi Masalah Pada Gambar',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
-                            } else if (data == 'cc') {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Anda kecepatan absennya',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
-                            } else if (data == 'yy') {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Gagal mengambil absen masuk terakhir',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
-                            } else if (data == 'xx') {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Anda hanya bisa absen masuk 05:00 - 17:59',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
-                            } else if (data == 'qw') {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Foto anda tidak terdeteksi',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
-                            } else if (data == 'zz') {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Shift Tidak Valid',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
-                            } else if (data == 5) {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Anda Harus Absen Masuk Dulu',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
-                            } else if (data > 0) {
-                              Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil...!',
-                                text: 'Anda Berhasil Absen',
-                                showConfirmButton: false,
-                                timer: 2000
-                              });
 
-                              setTimeout(function() { // wait for 5 secs(2)
-                                location.reload(); // then reload the page.(3)
-                              }, 2000);
-                            } else {
-                              Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal...!',
-                                text: 'Anda Telah Absen Hari Ini',
-                                showConfirmButton: false,
-                                timer: 4000
-                              });
+                Webcam.snap(function(data_uri) {
+                  image = data_uri;
+                });
 
+                if (image) {
+
+                  Swal.fire({
+                    title: 'Absen ' + absen + '',
+                    text: "Absen " + absen + " atas nama " + namapegawai + " dengan shift " + sift + " dan usahakan foto diatas tampak jelas",
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Upload',
+                    imageUrl: image,
+                    imageWidth: 320,
+                    imageHeight: 240,
+                    imageAlt: 'Custom image',
+                    allowOutsideClick: false
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      // Webcam.snap(function(data_uri) {
+                      //   image = data_uri;
+                      //   //$('#my_camera').html('<img src="' + data_uri + '"/>')
+                      // });
+                      if (image) {
+                        $.ajax({
+                            url: '<?php echo site_url("Pegawai/saveabsensi"); ?>',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                              nama: nama,
+                              image: image,
+                              ket: ket,
+                              sift: sift
+                            },
+                            beforeSend: function() {
+                              Swal.showLoading();
+                            },
+                            success: function(data) {
+                              if (data == 'q') {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Terjadi Masalah Pada Gambar',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+                              } else if (data == 'cc') {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Anda kecepatan absennya',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+                              } else if (data == 'yy') {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Gagal mengambil absen masuk terakhir',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+                              } else if (data == 'xx') {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Anda hanya bisa absen masuk 05:00 - 17:59',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+                              } else if (data == 'qw') {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Foto anda tidak terdeteksi',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+                              } else if (data == 'zz') {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Shift Tidak Valid',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+                              } else if (data == 5) {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Anda Harus Absen Masuk Dulu',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+                              } else if (data > 0) {
+                                Swal.fire({
+                                  icon: 'success',
+                                  title: 'Berhasil...!',
+                                  text: 'Anda Berhasil Absen',
+                                  showConfirmButton: false,
+                                  timer: 2000
+                                });
+
+                                setTimeout(function() { // wait for 5 secs(2)
+                                  location.reload(); // then reload the page.(3)
+                                }, 2000);
+                              } else {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Gagal...!',
+                                  text: 'Anda Telah Absen Hari Ini',
+                                  showConfirmButton: false,
+                                  timer: 4000
+                                });
+
+                              }
                             }
-                          }
-                        })
-                        .fail(function(data) {
-                          console.log(data);
-                        });
+                          })
+                          .fail(function(data) {
+                            console.log(data);
+                          });
 
-                    } else {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal...!',
-                        text: 'Kamera Bermasalah Refresh Halaman',
-                        showConfirmButton: false,
-                        timer: 1500
-                      });
+                      } else {
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Gagal...!',
+                          text: 'Kamera Bermasalah Refresh Halaman',
+                          showConfirmButton: false,
+                          timer: 1500
+                        });
+                      }
                     }
-                  }
-                })
+                  })
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal...!',
+                    text: 'Kamera Bermasalah Refresh Halaman',
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                }
               }
             }
           })

@@ -408,15 +408,12 @@ class Voc_peg extends Admin_Controller
 
 			$update = $this->model_vocpeg->ubahjmlvoc($id, $data);
 			if ($update == true) {
-				$this->session->set_flashdata('success', $nama . ' Berhasil di Ubah Limitnya');
-				redirect('voc_peg', 'refresh');
+				echo 1;
 			} else {
-				$this->session->set_flashdata('error', 'Terjadi Kesalahan !!');
-				redirect('voc_peg', 'refresh');
+				echo 500;
 			}
 		} else {
-			$this->session->set_flashdata('error', 'Data tidak diketahui');
-			redirect('voc_peg', 'refresh');
+			echo 9;
 		}
 	}
 }

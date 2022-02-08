@@ -90,12 +90,11 @@ endif; ?>
                   <td style="text-align: center; ">
                     <?php
                     if (isset($pegawai['limit_voc'])) {
-                      echo
-                      '<form method="POST"  action="voc_peg/ubahlimit">
-                        <input type="hidden" name="id" value="' . $employe->id . '">
-                        <input type="hidden" name="nama" value="' . $employe->nama . '" >
-                        <input type="number" style="width:80px" required name="limit" min="' . $pegawai["jml_voc"] . '" value="' . $pegawai["limit_voc"] . '">
-                      </form>';
+                      echo '
+                        <input type="hidden" name="nama" id="namalimit" value="' . $employe->nama . '" >
+                        <input type="number" onchange="ubahlimit(' . $pegawai["id"] . ', this.value, ';
+                      echo   "'" . $employe->nama . "'";
+                      echo ')" style="width:80px" required name="limit" value="' . $pegawai["limit_voc"] . '">';
                     } else {
                       echo '';
                     } ?>
@@ -280,6 +279,49 @@ endif; ?>
       }
     })
   };
+
+  function ubahlimit(id, data, nama) {
+    url = 'voc_peg/ubahlimit';
+    if (id && data && nama) {
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+          'id': id,
+          'limit': data,
+          'nama': nama
+        },
+        success: function(data) {
+          if (data == 1) {
+
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: nama + ' Berhasil di Ubah Limitnya',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          } else if (data == 9) {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'error',
+              title: 'Data tidak diketahui',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          } else {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'error',
+              title: 'Terjadi Kesalahan !!',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        }
+      })
+    }
+  }
 </script>
 
 <style>
