@@ -77,7 +77,7 @@ class Model_vocpeg extends CI_Model
 	{
 		if ($data) {
 
-			$sql = "UPDATE voc_peg_data SET jml_voc='$data' WHERE id='$id' ";
+			$sql = "UPDATE voc_peg_data SET jml_voc=0 WHERE id='$id' ";
 			$data = $this->db->query($sql);
 			return ($data == true) ? true : false;
 		}
@@ -106,7 +106,7 @@ class Model_vocpeg extends CI_Model
 	}
 	public function select_all_tgl($dari, $sampai)
 	{
-		$sql = "SELECT * FROM voc_peg_pakai WHERE tgl BETWEEN '$dari' AND '$sampai' ORDER BY outlet DESC, tgl DESC";
+		$sql = "SELECT * FROM voc_peg_pakai WHERE tgl BETWEEN '$dari' AND '$sampai' ORDER BY id DESC, outlet DESC";
 
 		$data = $this->db->query($sql);
 

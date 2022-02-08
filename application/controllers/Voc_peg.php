@@ -60,7 +60,7 @@ class Voc_peg extends Admin_Controller
 				'nama' => $pegawai['nama'],
 				'barcode' => $barcode,
 				'nopegawai' => $s,
-				'jml_voc' => $jml,
+				'jml_voc' => 0,
 				'limit_voc' => $jml,
 				'aktif' => 1,
 			);
@@ -97,6 +97,7 @@ class Voc_peg extends Admin_Controller
 		}
 	}
 
+	//fix
 	public function reset()
 	{
 		$l_voc = $this->model_vocpeg->lj_voc();
@@ -107,7 +108,7 @@ class Voc_peg extends Admin_Controller
 			$jml_voc += $value['jml_voc'];
 		}
 
-		if ($jml_voc == $limit_voc) {
+		if (!$jml_voc) {
 			$this->session->set_flashdata('error', 'Telah direset');
 			redirect('voc_peg', 'refresh');
 		} else {
@@ -141,7 +142,7 @@ class Voc_peg extends Admin_Controller
 			if ($idvoc) {
 				if ($idvoc['jml_voc'] > 0) {
 					$data = array(
-						'jml_voc' => $idvoc['jml_voc'] - 1,
+						'jml_voc' => $idvoc['jml_voc'] + 1,
 					);
 					$data2 = array(
 						'idpegawai' => $idvoc['idpegawai'],
@@ -226,26 +227,27 @@ class Voc_peg extends Admin_Controller
 				echo 'Tidak ditemukan';
 			}
 		} else {
-			$tgl = date('d');
-			if ($tgl == 26 or $tgl == 27 or $tgl == 28 or $tgl == 29 or  $tgl == 30 or $tgl == 31) {
+			// $tgl = date('d');
+			// if ($tgl == 26 or $tgl == 27 or $tgl == 28 or $tgl == 29 or  $tgl == 30 or $tgl == 31) {
 
-				echo  '<b><img width="150" src="' . base_url('assets/images/voc/gagal.gif') . '"><br> ~Maaf Voucher Hanya Dapat Ditukar Pada Tanggal 1-25 ~</b>';
-			} else {
-				$data = $this->model_vocpeg->tampilnopegawai($id);
-				if ($data) {
-					$dt = "Nama : " . $data['nama'] . " <br> ID Pegawai : " . $data['nopegawai'] . " <br> Sisa Penukaran  <br> <font style='font-size: x-large;color: #e91e63;font-weight: bolder;'>" . $data['jml_voc'] . "</font>";
-					$sub = '<br><br><form action="pakai" method="POST"><input type="hidden" name="voucher" value="' . $data['nopegawai'] . '" class="form-control">';
-					if ($data['jml_voc'] < 1) {
-						$tb = '<b><img width="150" src="' . base_url('assets/images/voc/gagal.gif') . '"><br> ~Anda Telah Menggunakannya Bulan Ini~</b>';
-					} else {
-						$tb = '<img width="150" src="' . base_url('assets/images/voc/berhasil.gif') . '"><br><button class="btn btn-success btn-sm" type="submit" class="form-control"><span class="glyphicon glyphicon-send"></span> <b>Gunakan</b></button>
-	  			</form>';
-					}
-					echo $dt . $sub . $tb;
+			// 	echo  '<b><img width="150" src="' . base_url('assets/images/voc/gagal.gif') . '"><br> ~Maaf Voucher Hanya Dapat Ditukar Pada Tanggal 1-25 ~</b>';
+			// } else {
+			$data = $this->model_vocpeg->tampilnopegawai($id);
+			if ($data) {
+				$jmlvouher = $data['limit_voc'] - $data['jml_voc'];
+				$dt = "Nama : " . $data['nama'] . " <br> ID Pegawai : " . $data['nopegawai'] . " <br> Sisa Penukaran  <br> <font style='font-size: x-large;color: #e91e63;font-weight: bolder;'>" . $jmlvouher . "</font>";
+				$sub = '<br><br><form action="pakai" method="POST"><input type="hidden" name="voucher" value="' . $data['nopegawai'] . '" class="form-control">';
+				if ($data['jml_voc'] == $data['limit_voc']) {
+					$tb = '<b><img width="150" src="' . base_url('assets/images/voc/gagal.gif') . '"><br> ~Anda Telah Menggunakannya Bulan Ini~</b>';
 				} else {
-					echo 'Tidak ditemukan';
+					$tb = '<img width="150" src="' . base_url('assets/images/voc/berhasil.gif') . '"><br><button class="btn btn-success btn-sm" type="submit" class="form-control"><span class="glyphicon glyphicon-send"></span> <b>Gunakan</b></button>
+	  			</form>';
 				}
+				echo $dt . $sub . $tb;
+			} else {
+				echo 'Tidak ditemukan';
 			}
+			// }
 		}
 	}
 
@@ -364,9 +366,9 @@ class Voc_peg extends Admin_Controller
 		if ($voucher) {
 			$idvoc = $this->model_vocpeg->cekvoc($voucher);
 			if ($idvoc) {
-				if ($idvoc['jml_voc'] > 0) {
+				if ($idvoc['jml_voc'] <= $idvoc['limit_voc']) {
 					$data = array(
-						'jml_voc' => $idvoc['jml_voc'] - 1,
+						'jml_voc' => $idvoc['jml_voc'] + 1,
 					);
 					$data2 = array(
 						'idpegawai' => $idvoc['idpegawai'],

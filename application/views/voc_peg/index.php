@@ -102,9 +102,9 @@ endif; ?>
                   <td style="text-align: center; ">
                     <?php
                     if (isset($pegawai['jml_voc'])) {
-                      echo $pegawai["limit_voc"] - $pegawai["jml_voc"];
+                      echo  $pegawai["jml_voc"];
                     } else {
-                      echo '';
+                      echo '0';
                     } ?>
                   </td>
                 <?php
@@ -283,41 +283,53 @@ endif; ?>
   function ubahlimit(id, data, nama) {
     url = 'voc_peg/ubahlimit';
     if (id && data && nama) {
-      $.ajax({
-        type: 'POST',
-        url: url,
-        data: {
-          'id': id,
-          'limit': data,
-          'nama': nama
-        },
-        success: function(data) {
-          if (data == 1) {
+      Swal.fire({
+        title: 'Yakin ingin mengubah?',
+        text: "Anda akan merubah limit " + nama,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Reset'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+              'id': id,
+              'limit': data,
+              'nama': nama
+            },
+            success: function(data) {
+              if (data == 1) {
 
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: nama + ' Berhasil di Ubah Limitnya',
-              showConfirmButton: false,
-              timer: 1500
-            })
-          } else if (data == 9) {
-            Swal.fire({
-              position: 'top-end',
-              icon: 'error',
-              title: 'Data tidak diketahui',
-              showConfirmButton: false,
-              timer: 1500
-            })
-          } else {
-            Swal.fire({
-              position: 'top-end',
-              icon: 'error',
-              title: 'Terjadi Kesalahan !!',
-              showConfirmButton: false,
-              timer: 1500
-            })
-          }
+                Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: nama + ' Berhasil di Ubah Limitnya',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+              } else if (data == 9) {
+                Swal.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: 'Data tidak diketahui',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+              } else {
+                Swal.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: 'Terjadi Kesalahan !!',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+              }
+            }
+          })
         }
       })
     }
