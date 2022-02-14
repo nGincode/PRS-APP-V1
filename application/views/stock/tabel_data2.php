@@ -66,11 +66,16 @@
           <input type="hidden" name="nama_produk[]" class="form-control" value="<?php echo $v['nama_produk'] ?>" autocomplete="off">
           <input type="hidden" name="count[]" id="count_<?php echo $no ?>" class="form-control" autocomplete="off">
         </td>
-        <?php $stock = $this->model_stock->produkid($v['id']);
-        if ($stock) {
-          $aunit = $stock['s_unit'];
-        } else {
+        <?php
+        if (isset($tdkditemukan)) {
           $aunit = 0;
+        } else {
+          $stock = $this->model_stock->produkid($v['id']);
+          if ($stock) {
+            $aunit = $stock['s_unit'];
+          } else {
+            $aunit = 0;
+          }
         }
         ?>
         <td>

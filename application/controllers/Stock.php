@@ -231,6 +231,7 @@ class Stock extends Admin_Controller
                 $data['tgl'] = date('Y-m-d', strtotime('+1 day', strtotime($dt['tgl'])));
             } else {
                 $data['tgl'] = date('Y-m-d');
+                $tdkditemukan = true;
             }
 
             $this->load->view('stock/tabel_data2', $data);

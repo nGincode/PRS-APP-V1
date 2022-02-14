@@ -646,9 +646,11 @@ if ($div > 0) :
                           <div class="col-sm-7">
                             <select disabled class="form-control">
                               <?php foreach ($logistik as $s => $l) : ?>
-                                <option value="<?php echo $l['id'] ?>"><?php if ($order_data['order']['gudang_id'] == $l['id']) {
-                                                                          echo $l['name'];
-                                                                        } ?></option>
+                                <?php if ($order_data['order']['gudang_id'] == $l['id']) { ?>
+                                  <option value="<?php echo $l['id'] ?>">
+                                    <?= $l['name']; ?>
+                                  </option>
+                                <?php } ?>
                               <?php endforeach ?>
                             </select>
 

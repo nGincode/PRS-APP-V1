@@ -188,6 +188,7 @@
 
               <?php endif; ?>
               <?php if ($div == 0) : ?>
+                <th style="max-width: 3%;">Opsi</th>
                 <th style="max-width: 3%;">Profit</th>
               <?php endif; ?>
               <th>Nama Produk</th>
