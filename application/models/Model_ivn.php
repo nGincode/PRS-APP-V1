@@ -118,6 +118,40 @@ class Model_ivn extends CI_Model
 		}
 	}
 
+
+	public function removebaru($id)
+	{
+		if ($id) {
+			$this->db->where('id', $id);
+			$delete = $this->db->delete('ivn_lmasukb');
+			return ($delete == true) ? true : false;
+		}
+	}
+	public function removemasuk($id)
+	{
+		if ($id) {
+			$this->db->where('id', $id);
+			$delete = $this->db->delete('ivn_lmasuk');
+			return ($delete == true) ? true : false;
+		}
+	}
+	public function removekeluar($id)
+	{
+		if ($id) {
+			$this->db->where('id', $id);
+			$delete = $this->db->delete('ivn_lkeluar');
+			return ($delete == true) ? true : false;
+		}
+	}
+	public function removerusak($id)
+	{
+		if ($id) {
+			$this->db->where('id', $id);
+			$delete = $this->db->delete('ivn_lrusak');
+			return ($delete == true) ? true : false;
+		}
+	}
+
 	public function countTotalProducts()
 	{
 		$sql = "SELECT * FROM products";

@@ -418,6 +418,94 @@ class Voc_peg extends Admin_Controller
 			echo 9;
 		}
 	}
+
+
+
+	public function printDiv()
+	{
+		$id = $this->input->post('id');
+		$idvoc = $this->model_vocpeg->voc_peg_dataid($id);
+
+		if (!$id) {
+			redirect('dashboard', 'refresh');
+		}
+
+		if ($idvoc) {
+			$html = '<!-- Main content -->
+			<!DOCTYPE html>
+			<html>
+			<head>
+			  <meta charset="utf-8">
+			  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+			  <title>Invoice Order</title>
+			  <!-- Tell the browser to be responsive to screen width -->
+			  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+			  <!-- Bootstrap 3.3.7 -->
+			  <link rel="stylesheet" href="' . base_url('assets/bower_components/bootstrap/dist/css/bootstrap.min.css') . '">
+			  <!-- Font Awesome -->
+			  <link rel="stylesheet" href="' . base_url('assets/bower_components/font-awesome/css/font-awesome.min.css') . '">
+			  <link rel="stylesheet" href="' . base_url('assets/dist/css/AdminLTE.min.css') . '">
+			</head>
+			<body onload="window.print();">
+			<style>html, body {height:unset;}</style>
+			<div class="wrapper" style="width: 80mm;height:unset;">
+			  <section class="invoice">
+			    <!-- /.row -->
+
+			    <!-- Table row -->
+			    <div class="row">
+			      <div class="col-xs-12 table-responsive">
+			        <table class="table"  style="font-size: 20px; width:100%;">
+			        
+			          <tbody>';
+			$html .= '<tr style="border-bottom: solid;">
+				            <td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+							Nama :
+							</td>
+				            <td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+							' . $idvoc['nama'] . '
+							</td>
+			          	</tr>
+						  <tr style="border-bottom: solid;">
+						  <td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+						  ID :
+						  </td>
+						  <td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+						  ' . $idvoc['nopegawai'] . '
+						  </td>
+						</tr>
+						<tr style="border-bottom: solid;">
+						<td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+						Tempat :
+						</td>
+						<td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+						' . $idvoc['outlet'] . '
+						</td>
+						</tr>
+						<tr style="border-bottom: solid;">
+						<td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+						Tanggal :
+						</td>
+						<td colspan="3" style="text-align: center;padding: 5px;line-height: normal;">
+						' . $idvoc['tgl'] . '
+						</td>
+						<tr>';
+
+			$html .= '</tbody>
+			        </table>
+			      </div>
+			      <!-- /.col -->
+			    </div>
+			    <!-- /.row -->
+
+			  </section>
+			  <!-- /.content -->
+			</div>
+			</body>
+			</html>';
+			echo $html;
+		}
+	}
 }
 
 /* End of file employe.php */

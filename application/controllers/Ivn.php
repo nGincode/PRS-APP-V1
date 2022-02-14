@@ -59,9 +59,15 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if ($div == 0) {
             foreach ($data as $key => $value) {
 
+                $buttons = ' <div class="btn-group dropleft">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+                <ul class="dropdown-menu">';
+                $buttons .= '<li><a style="cursor:pointer;" onclick="removeFunc(' . $value['id'] . ')" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i> Hapus</a></li>';
+                $buttons .= '</ul></div>';
                 $result['data'][$key] = array(
-                    $value['tgl_masuk'],
+                    $buttons,
                     $value['store'],
+                    $value['tgl_masuk'],
                     $value['nama'],
                     $value['bagian'],
                     $value['jumlah'],
@@ -486,9 +492,16 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
             foreach ($data as $key => $value) {
 
+                $buttons = ' <div class="btn-group dropleft">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+                <ul class="dropdown-menu">';
+                $buttons .= '<li><a style="cursor:pointer;" onclick="removeFunc(' . $value['id'] . ')" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i> Hapus</a></li>';
+                $buttons .= '</ul></div>';
+
                 $result['data'][$key] = array(
-                    $value['tgl_masuk'],
+                    $buttons,
                     $value['store'],
+                    $value['tgl_masuk'],
                     $value['nama'],
                     $value['bagian'],
                     $value['jumlah'],
@@ -604,10 +617,20 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         if ($div == 0) {
             foreach ($data as $key => $value) {
+
+
+                $buttons = ' <div class="btn-group dropleft">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+                <ul class="dropdown-menu">';
+                $buttons .= '<li><a style="cursor:pointer;" onclick="removeFunc(' . $value['id'] . ')" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i> Hapus</a></li>';
+                $buttons .= '</ul></div>';
+
+
                 $result['data'][$key] = array(
+                    $buttons,
+                    $value['store'],
                     $value['tgl_keluar'],
                     $value['nama'],
-                    $value['store'],
                     $value['bagian'],
                     $value['ke'],
                     $value['jumlah'],
@@ -730,9 +753,16 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if ($div == 0) {
             foreach ($data as $key => $value) {
 
+                $buttons = ' <div class="btn-group dropleft">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
+                <ul class="dropdown-menu">';
+                $buttons .= '<li><a style="cursor:pointer;" onclick="removeFunc(' . $value['id'] . ')" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i> Hapus</a></li>';
+                $buttons .= '</ul></div>';
+
                 $result['data'][$key] = array(
-                    $value['tgl_rusak'],
+                    $buttons,
                     $value['store'],
+                    $value['tgl_rusak'],
                     $value['nama'],
                     $value['bagian'],
                     $value['ket'],
@@ -925,5 +955,89 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         $this->data['ivn'] = $this->model_ivn->getivnDatastore($store_id);
 
         $this->load->view('ivn/laporan/cetaklaporan', $this->data);
+    }
+
+
+
+    public function removebaru()
+    {
+
+        $id = $this->input->post('id');
+        $response = array();
+        if ($id) {
+            $delete = $this->model_ivn->removebaru($id);
+            if ($delete == true) {
+                $response['success'] = true;
+                $response['messages'] = "Berhasil Terhapus";
+            } else {
+                $response['success'] = false;
+                $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+            }
+        } else {
+            $response['success'] = false;
+            $response['messages'] = "Refersh Halaman!!";
+        }
+        echo json_encode($response);
+    }
+
+    public function removemasuk()
+    {
+
+        $id = $this->input->post('id');
+        $response = array();
+        if ($id) {
+            $delete = $this->model_ivn->removemasuk($id);
+            if ($delete == true) {
+                $response['success'] = true;
+                $response['messages'] = "Berhasil Terhapus";
+            } else {
+                $response['success'] = false;
+                $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+            }
+        } else {
+            $response['success'] = false;
+            $response['messages'] = "Refersh Halaman!!";
+        }
+        echo json_encode($response);
+    }
+    public function removekeluar()
+    {
+
+        $id = $this->input->post('id');
+        $response = array();
+        if ($id) {
+            $delete = $this->model_ivn->removekeluar($id);
+            if ($delete == true) {
+                $response['success'] = true;
+                $response['messages'] = "Berhasil Terhapus";
+            } else {
+                $response['success'] = false;
+                $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+            }
+        } else {
+            $response['success'] = false;
+            $response['messages'] = "Refersh Halaman!!";
+        }
+        echo json_encode($response);
+    }
+    public function removerusak()
+    {
+
+        $id = $this->input->post('id');
+        $response = array();
+        if ($id) {
+            $delete = $this->model_ivn->removerusak($id);
+            if ($delete == true) {
+                $response['success'] = true;
+                $response['messages'] = "Berhasil Terhapus";
+            } else {
+                $response['success'] = false;
+                $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+            }
+        } else {
+            $response['success'] = false;
+            $response['messages'] = "Refersh Halaman!!";
+        }
+        echo json_encode($response);
     }
 }

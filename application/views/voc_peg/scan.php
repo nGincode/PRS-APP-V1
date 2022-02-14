@@ -118,6 +118,7 @@ endif; ?>
           <table id="userTable" class="table table-bordered table-striped">
             <thead>
               <tr>
+                <th style="text-align: center; ">Opsi</th>
                 <th style="text-align: center; ">Tanggal</th>
                 <th style="text-align: center; ">Nama</th>
                 <th style="text-align: center;  ">ID </th>
@@ -129,6 +130,7 @@ endif; ?>
             foreach ($datapakai as $pakai) {
             ?>
               <tr>
+                <td style="text-align: center; "><button class="btn btn-primary" onclick="print(<?php echo $pakai->id; ?>)"><i class="fa fa-print"></i></button></td>
                 <td style="text-align: center; "><?php echo $pakai->tgl; ?></td>
                 <td style="text-align: center; "><?php echo $pakai->nama; ?></td>
                 <td style="text-align: center; "><?php echo $pakai->nopegawai; ?></td>
@@ -144,6 +146,7 @@ endif; ?>
 
   </section>
 </div>
+<div id="printaera" style="position: absolute; z-index: -1;"></div>
 <script type="text/javascript">
   $(document).ready(function() {
     $('#userTable').DataTable();
@@ -151,4 +154,20 @@ endif; ?>
     $("#mainvocpNav").addClass('active');
     $("#addvocpNav").addClass('active');
   });
+
+  function print(id) {
+    $.ajax({
+      url: "<?= base_url('voc_peg/printDiv') ?>",
+      type: 'POST',
+      data: {
+        id: id
+      },
+      success: function(data) {
+        document.getElementById("printaera").innerHTML = data;
+        $.print("#printaera");
+      }
+    });
+
+  }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/jQuery.print@1.5.1/jQuery.print.min.js"></script>

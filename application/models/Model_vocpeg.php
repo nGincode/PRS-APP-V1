@@ -22,6 +22,13 @@ class Model_vocpeg extends CI_Model
 		return $data->row_array();
 	}
 
+	public function voc_peg_dataid($id)
+	{
+		$sql = "SELECT * FROM voc_peg_pakai Where id='$id'";
+		$data = $this->db->query($sql);
+		return $data->row_array();
+	}
+
 	public function datapegawai($id)
 	{
 		$sql = "SELECT * FROM pegawai Where id='$id'";

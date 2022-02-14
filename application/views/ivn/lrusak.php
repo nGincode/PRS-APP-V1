@@ -102,10 +102,11 @@
             <table id="manageTable" class="table table-bordered table-striped" style="width: 100%;">
               <thead>
                 <tr>
-                  <th>Tanggal</th>
                   <?php if ($div == 0) { ?>
+                    <th style="max-width:30px;text-align: center;"> Opsi</th>
                     <th>Store</th>
                   <?php } ?>
+                  <th>Tanggal</th>
                   <th>Nama</th>
                   <th>Bagian</th>
                   <th>Ket</th>
@@ -129,6 +130,29 @@
 </div>
 <!-- /.content-wrapper -->
 
+<!-- remove brand modal -->
+<div class="modal fade" tabindex="-1" role="dialog" id="removeModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Hapus </h4>
+      </div>
+
+      <form role="form" action="<?php echo base_url('ivn/removerusak') ?>" method="post" id="removeForm">
+        <div class="modal-body">
+          <p>Yakin Ingin Menghapus ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Hapus</button>
+        </div>
+      </form>
+
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script type="text/javascript">
   var manageTable;
   var base_url = "<?php echo base_url(); ?>";
@@ -149,4 +173,60 @@
     });
 
   });
+
+
+
+
+  function removeFunc(id) {
+    if (id) {
+      $("#removeForm").on('submit', function() {
+
+        var form = $(this);
+
+        // remove the text-danger
+        $(".text-danger").remove();
+
+        $.ajax({
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: {
+            id: id
+          },
+          dataType: 'json',
+          success: function(response) {
+
+            manageTable.ajax.reload(null, false);
+
+            if (response.success === true) {
+
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil...!',
+                text: response.messages,
+                showConfirmButton: false,
+                timer: 4000
+              });
+
+              // hide the modal
+              $("#removeModal").modal('hide');
+
+            } else {
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Maaf...!',
+                text: response.messages,
+                showConfirmButton: false,
+                timer: 4000
+              });
+              // hide the modal
+              $("#removeModal").modal('hide');
+            }
+          }
+        });
+
+        return false;
+      });
+    }
+  }
 </script>
