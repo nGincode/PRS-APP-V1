@@ -104,24 +104,24 @@ endif; ?>
 
 
               <div class="form-group">
-                <label for="divisi">Izin</label>
+                <label for="divisi">Izin Sebagai</label>
                 <select class="form-control" id="divisi" name="divisi" required>
                   <option value="">-- Kode Izin --</option>
                   <option value="0" <?php if ($user_data['divisi'] == 0) {
                                       echo "selected";
-                                    } ?>>0</option>
+                                    } ?>>Office / Logistik</option>
                   <option value="11" <?php if ($user_data['divisi'] == 11) {
                                         echo "selected";
-                                      } ?>>11</option>
+                                      } ?>>Leader / Kasir</option>
                   <option value="1" <?php if ($user_data['divisi'] == 1) {
                                       echo "selected";
-                                    } ?>>1</option>
+                                    } ?>>Bar</option>
                   <option value="2" <?php if ($user_data['divisi'] == 2) {
                                       echo "selected";
-                                    } ?>>2</option>
+                                    } ?>>Waiter</option>
                   <option value="3" <?php if ($user_data['divisi'] == 3) {
                                       echo "selected";
-                                    } ?>>3</option>
+                                    } ?>>Kitchen</option>
                 </select>
               </div>
 

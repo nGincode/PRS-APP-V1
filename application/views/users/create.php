@@ -108,14 +108,14 @@ endif; ?>
 
 
               <div class="form-group">
-                <label for="divisi">Izin</label>
+                <label for="divisi">Izin Sebagai</label>
                 <select class="form-control" id="divisi" name="divisi" required>
                   <option value="">-- Kode Izin --</option>
-                  <option value="0">0</option>
-                  <option value="11">11</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="0">Office / Logistik</option>
+                  <option value="11">Leader / Kasir</option>
+                  <option value="1">Bar</option>
+                  <option value="2">Waiter</option>
+                  <option value="3">Kitchen</option>
                 </select>
               </div>
             </div>

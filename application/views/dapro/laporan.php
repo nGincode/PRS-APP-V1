@@ -58,21 +58,19 @@
                                                     <div class="input-group-addon ">
                                                         <i class="fa fa-calendar"></i>
                                                     </div>
-                                                    <input type="date" name="date" required class="form-control pull-right" id="datepicker">
+                                                    <input type="date" name="date" required class="form-control pull-right" onchange="cekdata(this.value)" id="datepicker">
                                                 </div>
 
                                             </div>
                                         </div>
 
+
                                     </div>
 
+                                    <div id="hasilnya"></div>
                                     <br><br>
                                 </div>
 
-
-                                <div class="box-footer">
-                                    <button type="submit" class="btn btn-app"><i class="fa fa-file-pdf-o"></i> PDF</button>
-                                </div>
                             </form>
                             <!-- /.box-body -->
 
@@ -134,9 +132,9 @@
 
                                                     <select name="lap" required class="form-control pull-right">
                                                         <option value="">- PILIH LAPORAN -</option>
-                                                        <option value="1">Laporan Stock Dapro/Barang Matah</option>
+                                                        <option value="1">Laporan Barang Matah</option>
                                                         <option value="2">Laporan Barang Jadi</option>
-                                                        <option value="3">Laporan </option>
+                                                        <option value="3">Laporan Ke Logistik</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -206,5 +204,23 @@
         $("#maindaproNav").addClass('active');
         $("#laporan").addClass('active');
 
+
+
+
+
     });
+
+    function cekdata(val) {
+        $.ajax({
+            url: 'laporandata',
+            type: "POST",
+            data: {
+                id: val
+            },
+            success: function(data) {
+                $('#hasilnya').html(data);
+            }
+        });
+
+    }
 </script>

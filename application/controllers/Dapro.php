@@ -370,4 +370,222 @@ class Dapro extends Admin_Controller
     {
         $this->render_template('dapro/laporan', $this->data);
     }
+
+    public function laporandata()
+    {
+        $id = $this->input->post('id');
+
+
+
+        $data = $this->model_dapro->fetchbahanjaditgl($id);
+        $data1 = $this->model_dapro->fetchbahanbakutgl($id);
+        $data3 = $this->model_dapro->fetchbahanjaditgl1($id);
+
+
+        echo '<br><br><h2><b>Laporan Barang Jadi</b></h2>
+        <table class="table table-bordered" id="product_info_table" >
+          <tr>
+            <th style="text-align: center;">Tanggal</th>
+            <th style="text-align: center;">Nama</th>
+            <th style="text-align: center;">Qty</th>
+            <th style="text-align: center;">Harga</th>
+            <th style="text-align: center;">Total</th>
+          </tr>
+          </thead>
+          <tbody>';
+
+        if ($data) {
+
+            foreach ($data as $v) {
+
+                $ak = $this->model_dapro->fetchbahanjaditglak($v['idproduct'], $id);
+
+                $qty = 0;
+                foreach ($ak as $vl) {
+                    $qty += $vl['qty'];
+                }
+
+                $total = $ak[0]['harga'] * $qty;
+
+                echo '
+                    <tr>
+                    <td>' . $ak[0]['tgl'] . '</td>
+                    <td>' . $ak[0]['nama'] . '</td>
+                    <td>' . $qty . '</td>
+                    <td>' . $ak[0]['harga'] . '</td>
+                    <td>' . $total . '</td>
+                    </tr>';
+            }
+        } else {
+            echo '<tr><td colspan="5" alignt="center"><center><h4><b>Tidak ditemukan</b></h4></center></td></tr>';
+        }
+        echo '
+        
+          </tbody>
+        </table>';
+
+
+
+
+        echo '<br><br><h2><b>Laporan Barang Baku</b></h2>
+        <table class="table table-bordered" id="product_info_table" >
+          <tr>
+            <th style="text-align: center;">Tanggal</th>
+            <th style="text-align: center;">Nama</th>
+            <th style="text-align: center;">Qty</th>
+            <th style="text-align: center;">Harga</th>
+            <th style="text-align: center;">Total</th>
+          </tr>
+          </thead>
+          <tbody>';
+
+        if ($data1) {
+
+            foreach ($data1 as $v1) {
+
+                $ak1 = $this->model_dapro->fetchbahanbakutglak($v1['product_id'], $id);
+
+                $qty1 = 0;
+                foreach ($ak1 as $vl1) {
+                    $qty1 += $vl1['qty'];
+                }
+
+                $total1 = $ak1[0]['harga'] * $qty1;
+
+                echo '
+                    <tr>
+                    <td>' . $ak1[0]['tgl'] . '</td>
+                    <td>' . $ak1[0]['nama_produk'] . '</td>
+                    <td>' . $qty1 . '</td>
+                    <td>' . $ak1[0]['harga'] . '</td>
+                    <td>' . $total1 . '</td>
+                    </tr>';
+            }
+        } else {
+            echo '<tr><td colspan="5" alignt="center"><center><h4><b>Tidak ditemukan</b></h4></center></td></tr>';
+        }
+        echo '
+        
+          </tbody>
+        </table>';
+
+
+
+        echo '<br><br><h2><b>Laporan Barang Jadi Ke logistik</b></h2>
+        <table class="table table-bordered" id="product_info_table" >
+          <tr>
+            <th style="text-align: center;">Tanggal</th>
+            <th style="text-align: center;">Nama</th>
+            <th style="text-align: center;">Qty</th>
+            <th style="text-align: center;">Harga</th>
+            <th style="text-align: center;">Total</th>
+          </tr>
+          </thead>
+          <tbody>';
+
+        if ($data3) {
+
+            foreach ($data3 as $v3) {
+
+                $ak3 = $this->model_dapro->fetchbahanjaditglak1($v3['idproduct'], $id);
+
+                $qty3 = 0;
+                foreach ($ak3 as $vl3) {
+                    $qty3 += $vl3['qty'];
+                }
+
+                $total3 = $ak3[0]['harga'] * $qty3;
+
+                echo '
+                    <tr>
+                    <td>' . $ak3[0]['tgl'] . '</td>
+                    <td>' . $ak3[0]['nama'] . '</td>
+                    <td>' . $qty3 . '</td>
+                    <td>' . $ak3[0]['harga'] . '</td>
+                    <td>' . $total3 . '</td>
+                    </tr>';
+            }
+        } else {
+            echo '<tr><td colspan="5" alignt="center"><center><h4><b>Tidak ditemukan</b></h4></center></td></tr>';
+        }
+        echo '
+        
+          </tbody>
+        </table>';
+    }
+
+
+
+
+    public function excel()
+    {
+
+        $tglawal = $this->input->post('tglawal');
+        $tglakhir = $this->input->post('tglakhir');
+
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $spreadsheet->getProperties()
+            ->setCreator("Fembi Nur Ilham")
+            ->setLastModifiedBy("Fembi Nur Ilham")
+            ->setTitle("Stock Logistik")
+            ->setSubject("Hasil Export Dari PRS System")
+            ->setDescription("Semoga Terbantu Dengan Adanya Ini")
+            ->setKeywords("office 2007 openxml php")
+            ->setCategory("Stock Logistik");
+
+
+        $filename = "Laporan Bahan Baku & Bahan Jadi " . date('d-m-Y') . ".xlsx";
+
+        $sheet->setCellValue('A1', 'Stock Produk Logistik');
+        $sheet->setCellValue('A2', 'Tanggal ' . date('d-m-Y'));
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('E')->setAutoSize(true);
+
+        $sheet->setCellValue('A4', 'No');
+        $sheet->setCellValue('B4', 'Nama Produk');
+        $sheet->setCellValue('C4', 'Harga');
+        $sheet->setCellValue('D4', 'Satuan');
+        $sheet->setCellValue('E4', 'Qty Tersedia');
+        $sheet->setCellValue('F4', 'Total Harga');
+
+        $data = $this->model_products->getProductData();
+        $baris = 5;
+        $no = 1;
+        $count = 4;
+        $hrgjml = 0;
+        if ($data) {
+            foreach ($data as $key => $value) {
+
+                $angka = $value['price'] * $value['qty'];
+
+                $sheet->setCellValue('A' . $baris, $no++);
+                $sheet->setCellValue('B' . $baris, $value['name']);
+                $sheet->setCellValue('C' . $baris, $value['price']);
+                $sheet->setCellValue('D' . $baris,  $value['satuan']);
+                $sheet->setCellValue('E' . $baris, $value['qty']);
+                $sheet->setCellValue('F' . $baris, $angka);
+
+                $baris++;
+                $count++;
+                $hrgjml += $angka;
+            }
+            $jmlh = $count + 1;
+            $spreadsheet->getActiveSheet()->mergeCells('A' . $jmlh . ':E' . $jmlh);
+            $sheet->setCellValue('A' . $jmlh, 'Jumlah');
+            $sheet->setCellValue('F' . $jmlh, $hrgjml);
+
+            $writer = new Xlsx($spreadsheet);
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Content-Type: application/vnd.ms-excel');
+            header('Cache-Control: max-age=0');
+            $writer->save('php://output');
+        } else {
+            $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
+            redirect('orders/', 'refresh');
+        }
+    }
 }

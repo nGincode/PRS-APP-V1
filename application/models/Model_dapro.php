@@ -120,4 +120,59 @@ class Model_dapro extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
+
+
+	public function fetchbahanjaditgl($tgl)
+	{
+
+		$sql = "SELECT DISTINCT idproduct FROM dapro_bahanjadi WHERE tgl = '$tgl'  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+	public function fetchbahanjaditglak($id, $tgl)
+	{
+
+		$sql = "SELECT * FROM dapro_bahanjadi WHERE idproduct = $id AND tgl = '$tgl'  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+	public function fetchbahanbakutgl($tgl)
+	{
+
+		$sql = "SELECT DISTINCT product_id FROM dapro_bahanbaku WHERE tgl = '$tgl'  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+	public function fetchbahanbakutglak($id, $tgl)
+	{
+
+		$sql = "SELECT * FROM dapro_bahanbaku WHERE product_id = $id AND tgl = '$tgl'  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+
+
+	public function fetchbahanjaditgl1($tgl)
+	{
+
+		$sql = "SELECT DISTINCT idproduct FROM dapro_bahanjadi WHERE tgl = '$tgl' AND up = 1  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+	public function fetchbahanjaditglak1($id, $tgl)
+	{
+
+		$sql = "SELECT * FROM dapro_bahanjadi WHERE idproduct = $id AND tgl = '$tgl' AND up = 1  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 }
