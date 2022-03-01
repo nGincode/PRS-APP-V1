@@ -796,11 +796,16 @@ class penjualan extends Admin_Controller
 
                     foreach ($itemrspvarian as  $v) {
                         $iditemresep = $this->model_penjualan->getitemresep($v['iditemresep']);
-                        $qtytotalvrn[$iditemresep['nama']] = $v['qty'] * $value['qty'];
-                        if ($iditemresep['harga']) {
-                            $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ')<br>';
+                        if ($iditemresep) {
+                            $qtytotalvrn[$iditemresep['nama']] = $v['qty'] * $value['qty'];
+                            if ($iditemresep['harga']) {
+                                $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ')<br>';
+                            } else {
+                                $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ')<br>';
+                            }
                         } else {
-                            $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ')<br>';
+                            $qtyvarian = '-';
+                            $variancek = '<font color="red">( No Varian )</font>';
                         }
                     }
                 } else {
