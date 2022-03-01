@@ -1046,8 +1046,8 @@ class penjualan extends Admin_Controller
             foreach ($data as $key => $value) {
 
                 $pesan = $value['nama'];
-                $ms = str_replace('(GB) ', '', $pesan);
-                $message = str_replace('GB ', '', $ms);
+                $ms = str_replace('(GB)', '', $pesan);
+                $message = str_replace('GB', '', $ms);
 
                 $name = $message;
                 $varian = $value['varian'];
