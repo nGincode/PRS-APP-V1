@@ -101,7 +101,7 @@
                             <?php endif; ?>
 
                             <!-- /.box-header -->
-                            <form action="<?php echo base_url('pegawai/excel') ?>" method="post" class="form-horizontal">
+                            <form action="<?php echo base_url('dapro/excel') ?>" method="post" class="form-horizontal">
                                 <div class="box-body">
 
                                     <?php echo validation_errors(); ?>
@@ -120,25 +120,6 @@
                                     <div class="col-md-4 col-xs-12 pull pull-left">
 
 
-
-                                        <div class="form-group">
-                                            <label class="col-sm-5 control-label" style="text-align:left;">Divisi</label>
-                                            <div class="col-sm-7">
-
-                                                <div class="input-group date">
-                                                    <div class="input-group-addon ">
-                                                        <i class="fa fa-users"></i>
-                                                    </div>
-
-                                                    <select name="lap" required class="form-control pull-right">
-                                                        <option value="">- PILIH LAPORAN -</option>
-                                                        <option value="1">Laporan Barang Matah</option>
-                                                        <option value="2">Laporan Barang Jadi</option>
-                                                        <option value="3">Laporan Ke Logistik</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="form-group">
                                             <label class="col-sm-5 control-label" style="text-align:left;">Tanggal Awal :</label>
                                             <div class="col-sm-7">

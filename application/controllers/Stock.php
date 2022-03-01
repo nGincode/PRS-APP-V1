@@ -137,7 +137,7 @@ class Stock extends Admin_Controller
                 }
 
                 $sama = $this->input->post('tgl') . $this->input->post('product')[$x];
-                $samadb = $this->model_stock->validasisama($this->input->post('product')[$x], $this->input->post('tgl'));
+                $samadb = $this->model_stock->validasisama($this->input->post('product')[$x], $this->input->post('tgl'), $this->input->post('bagian'));
 
                 if ($samadb) {
                     $datastock = $samadb['tgl'] . $samadb['produk_id'];

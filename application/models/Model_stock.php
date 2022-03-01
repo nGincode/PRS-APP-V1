@@ -52,9 +52,9 @@ class Model_stock extends CI_Model
 		}
 	}
 
-	public function validasisama($produk_id, $tgl)
+	public function validasisama($produk_id, $tgl, $bagian)
 	{
-		$sql = "SELECT * FROM stock WHERE produk_id = '$produk_id' AND tgl = '$tgl'";
+		$sql = "SELECT * FROM stock WHERE produk_id = '$produk_id' AND tgl = '$tgl' AND bagian = '$bagian'";
 		$query = $this->db->query($sql);
 		return $query->row_array();
 	}

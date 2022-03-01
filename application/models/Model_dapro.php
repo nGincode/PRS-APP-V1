@@ -122,56 +122,91 @@ class Model_dapro extends CI_Model
 	}
 
 
-	public function fetchbahanjaditgl($tgl)
+	public function fetchbahanjaditgl($tglawal, $tglakhir)
 	{
 
-		$sql = "SELECT DISTINCT idproduct FROM dapro_bahanjadi WHERE tgl = '$tgl'  ORDER BY tgl ASC";
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
+		$sql = "SELECT DISTINCT idproduct FROM dapro_bahanjadi WHERE $tgl ORDER BY tgl ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
 
-	public function fetchbahanjaditglak($id, $tgl)
+	public function fetchbahanjaditglak($id, $tglawal, $tglakhir)
 	{
 
-		$sql = "SELECT * FROM dapro_bahanjadi WHERE idproduct = $id AND tgl = '$tgl'  ORDER BY tgl ASC";
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
+
+		$sql = "SELECT * FROM dapro_bahanjadi WHERE idproduct = $id AND $tgl ORDER BY tgl ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
-	public function fetchbahanbakutgl($tgl)
+	public function fetchbahanbakutgl($tglawal, $tglakhir)
 	{
 
-		$sql = "SELECT DISTINCT product_id FROM dapro_bahanbaku WHERE tgl = '$tgl'  ORDER BY tgl ASC";
-		$query = $this->db->query($sql);
-		return $query->result_array();
-	}
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
 
-
-	public function fetchbahanbakutglak($id, $tgl)
-	{
-
-		$sql = "SELECT * FROM dapro_bahanbaku WHERE product_id = $id AND tgl = '$tgl'  ORDER BY tgl ASC";
-		$query = $this->db->query($sql);
-		return $query->result_array();
-	}
-
-
-
-
-	public function fetchbahanjaditgl1($tgl)
-	{
-
-		$sql = "SELECT DISTINCT idproduct FROM dapro_bahanjadi WHERE tgl = '$tgl' AND up = 1  ORDER BY tgl ASC";
+		$sql = "SELECT DISTINCT product_id FROM dapro_bahanbaku WHERE $tgl ORDER BY tgl ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
 
 
-	public function fetchbahanjaditglak1($id, $tgl)
+	public function fetchbahanbakutglak($id, $tglawal, $tglakhir)
 	{
 
-		$sql = "SELECT * FROM dapro_bahanjadi WHERE idproduct = $id AND tgl = '$tgl' AND up = 1  ORDER BY tgl ASC";
+
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
+		$sql = "SELECT * FROM dapro_bahanbaku WHERE product_id = $id AND $tgl ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+
+
+	public function fetchbahanjaditgl1($tglawal, $tglakhir)
+	{
+
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
+
+		$sql = "SELECT DISTINCT idproduct FROM dapro_bahanjadi WHERE $tgl AND up = 1  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+	public function fetchbahanjaditglak1($id, $tglawal, $tglakhir)
+	{
+
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
+
+		$sql = "SELECT * FROM dapro_bahanjadi WHERE idproduct = $id AND $tgl AND up = 1  ORDER BY tgl ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}

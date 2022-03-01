@@ -220,6 +220,7 @@ class Dapro extends Admin_Controller
                 'nama' => $productsat['name'],
                 'idproduct' => $idproduct,
                 'qty' => $jml,
+                'satuan' => $productsat['satuan'],
                 'harga' => $harga
             );
 
@@ -377,9 +378,9 @@ class Dapro extends Admin_Controller
 
 
 
-        $data = $this->model_dapro->fetchbahanjaditgl($id);
-        $data1 = $this->model_dapro->fetchbahanbakutgl($id);
-        $data3 = $this->model_dapro->fetchbahanjaditgl1($id);
+        $data = $this->model_dapro->fetchbahanjaditgl($id, 0);
+        $data1 = $this->model_dapro->fetchbahanbakutgl($id, 0);
+        $data3 = $this->model_dapro->fetchbahanjaditgl1($id, 0);
 
 
         echo '<br><br><h2><b>Laporan Barang Jadi</b></h2>
@@ -398,7 +399,7 @@ class Dapro extends Admin_Controller
 
             foreach ($data as $v) {
 
-                $ak = $this->model_dapro->fetchbahanjaditglak($v['idproduct'], $id);
+                $ak = $this->model_dapro->fetchbahanjaditglak($v['idproduct'], $id, 0);
 
                 $qty = 0;
                 foreach ($ak as $vl) {
@@ -412,7 +413,7 @@ class Dapro extends Admin_Controller
                     <td>' . $ak[0]['tgl'] . '</td>
                     <td>' . $ak[0]['nama'] . '</td>
                     <td>' . $qty . '</td>
-                    <td>' . $ak[0]['harga'] . '</td>
+                    <td>' . $ak[0]['harga'] . '/' . $ak[0]['satuan'] . '</td>
                     <td>' . $total . '</td>
                     </tr>';
             }
@@ -443,7 +444,7 @@ class Dapro extends Admin_Controller
 
             foreach ($data1 as $v1) {
 
-                $ak1 = $this->model_dapro->fetchbahanbakutglak($v1['product_id'], $id);
+                $ak1 = $this->model_dapro->fetchbahanbakutglak($v1['product_id'], $id, 0);
 
                 $qty1 = 0;
                 foreach ($ak1 as $vl1) {
@@ -456,9 +457,9 @@ class Dapro extends Admin_Controller
                     <tr>
                     <td>' . $ak1[0]['tgl'] . '</td>
                     <td>' . $ak1[0]['nama_produk'] . '</td>
-                    <td>' . $qty1 . '</td>
-                    <td>' . $ak1[0]['harga'] . '</td>
-                    <td>' . $total1 . '</td>
+                    <td>' . abs($qty1) . '</td>
+                    <td>' . $ak1[0]['harga'] . '/' . $ak[0]['satuan'] . '</td>
+                    <td>' . abs($total1) . '</td>
                     </tr>';
             }
         } else {
@@ -480,14 +481,14 @@ class Dapro extends Admin_Controller
             <th style="text-align: center;">Harga</th>
             <th style="text-align: center;">Total</th>
           </tr>
-          </thead>
+          </thead> 
           <tbody>';
 
         if ($data3) {
 
             foreach ($data3 as $v3) {
 
-                $ak3 = $this->model_dapro->fetchbahanjaditglak1($v3['idproduct'], $id);
+                $ak3 = $this->model_dapro->fetchbahanjaditglak1($v3['idproduct'], $id, 0);
 
                 $qty3 = 0;
                 foreach ($ak3 as $vl3) {
@@ -501,7 +502,7 @@ class Dapro extends Admin_Controller
                     <td>' . $ak3[0]['tgl'] . '</td>
                     <td>' . $ak3[0]['nama'] . '</td>
                     <td>' . $qty3 . '</td>
-                    <td>' . $ak3[0]['harga'] . '</td>
+                    <td>' . $ak3[0]['harga'] . '/' . $ak[0]['satuan'] . '</td>
                     <td>' . $total3 . '</td>
                     </tr>';
             }
@@ -524,6 +525,12 @@ class Dapro extends Admin_Controller
         $tglakhir = $this->input->post('tglakhir');
 
 
+        $data = $this->model_dapro->fetchbahanjaditgl($tglawal, $tglakhir);
+        $data1 = $this->model_dapro->fetchbahanbakutgl($tglawal, $tglakhir);
+        $data3 = $this->model_dapro->fetchbahanjaditgl1($tglawal, $tglakhir);
+
+
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $spreadsheet->getProperties()
@@ -536,47 +543,153 @@ class Dapro extends Admin_Controller
             ->setCategory("Stock Logistik");
 
 
-        $filename = "Laporan Bahan Baku & Bahan Jadi " . date('d-m-Y') . ".xlsx";
+        $filename = "Laporan Dapur Produksi " . $tglawal . " Sampai " . $tglakhir . ".xlsx";
 
-        $sheet->setCellValue('A1', 'Stock Produk Logistik');
-        $sheet->setCellValue('A2', 'Tanggal ' . date('d-m-Y'));
+        $sheet->setCellValue('A1', 'Laporan Dapur Produksi');
+        $sheet->setCellValue('A2', "Tanggal " . $tglawal . " Sampai " . $tglakhir);
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
         $sheet->getColumnDimension('D')->setAutoSize(true);
         $sheet->getColumnDimension('E')->setAutoSize(true);
 
-        $sheet->setCellValue('A4', 'No');
-        $sheet->setCellValue('B4', 'Nama Produk');
-        $sheet->setCellValue('C4', 'Harga');
-        $sheet->setCellValue('D4', 'Satuan');
-        $sheet->setCellValue('E4', 'Qty Tersedia');
-        $sheet->setCellValue('F4', 'Total Harga');
+        $sheet->setCellValue('A4', 'Laporan Barang Jadi');
+        $sheet->setCellValue('A5', 'No');
+        $sheet->setCellValue('B5', 'Nama Produk');
+        $sheet->setCellValue('C5', 'Qty');
+        $sheet->setCellValue('D5', 'Satuan');
+        $sheet->setCellValue('E5', 'Harga');
+        $sheet->setCellValue('F5', 'Total');
 
-        $data = $this->model_products->getProductData();
-        $baris = 5;
+        $baris = 6;
         $no = 1;
-        $count = 4;
+        $no1 = 1;
+        $no3 = 1;
+        $count = 6;
         $hrgjml = 0;
-        if ($data) {
-            foreach ($data as $key => $value) {
+        $hrgjml1 = 0;
+        $hrgjml3 = 0;
+        if ($data or $data1 or $data3) {
+            if ($data) {
+                foreach ($data as $v) {
+                    $ak = $this->model_dapro->fetchbahanjaditglak($v['idproduct'], $tglawal, $tglakhir);
 
-                $angka = $value['price'] * $value['qty'];
+                    $qty = 0;
+                    foreach ($ak as $vl) {
+                        $qty += $vl['qty'];
+                    }
 
-                $sheet->setCellValue('A' . $baris, $no++);
-                $sheet->setCellValue('B' . $baris, $value['name']);
-                $sheet->setCellValue('C' . $baris, $value['price']);
-                $sheet->setCellValue('D' . $baris,  $value['satuan']);
-                $sheet->setCellValue('E' . $baris, $value['qty']);
-                $sheet->setCellValue('F' . $baris, $angka);
+                    $total = $ak[0]['harga'] * $qty;
 
+                    $sheet->setCellValue('A' . $baris,  $no++);
+                    $sheet->setCellValue('B' . $baris, $ak[0]['nama']);
+                    $sheet->setCellValue('C' . $baris, $qty);
+                    $sheet->setCellValue('D' . $baris,  $ak[0]['satuan']);
+                    $sheet->setCellValue('E' . $baris,  $ak[0]['harga']);
+                    $sheet->setCellValue('F' . $baris, $total);
+
+                    $baris++;
+                    $count++;
+                    $hrgjml += $total;
+                }
+                $jmlh = $count;
+                $spreadsheet->getActiveSheet()->mergeCells('A' . $jmlh . ':E' . $jmlh);
+                $sheet->setCellValue('A' . $jmlh, 'Jumlah');
+                $sheet->setCellValue('F' . $jmlh, $hrgjml);
+            } else {
+                $spreadsheet->getActiveSheet()->mergeCells('A' . $baris . ':E' . $baris);
+                $sheet->setCellValue('A' . $baris,  'Tidak ditemukan');
                 $baris++;
-                $count++;
-                $hrgjml += $angka;
             }
-            $jmlh = $count + 1;
-            $spreadsheet->getActiveSheet()->mergeCells('A' . $jmlh . ':E' . $jmlh);
-            $sheet->setCellValue('A' . $jmlh, 'Jumlah');
-            $sheet->setCellValue('F' . $jmlh, $hrgjml);
+
+
+            $jmlh++;
+            $jmlh++;
+            $sheet->setCellValue('A' . $jmlh, 'Laporan Barang Baku');
+            $jmlh++;
+            $sheet->setCellValue('A' . $jmlh, 'No');
+            $sheet->setCellValue('B' . $jmlh, 'Nama Produk');
+            $sheet->setCellValue('C' . $jmlh, 'Qty');
+            $sheet->setCellValue('D' . $jmlh, 'Satuan');
+            $sheet->setCellValue('E' . $jmlh, 'Harga');
+            $sheet->setCellValue('F' . $jmlh, 'Total');
+            $jmlh++;
+            if ($data1) {
+                foreach ($data1 as $v1) {
+                    $ak1 = $this->model_dapro->fetchbahanbakutglak($v1['product_id'], $tglawal, $tglakhir);
+
+                    $qty1 = 0;
+                    foreach ($ak1 as $vl1) {
+                        $qty1 += $vl1['qty'];
+                    }
+
+                    $total1 = $ak1[0]['harga'] * $qty1;
+
+                    $sheet->setCellValue('A' . $jmlh,  $no1++);
+                    $sheet->setCellValue('B' . $jmlh, $ak1[0]['nama_produk']);
+                    $sheet->setCellValue('C' . $jmlh, abs($qty1));
+                    $sheet->setCellValue('D' . $jmlh,  $ak1[0]['satuan']);
+                    $sheet->setCellValue('E' . $jmlh,  $ak1[0]['harga']);
+                    $sheet->setCellValue('F' . $jmlh, abs($total1));
+
+                    $jmlh++;
+                    $count++;
+                    $hrgjml1 += $total1;
+                }
+                $spreadsheet->getActiveSheet()->mergeCells('A' . $jmlh . ':E' . $jmlh);
+                $sheet->setCellValue('A' . $jmlh, 'Jumlah');
+                $sheet->setCellValue('F' . $jmlh, abs($hrgjml1));
+            } else {
+                $spreadsheet->getActiveSheet()->mergeCells('A' . $jmlh . ':E' . $jmlh);
+                $sheet->setCellValue('A' . $jmlh,  'Tidak ditemukan');
+                $jmlh++;
+            }
+
+
+
+
+            $jmlh++;
+            $jmlh++;
+            $sheet->setCellValue('A' . $jmlh, 'Laporan Barang Jadi Ke logistik');
+            $jmlh++;
+            $sheet->setCellValue('A' . $jmlh, 'No');
+            $sheet->setCellValue('B' . $jmlh, 'Nama Produk');
+            $sheet->setCellValue('C' . $jmlh, 'Qty');
+            $sheet->setCellValue('D' . $jmlh, 'Satuan');
+            $sheet->setCellValue('E' . $jmlh, 'Harga');
+            $sheet->setCellValue('F' . $jmlh, 'Total');
+            $jmlh++;
+            if ($data3) {
+                foreach ($data3 as $v3) {
+
+                    $ak3 = $this->model_dapro->fetchbahanjaditglak1($v3['idproduct'], $tglawal, $tglakhir);
+
+                    $qty3 = 0;
+                    foreach ($ak3 as $vl3) {
+                        $qty3 += $vl3['qty'];
+                    }
+
+                    $total3 = $ak3[0]['harga'] * $qty3;
+
+                    $sheet->setCellValue('A' . $jmlh,  $no3++);
+                    $sheet->setCellValue('B' . $jmlh, $ak3[0]['nama']);
+                    $sheet->setCellValue('C' . $jmlh, abs($qty3));
+                    $sheet->setCellValue('D' . $jmlh,  $ak3[0]['satuan']);
+                    $sheet->setCellValue('E' . $jmlh,  $ak3[0]['harga']);
+                    $sheet->setCellValue('F' . $jmlh, abs($total3));
+
+                    $jmlh++;
+                    $count++;
+                    $hrgjml3 += $total3;
+                }
+                $spreadsheet->getActiveSheet()->mergeCells('A' . $jmlh . ':E' . $jmlh);
+                $sheet->setCellValue('A' . $jmlh, 'Jumlah');
+                $sheet->setCellValue('F' . $jmlh, abs($hrgjml3));
+            } else {
+                $spreadsheet->getActiveSheet()->mergeCells('A' . $jmlh . ':E' . $jmlh);
+                $sheet->setCellValue('A' . $jmlh,  'Tidak ditemukan');
+                $jmlh++;
+            }
+
 
             $writer = new Xlsx($spreadsheet);
             header('Content-Disposition: attachment;filename="' . $filename . '"');
@@ -585,7 +698,7 @@ class Dapro extends Admin_Controller
             $writer->save('php://output');
         } else {
             $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
-            redirect('orders/', 'refresh');
+            redirect('dapro/', 'refresh');
         }
     }
 }
