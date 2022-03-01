@@ -947,7 +947,9 @@ class penjualan extends Admin_Controller
                     $itemrspvarian = $this->model_penjualan->getresepitemid($id_varian);
                     foreach ($itemrspvarian as $v) {
                         $iditemresep = $this->model_penjualan->getitemresepid($v['iditemresep']);
-                        $dt2[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
+                        if ($iditemresep) {
+                            $dt2[$iditemresep['nama']] =  $v['qty'] * $value['qty'];
+                        }
                     }
                 }
 
@@ -983,7 +985,7 @@ class penjualan extends Admin_Controller
         for ($i = 0; $i < $c; $i++) {
 
             $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
-            if ($dtnama_menu['harga']) {
+            if ($dtnama_menu) {
                 $total = $dtnama_menu['harga'] * $qty[$i];
                 $harga = "Rp " . number_format($dtnama_menu['harga'], 0, ',', '.');
                 $ttl = "Rp " . number_format($total, 0, ',', '.');
