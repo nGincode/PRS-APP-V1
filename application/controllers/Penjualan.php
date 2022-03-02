@@ -896,6 +896,8 @@ class penjualan extends Admin_Controller
             } else {
                 $vrn = '';
             }
+
+            $hasil_rupiah = "Rp " . number_format($totalhpp, 0, ',', ',');
             $result['data'][$key] = array(
                 $no++,
                 $value['nama'] . ' ' . $vrn,
@@ -904,7 +906,7 @@ class penjualan extends Admin_Controller
                 $qtyresep,
                 $qtyvarian,
                 $totalhasil,
-                $totalhpp
+                $hasil_rupiah
             );
         }
         echo json_encode($result);
