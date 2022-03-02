@@ -1100,11 +1100,16 @@ class penjualan extends Admin_Controller
 
                         foreach ($itemrspvarian as  $v) {
                             $iditemresep = $this->model_penjualan->getitemresep($v['iditemresep']);
-                            $qtytotalvrn[$iditemresep['nama']] = $v['qty'] * $value['qty'];
-                            if ($iditemresep['harga']) {
-                                $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ')';
+                            if ($iditemresep) {
+                                $qtytotalvrn[$iditemresep['nama']] = $v['qty'] * $value['qty'];
+                                if ($iditemresep['harga']) {
+                                    $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . '@' . $v['qty'] . ' ' . $iditemresep['satuan'] . '/' . $iditemresep['harga'] . ')';
+                                } else {
+                                    $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ')';
+                                }
                             } else {
-                                $qtyvarian .= '(' . $iditemresep['nama'] . ' ' . $v['qty'] . ' ' . $iditemresep['satuan']  . ')';
+                                $qtyvarian = '-';
+                                $variancek = '( No Varian )';
                             }
                         }
                     } else {
