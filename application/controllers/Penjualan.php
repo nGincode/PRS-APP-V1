@@ -1037,6 +1037,7 @@ class penjualan extends Admin_Controller
         $sheet->setCellValue('E4', 'Qty Resep Menu');
         $sheet->setCellValue('F4', 'Qty Resep Varian');
         $sheet->setCellValue('G4', 'Total');
+        $sheet->setCellValue('H4', 'HPP');
 
 
 
@@ -1162,15 +1163,19 @@ class penjualan extends Admin_Controller
                 $nama = array_keys($sumArray);
 
                 $c = count($nama);
+                $totalhpp = 0;
                 if (!$c == 0) {
                     for ($i = 0; $i < $c; $i++) {
 
                         $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
+
                         if ($dtnama_menu) {
                             if ($dtnama_menu['harga']) {
                                 $total = $dtnama_menu['harga'] * $qty[$i];
                                 $ttl = "(Rp " . number_format($total, 0, ',', '.') . ')';
+                                $totalhpp +=  $total;
                             } else {
+                                $totalhpp += 0;
                                 $ttl = '';
                             }
                             if ($c == $i + 1) {
@@ -1185,6 +1190,9 @@ class penjualan extends Admin_Controller
                 } else {
                     $sheet->setCellValue('G' . $baris++, '-');
                 }
+
+                $sheet->setCellValue('H' . $baris, $totalhpp);
+
 
 
                 $baris++;
