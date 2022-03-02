@@ -866,13 +866,16 @@ class penjualan extends Admin_Controller
             $nama = array_keys($sumArray);
             $totalqty = '';
             $c = count($nama);
+            $totalhpp = 0;
             for ($i = 0; $i < $c; $i++) {
 
                 $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
                 if ($dtnama_menu['harga']) {
                     $total = $dtnama_menu['harga'] * $qty[$i];
+                    $totalhpp += $total;
                     $ttl = "(Rp " . number_format($total, 0, ',', '.') . ')';
                 } else {
+                    $totalhpp += 0;
                     $ttl = '';
                 }
                 if ($c == $i + 1) {
@@ -900,7 +903,8 @@ class penjualan extends Admin_Controller
                 $value['qty'],
                 $qtyresep,
                 $qtyvarian,
-                $totalhasil
+                $totalhasil,
+                $totalhpp
             );
         }
         echo json_encode($result);
@@ -1190,7 +1194,7 @@ class penjualan extends Admin_Controller
                 } else {
                     $sheet->setCellValue('G' . $baris++, '-');
                 }
-                $hasil_rupiah = "Rp " . number_format($totalhpp, 0, ',', '.');
+                $hasil_rupiah = "Rp " . number_format($totalhpp, 0, ',', ',');
                 $sheet->setCellValue('H' . $baris, $hasil_rupiah);
 
 

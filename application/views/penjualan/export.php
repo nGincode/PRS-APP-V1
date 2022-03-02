@@ -45,6 +45,7 @@
               <th> Resep Menu</th>
               <th> Resep Varian</th>
               <th>Total</th>
+              <th>HPP</th>
             </tr>
           </thead>
 
