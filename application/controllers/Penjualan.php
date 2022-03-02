@@ -1190,8 +1190,8 @@ class penjualan extends Admin_Controller
                 } else {
                     $sheet->setCellValue('G' . $baris++, '-');
                 }
-
-                $sheet->setCellValue('H' . $baris, $totalhpp);
+                $hasil_rupiah = "Rp " . number_format($totalhpp, 0, ',', '.');
+                $sheet->setCellValue('H' . $baris, $hasil_rupiah);
 
 
 
