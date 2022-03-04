@@ -270,6 +270,13 @@ class Products extends Admin_Controller
                     $ke = '';
                 }
 
+                if ($product_data['price'] == $this->input->post('price')) {
+                    $harga = $product_data['price_old'];
+                    $tgl = $product_data['price_tgl'];
+                } else {
+                    $tgl = date('Y-m-d');
+                    $harga = $product_data['price'];
+                }
 
                 $data = array(
                     'gudang_id' => $store_id,
@@ -285,6 +292,8 @@ class Products extends Admin_Controller
                     'availability' => $this->input->post('availability'),
                     'kadaluarsa' => $kadaluarsa,
                     'tipe' => $this->input->post('tipe'),
+                    'price_old' => $harga,
+                    'price_tgl' => $tgl
                 );
 
 

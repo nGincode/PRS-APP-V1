@@ -124,7 +124,7 @@
                 </tbody>
                 <tfoot>
                   <th colspan="6">
-                    <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button>
+                    <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                   </th>
                 </tfoot>
               </table>
@@ -239,9 +239,11 @@
             '<td>' +
             '<select class="form-control select_group product" data-row-id="' + row_id + '" id="product_' + row_id + '" name="product[]" style="width:100%;" onchange="getProductData(' + row_id + ')" required>' +
             '<option selected="true" disabled="disabled">Pilih Produk</option>';
+
           $.each(response, function(index, value) {
             html += '<option value="' + value.id + '">' + value.name + '</option>';
           });
+
 
           html += '</select>' +
             '</td>' +
@@ -249,7 +251,7 @@
             '<td><input type="text" name="rate[]" id="rate_' + row_id + '" class="form-control" disabled><input type="hidden" name="rate_value[]" id="rate_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="text" name="satuan[]" id="satuan_' + row_id + '" class="form-control" disabled><input type="hidden" name="satuan_value[]" id="satuan_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="text" name="amount[]" id="amount_' + row_id + '" class="form-control" disabled><input type="hidden" name="amount_value[]" id="amount_value_' + row_id + '" class="form-control"></td>' +
-            '<td><button type="button" class="btn btn-default" onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
+            '<td><button type="button" class="btn btn-danger" onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
             '</tr>';
 
           if (count_table_tbody_tr >= 1) {
@@ -313,6 +315,36 @@
         },
         dataType: 'json',
         success: function(response) {
+
+          var tgl = new Date().getDate() - 3;
+          var bulan = new Date().getMonth() + 1;
+          var thn = new Date().getFullYear();
+          var gabung = thn + "" + bulan + "" + tgl;
+
+          var hariini = gabung.replace(/-0/g, '');
+
+          if (response.price_tgl) {
+            var date_price = response.price_tgl.replace(/-0/g, '')
+
+            if (hariini < date_price) {
+
+              $("#row_" + row_id).css("background-color", "rgba(253, 253, 86, 0.72)");
+
+              // $("#row_" + row_id).append('<i class="fa fa-warning" style="position: absolute;z-index: 9;margin-top: 18px;margin-left: -7px;color:red;"></i>');
+
+              Swal.fire({
+                icon: 'info',
+                title: 'Harga Berubah!',
+                text: 'Dari ' + response.price_old + ' Ke ' + response.price,
+                showConfirmButton: false,
+                timer: 1500
+              });
+            } else {
+              $("#row_" + row_id).css("background-color", "unset");
+
+            }
+          }
+
           // setting the rate value into the rate input field
 
           $("#rate_" + row_id).val(response.price);
