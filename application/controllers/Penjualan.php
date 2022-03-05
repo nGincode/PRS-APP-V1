@@ -811,7 +811,7 @@ class penjualan extends Admin_Controller
                     }
                 } else {
                     $qtyvarian = '-';
-                    $variancek = '<font color="red">( No Varian )</font>';
+                    $variancek = '';
                 }
 
 
