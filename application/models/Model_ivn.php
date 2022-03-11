@@ -434,4 +434,70 @@ class Model_ivn extends CI_Model
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}
+
+
+	public function ubahjmlmasuk($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lmasuk', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+	public function ubahhrgmasuk($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lmasuk', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+	public function ubahjmlbmasuk($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lmasukb', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+	public function ubahhrgbmasuk($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lmasukb', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+	public function ubahjmlkeluar($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lkeluar', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+	public function ubahhrgkeluar($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lkeluar', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+	public function ubahjmlrusak($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lrusak', $data);
+			return ($update == true) ? true : false;
+		}
+	}
+	public function ubahhrgrusak($id, $data)
+	{
+		if ($data) {
+			$this->db->where('id', $id);
+			$update = $this->db->update('ivn_lrusak', $data);
+			return ($update == true) ? true : false;
+		}
+	}
 }

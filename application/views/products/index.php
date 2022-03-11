@@ -76,7 +76,7 @@ endif; ?>
                   <th>Nama</th>
                   <th>Harga</th>
                   <th>Qty</th>
-                  <th>Status</th>
+                  <th>Ket</th>
                 </tr>
               </thead>
 

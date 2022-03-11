@@ -305,6 +305,109 @@
 
 
 
+  function ubahjml(jml, nama, id) {
+    Swal.fire({
+      title: 'Yakin ingin mengubah?',
+      text: "Anda akan merubah " + nama,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ubah'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: 'POST',
+          url: 'ubahjmlbmasuk',
+          data: {
+            'id': id,
+            'nama': nama,
+            'jml': jml
+          },
+          success: function(data) {
+            if (data == 1) {
+
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: nama + ' Berhasil di Ubah',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            } else if (data == 9) {
+              Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Data tidak diketahui',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            } else {
+              Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Terjadi Kesalahan !!',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          }
+        })
+      }
+    })
+  }
+
+  function ubahhrg(jml, nama, id) {
+    Swal.fire({
+      title: 'Yakin ingin mengubah?',
+      text: "Anda akan merubah " + nama,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ubah'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          type: 'POST',
+          url: 'ubahhrgbmasuk',
+          data: {
+            'id': id,
+            'nama': nama,
+            'jml': jml
+          },
+          success: function(data) {
+            if (data == 1) {
+
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: nama + ' Berhasil di Ubah',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            } else if (data == 9) {
+              Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Data tidak diketahui',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            } else {
+              Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Terjadi Kesalahan !!',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            }
+          }
+        })
+      }
+    })
+  }
 
   function removeFunc(id) {
     if (id) {

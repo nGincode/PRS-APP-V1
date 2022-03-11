@@ -59,6 +59,8 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if ($div == 0) {
             foreach ($data as $key => $value) {
 
+                $inputjml = '<input type="number" onchange="ubahjml(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahjml" value="' . $value["jumlah"] . '">';
+                $inputhrg = '<input type="number" onchange="ubahhrg(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahhrg" value="' . $value["harga"] . '">';
                 $buttons = ' <div class="btn-group dropleft">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                 <ul class="dropdown-menu">';
@@ -70,8 +72,8 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                     $value['tgl_masuk'],
                     $value['nama'],
                     $value['bagian'],
-                    $value['jumlah'],
-                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    $inputjml,
+                    $inputhrg,
                     "Rp " . number_format($value['jumlah'] * $value['harga'], 0, ',', '.')
                 );
             } // /foreach
@@ -91,7 +93,175 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         echo json_encode($result);
     }
 
+    public function ubahjmlmasuk()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
 
+        if ($id && $jml && $nama) {
+            $data = array(
+                'jumlah' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahjmlmasuk($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
+    public function ubahhrgmasuk()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
+
+        if ($id && $jml && $nama) {
+            $data = array(
+                'harga' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahhrgmasuk($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
+    public function ubahjmlbmasuk()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
+
+        if ($id && $jml && $nama) {
+            $data = array(
+                'jumlah' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahjmlbmasuk($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
+    public function ubahhrgbmasuk()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
+
+        if ($id && $jml && $nama) {
+            $data = array(
+                'harga' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahhrgbmasuk($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
+
+    public function ubahjmlkeluar()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
+
+        if ($id && $jml && $nama) {
+            $data = array(
+                'jumlah' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahjmlkeluar($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
+    public function ubahhrgkeluar()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
+
+        if ($id && $jml && $nama) {
+            $data = array(
+                'harga' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahhrgkeluar($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
+    public function ubahjmlrusak()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
+
+        if ($id && $jml && $nama) {
+            $data = array(
+                'jumlah' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahjmlrusak($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
+    public function ubahhrgrusak()
+    {
+        $id = $this->input->post('id');
+        $jml = $this->input->post('jml');
+        $nama = $this->input->post('nama');
+
+        if ($id && $jml && $nama) {
+            $data = array(
+                'harga' => $jml,
+            );
+
+            $update = $this->model_ivn->ubahhrgrusak($id, $data);
+            if ($update == true) {
+                echo 1;
+            } else {
+                echo 500;
+            }
+        } else {
+            echo 9;
+        }
+    }
     /*
 Input Data+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 */
@@ -491,6 +661,8 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if ($div == 0) {
 
             foreach ($data as $key => $value) {
+                $inputjml = '<input type="number" onchange="ubahjml(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahjml" value="' . $value["jumlah"] . '">';
+                $inputhrg = '<input type="number" onchange="ubahhrg(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahhrg" value="' . $value["harga"] . '">';
 
                 $buttons = ' <div class="btn-group dropleft">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
@@ -504,8 +676,8 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                     $value['tgl_masuk'],
                     $value['nama'],
                     $value['bagian'],
-                    $value['jumlah'],
-                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    $inputjml,
+                    $inputhrg,
                     "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
                 );
             } // /foreach
@@ -618,6 +790,9 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if ($div == 0) {
             foreach ($data as $key => $value) {
 
+                $inputjml = '<input type="number" onchange="ubahjml(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahjml" value="' . $value["jumlah"] . '">';
+                $inputhrg = '<input type="number" onchange="ubahhrg(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahhrg" value="' . $value["harga"] . '">';
+
 
                 $buttons = ' <div class="btn-group dropleft">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
@@ -633,8 +808,8 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                     $value['nama'],
                     $value['bagian'],
                     $value['ke'],
-                    $value['jumlah'],
-                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    $inputjml,
+                    $inputhrg,
                     "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
                 );
             } // /foreach
@@ -753,6 +928,10 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if ($div == 0) {
             foreach ($data as $key => $value) {
 
+
+                $inputjml = '<input type="number" onchange="ubahjml(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahjml" value="' . $value["jumlah"] . '">';
+                $inputhrg = '<input type="number" onchange="ubahhrg(this.value,' . "'" . $value['nama'] . "'" . ',' . $value['id'] . ')" style="width:80px" required name="ubahhrg" value="' . $value["harga"] . '">';
+
                 $buttons = ' <div class="btn-group dropleft">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                 <ul class="dropdown-menu">';
@@ -766,8 +945,8 @@ Input Data++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                     $value['nama'],
                     $value['bagian'],
                     $value['ket'],
-                    $value['jumlah'],
-                    "Rp " . number_format($value['harga'], 0, ',', '.'),
+                    $inputjml,
+                    $inputhrg,
                     "Rp " . number_format($value['harga'] * $value['jumlah'], 0, ',', '.')
                 );
             } // /foreach

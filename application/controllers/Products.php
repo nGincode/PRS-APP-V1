@@ -101,6 +101,13 @@ class Products extends Admin_Controller
             $angka = $price * $qty;
             $hargatotal = number_format("$angka", 0, ",", ".");
             $availability = ($value['availability'] == 1) ? '<span class="label label-success">Ada</span>' : '<span class="label label-warning">Tidak</span>';
+            if ($value['tipe'] == 0) {
+                $availability .= ' &nbsp;<span class="label label-primary">Umum</span>';
+            } else if ($value['tipe'] == 1) {
+                $availability .= ' &nbsp;<span class="label label-info">Baku</span>';
+            } else if ($value['tipe'] == 2) {
+                $availability .= ' &nbsp;<span class="label label-danger">Jadi</span>';
+            };
 
             $qty_status = '';
             if ($value['qty'] <= 10) {
@@ -748,9 +755,9 @@ class Products extends Admin_Controller
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                                 <ul class="dropdown-menu">';
 
-                        if ($id_user == 66) {
-                            $buttons .= '<li><a style="cursor:pointer;" onclick="upload(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
-                        }
+                        // if ($id_user == 66) {
+                        $buttons .= '<li><a style="cursor:pointer;" onclick="upload(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
+                        // }
 
                         $buttons .= '<li><a  href="' . base_url('products/lihat/' . $value['id']) . '" ><i class="fa fa-eye"></i> Lihat</a></li>';
                         $buttons .= '</ul></div>';
