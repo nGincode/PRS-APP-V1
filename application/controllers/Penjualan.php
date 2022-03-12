@@ -1367,6 +1367,195 @@ class penjualan extends Admin_Controller
         $writer->save('php://output');
     }
 
+    public function excelresep()
+    {
+        $idstore = $this->input->post('id');
+        if ($idstore) {
+            $store =  $this->model_stores->getStoresData($idstore);
+            $judul = "HPP Resep " . $store['name'];
+        } else {
+            $judul = 'HPP Resep Keseluruhan';
+        }
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $filename = $judul . date('d-m-Y') . ".xlsx";
+
+        $spreadsheet->getProperties()
+            ->setCreator("Fembi Nur Ilham")
+            ->setLastModifiedBy("Fembi Nur Ilham")
+            ->setTitle("Laporan Penjualan ")
+            ->setSubject("Hasil Export Dari PRS System")
+            ->setDescription("Semoga Terbantu Dengan Adanya Ini")
+            ->setKeywords("office 2007 openxml php")
+            ->setCategory("Order");
+
+        $sheet->setCellValue('A1', $judul);
+        $sheet->setCellValue('A2', date('d-m-Y'));
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+
+        $sheet->setCellValue('A4', 'No');
+        $sheet->setCellValue('B4', 'Nama Resep');
+        $sheet->setCellValue('C4', 'Item');
+        $sheet->setCellValue('D4', 'Satuan');
+        $sheet->setCellValue('E4', 'Harga');
+        $sheet->setCellValue('F4', 'HPP');
+
+
+
+        $data = $this->model_penjualan->getnamamenustore($idstore);
+        $baris = 5;
+        $no = 1;
+        $count = 4;
+
+        if ($data) {
+            foreach ($data as $key => $value) {
+
+                if (!$value['idproduct']) {
+                    $name = $value['nama_menu'];
+                } else {
+                    $product = $this->model_products->getProductData($value['idproduct']);
+                    $name = $product['name'];
+                }
+                $dtnama_menu = $this->model_penjualan->getnamamenu("$name");
+
+                $nama_menu = $dtnama_menu['nama_menu'];
+                $id_menu = $dtnama_menu['id'];
+
+
+
+                $sheet->setCellValue('A' . $baris, $no++);
+                $sheet->setCellValue('B' . $baris, $nama_menu);
+
+                $itemrsp = $this->model_penjualan->getresepitemid($id_menu);
+
+
+                $hpp = 0;
+                if ($itemrsp) {
+                    foreach ($itemrsp as  $v) {
+                        if (!$value['idproduct']) {
+                            $iditemresep = $this->model_penjualan->getitemresep($v['iditemresep']);
+                            if ($iditemresep) {
+                                if ($iditemresep['harga']) {
+                                    $hpp += $iditemresep['harga'];
+                                    $sheet->setCellValue('C' . $baris, $iditemresep['nama']);
+                                    $sheet->setCellValue('D' . $baris, $iditemresep['satuan']);
+                                    $sheet->setCellValue('E' . $baris, $iditemresep['harga']);
+                                }
+                                $baris++;
+                            } else {
+                                $sheet->setCellValue('C' . $baris, 'Tak Ditemukan');
+                                $sheet->setCellValue('D' . $baris, '-');
+                                $sheet->setCellValue('E' . $baris, '-');
+                            }
+                        } else {
+                            $iditemresep = $this->model_products->getProductData($v['idproduct']);
+                            if ($iditemresep) {
+                                if ($iditemresep['price']) {
+                                    $hpp += $iditemresep['price'];
+                                    $sheet->setCellValue('C' . $baris, $iditemresep['name']);
+                                    $sheet->setCellValue('D' . $baris, $iditemresep['satuan']);
+                                    $sheet->setCellValue('E' . $baris, $iditemresep['price']);
+                                }
+                                $baris++;
+                            } else {
+                                $sheet->setCellValue('C' . $baris, 'Tak Ditemukan');
+                                $sheet->setCellValue('D' . $baris, '-');
+                                $sheet->setCellValue('E' . $baris, '-');
+                            }
+                        }
+                    }
+                } else {
+                    $sheet->setCellValue('C' . $baris, 'Tak Ditemukan');
+                }
+
+                if ($hpp) {
+                    $spreadsheet
+                        ->getActiveSheet()
+                        ->getStyle('B' . $baris . ':F' . $baris)
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('28a745');
+                    $sheet->setCellValue('F' . $baris, $hpp);
+                } else {
+                    $spreadsheet
+                        ->getActiveSheet()
+                        ->getStyle('B' . $baris . ':F' . $baris)
+                        ->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()
+                        ->setARGB('dc3545');
+                    $sheet->setCellValue('F' . $baris, '-');
+                }
+
+                // $array = array_merge(array($qtytotalrsp));
+                // $sumArray = array();
+                // foreach ($array as $k => $subArray) {
+                //     foreach ($subArray as $id => $k) {
+                //         if (!isset($sumArray[$id])) {
+                //             $sumArray[$id] = $k;
+                //         } else {
+                //             $sumArray[$id] += $k;
+                //         }
+                //     }
+                // }
+
+                // $sheet->setCellValue('C' . $baris, $qtyresep);
+                // $sheet->setCellValue('D' . $baris, $qtyvarian);
+
+
+                // $qty = array_values($sumArray);
+                // $nama = array_keys($sumArray);
+
+                // $c = count($nama);
+                // $totalhpp = 0;
+                // if (!$c == 0) {
+                //     for ($i = 0; $i < $c; $i++) {
+
+                //         $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
+
+                //         if ($dtnama_menu) {
+                //             if ($dtnama_menu['harga']) {
+                //                 $total = $dtnama_menu['harga'] * $qty[$i];
+                //                 $ttl = "(Rp " . number_format($total, 0, ',', '.') . ')';
+                //                 $totalhpp +=  $total;
+                //             } else {
+                //                 $totalhpp += 0;
+                //                 $ttl = '';
+                //             }
+                //             if ($c == $i + 1) {
+                //                 $totalqty =   $nama[$i] . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan']  . ' ' . $ttl . '';
+                //                 $sheet->setCellValue('G' . $baris++, $totalqty);
+                //             } else {
+                //                 $totalqty =   $nama[$i]  . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan'] . ' '  . $ttl . '';
+                //                 $sheet->setCellValue('G' . $baris++, $totalqty);
+                //             }
+                //         }
+                //     }
+                // } else {
+                //     $sheet->setCellValue('G' . $baris++, '-');
+                // }
+                // $hasil_rupiah = "Rp " . number_format($totalhpp, 0, ',', ',');
+                // $sheet->setCellValue('H' . $baris, $hasil_rupiah);
+
+
+
+                $baris++;
+                $count++;
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            header('Content-Disposition: attachment;filename="' . $filename . '"');
+            header('Content-Type: application/vnd.ms-excel');
+            header('Cache-Control: max-age=0');
+            $writer->save('php://output');
+        } else {
+            // $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
+            // redirect('penjualan/', 'refresh');
+        }
+    }
 
     public function tes()
     {

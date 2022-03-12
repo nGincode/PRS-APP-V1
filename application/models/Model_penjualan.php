@@ -170,6 +170,19 @@ class Model_penjualan extends CI_Model
 	}
 
 
+	public function getnamamenustore($id)
+	{
+
+
+		if ($id) {
+			$hasil = "WHERE store_id = '$id'";
+		} else {
+			$hasil = '';
+		}
+		$sql = "SELECT * FROM penjualan_resep  $hasil ORDER BY nama_menu ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 
 
 

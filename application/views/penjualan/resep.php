@@ -149,6 +149,22 @@
       </div>
       <!-- /.box-header -->
       <div class="box-body" id='penyesuaian'>
+        <form action="<?= base_url('penjualan/excelresep') ?>" method="post">
+
+          <select name="id" style="height: 32px;
+    border-bottom: #00a65a solid;
+    border-radius: 3px;
+    border-top: none;
+    border-left: none;
+    border-right: none;">
+            <option value="0">Semua</option>
+            <?php foreach ($store as $k => $v) : ?>
+              <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
+            <?php endforeach ?>
+          </select>
+          <button class="btn btn-success" type="submit"><i class="fa fa-download"></i> Download </button><br>
+        </form>
+        <br>
         <table id="manageTable" class="table table-bordered table-striped" style="width: 100%;">
           <thead>
             <tr>
