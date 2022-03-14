@@ -1398,9 +1398,10 @@ class penjualan extends Admin_Controller
         $sheet->setCellValue('A4', 'No');
         $sheet->setCellValue('B4', 'Nama Resep');
         $sheet->setCellValue('C4', 'Item');
-        $sheet->setCellValue('D4', 'Satuan');
-        $sheet->setCellValue('E4', 'Harga');
-        $sheet->setCellValue('F4', 'HPP');
+        $sheet->setCellValue('D4', 'Qty');
+        $sheet->setCellValue('E4', 'Satuan');
+        $sheet->setCellValue('F4', 'Harga');
+        $sheet->setCellValue('G4', 'HPP');
 
 
 
@@ -1438,31 +1439,35 @@ class penjualan extends Admin_Controller
                             $iditemresep = $this->model_penjualan->getitemresep($v['iditemresep']);
                             if ($iditemresep) {
                                 if ($iditemresep['harga']) {
-                                    $hpp += $iditemresep['harga'];
+                                    $hpp += $iditemresep['harga'] * $v['qty'];
                                     $sheet->setCellValue('C' . $baris, $iditemresep['nama']);
-                                    $sheet->setCellValue('D' . $baris, $iditemresep['satuan']);
-                                    $sheet->setCellValue('E' . $baris, $iditemresep['harga']);
+                                    $sheet->setCellValue('D' . $baris, $v['qty']);
+                                    $sheet->setCellValue('E' . $baris, $iditemresep['satuan']);
+                                    $sheet->setCellValue('F' . $baris, $iditemresep['harga']);
                                 }
                                 $baris++;
                             } else {
                                 $sheet->setCellValue('C' . $baris, 'Tak Ditemukan');
                                 $sheet->setCellValue('D' . $baris, '-');
                                 $sheet->setCellValue('E' . $baris, '-');
+                                $sheet->setCellValue('F' . $baris, '-');
                             }
                         } else {
                             $iditemresep = $this->model_products->getProductData($v['idproduct']);
                             if ($iditemresep) {
                                 if ($iditemresep['price']) {
-                                    $hpp += $iditemresep['price'];
+                                    $hpp += $iditemresep['price'] * $v['qty'];
                                     $sheet->setCellValue('C' . $baris, $iditemresep['name']);
-                                    $sheet->setCellValue('D' . $baris, $iditemresep['satuan']);
-                                    $sheet->setCellValue('E' . $baris, $iditemresep['price']);
+                                    $sheet->setCellValue('D' . $baris, $v['qty']);
+                                    $sheet->setCellValue('E' . $baris, $iditemresep['satuan']);
+                                    $sheet->setCellValue('F' . $baris, $iditemresep['price']);
                                 }
                                 $baris++;
                             } else {
                                 $sheet->setCellValue('C' . $baris, 'Tak Ditemukan');
                                 $sheet->setCellValue('D' . $baris, '-');
                                 $sheet->setCellValue('E' . $baris, '-');
+                                $sheet->setCellValue('F' . $baris, '-');
                             }
                         }
                     }
@@ -1473,73 +1478,22 @@ class penjualan extends Admin_Controller
                 if ($hpp) {
                     $spreadsheet
                         ->getActiveSheet()
-                        ->getStyle('B' . $baris . ':F' . $baris)
+                        ->getStyle('B' . $baris . ':G' . $baris)
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB('28a745');
-                    $sheet->setCellValue('F' . $baris, $hpp);
+                    $sheet->setCellValue('G' . $baris, $hpp);
                 } else {
                     $spreadsheet
                         ->getActiveSheet()
-                        ->getStyle('B' . $baris . ':F' . $baris)
+                        ->getStyle('B' . $baris . ':G' . $baris)
                         ->getFill()
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB('dc3545');
-                    $sheet->setCellValue('F' . $baris, '-');
+                    $sheet->setCellValue('G' . $baris, '-');
                 }
-
-                // $array = array_merge(array($qtytotalrsp));
-                // $sumArray = array();
-                // foreach ($array as $k => $subArray) {
-                //     foreach ($subArray as $id => $k) {
-                //         if (!isset($sumArray[$id])) {
-                //             $sumArray[$id] = $k;
-                //         } else {
-                //             $sumArray[$id] += $k;
-                //         }
-                //     }
-                // }
-
-                // $sheet->setCellValue('C' . $baris, $qtyresep);
-                // $sheet->setCellValue('D' . $baris, $qtyvarian);
-
-
-                // $qty = array_values($sumArray);
-                // $nama = array_keys($sumArray);
-
-                // $c = count($nama);
-                // $totalhpp = 0;
-                // if (!$c == 0) {
-                //     for ($i = 0; $i < $c; $i++) {
-
-                //         $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
-
-                //         if ($dtnama_menu) {
-                //             if ($dtnama_menu['harga']) {
-                //                 $total = $dtnama_menu['harga'] * $qty[$i];
-                //                 $ttl = "(Rp " . number_format($total, 0, ',', '.') . ')';
-                //                 $totalhpp +=  $total;
-                //             } else {
-                //                 $totalhpp += 0;
-                //                 $ttl = '';
-                //             }
-                //             if ($c == $i + 1) {
-                //                 $totalqty =   $nama[$i] . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan']  . ' ' . $ttl . '';
-                //                 $sheet->setCellValue('G' . $baris++, $totalqty);
-                //             } else {
-                //                 $totalqty =   $nama[$i]  . ' ' . $qty[$i] . '/' . $dtnama_menu['satuan'] . ' '  . $ttl . '';
-                //                 $sheet->setCellValue('G' . $baris++, $totalqty);
-                //             }
-                //         }
-                //     }
-                // } else {
-                //     $sheet->setCellValue('G' . $baris++, '-');
-                // }
-                // $hasil_rupiah = "Rp " . number_format($totalhpp, 0, ',', ',');
-                // $sheet->setCellValue('H' . $baris, $hasil_rupiah);
-
 
 
                 $baris++;
@@ -1552,8 +1506,8 @@ class penjualan extends Admin_Controller
             header('Cache-Control: max-age=0');
             $writer->save('php://output');
         } else {
-            // $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
-            // redirect('penjualan/', 'refresh');
+            $this->session->set_flashdata('error', 'Data Tidak Ditemukan');
+            redirect('penjualan/', 'refresh');
         }
     }
 

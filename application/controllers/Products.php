@@ -718,6 +718,8 @@ class Products extends Admin_Controller
         $id_user = $this->session->userdata('id');
         $store_id = $this->session->userdata('store_id');
 
+        $str  = $this->model_stores->getStoresData($store_id);
+
 
         if ($var) {
             if (is_numeric($filter) or $filter == '') {
@@ -755,9 +757,9 @@ class Products extends Admin_Controller
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
                                 <ul class="dropdown-menu">';
 
-                        // if ($id_user == 66) {
-                        $buttons .= '<li><a style="cursor:pointer;" onclick="upload(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
-                        // }
+                        if ($str['tipe'] == 2) {
+                            $buttons .= '<li><a style="cursor:pointer;" onclick="upload(' . $value['id'] . ')"><i class="fa fa-upload"></i> Upload</a></li>';
+                        }
 
                         $buttons .= '<li><a  href="' . base_url('products/lihat/' . $value['id']) . '" ><i class="fa fa-eye"></i> Lihat</a></li>';
                         $buttons .= '</ul></div>';
