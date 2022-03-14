@@ -218,8 +218,6 @@ $countbaca = $CI->model_orders->countbaca(1);
           </li>
         <?php endif; ?>
 
-
-
         <?php if (in_array('createpengadaan', $user_permission) || in_array('updatepengadaan', $user_permission) || in_array('viewpengadaan', $user_permission) || in_array('deletepengadaan', $user_permission)) : ?>
           <li class="treeview" id="mainpengadaanNav">
             <a href="#">
@@ -447,18 +445,6 @@ $countbaca = $CI->model_orders->countbaca(1);
           </li>
         <?php endif; ?>
 
-        <?php if (in_array('viewReports', $user_permission)) : ?>
-          <li id="reportNav">
-            <a href="<?php echo base_url('reports/') ?>">
-              <i class="glyphicon glyphicon-stats"></i> <span>Reports</span>
-            </a>
-          </li>
-        <?php endif; ?>
-
-        <?php if (in_array('updateCompany', $user_permission)) : ?>
-          <li id="companyNav"><a href="<?php echo base_url('company/') ?>"><i class="fa fa-files-o"></i> <span>Perusahaan</span></a></li>
-        <?php endif; ?>
-
         <?php if (in_array('createabsen', $user_permission) || in_array('updateabsen', $user_permission) || in_array('viewabsen', $user_permission) || in_array('deleteabsen', $user_permission)) : ?>
           <li class="treeview" id="mainabsenNav">
             <a href="#">
@@ -536,7 +522,6 @@ $countbaca = $CI->model_orders->countbaca(1);
           </li>
         <?php endif; ?>
 
-
         <?php if (in_array('createpelanggan', $user_permission) || in_array('updatepelanggan', $user_permission) || in_array('viewpelanggan', $user_permission) || in_array('deletepelanggan', $user_permission)) : ?>
           <li class="treeview" id="mainpelangganNav">
             <a href="#">
@@ -560,7 +545,6 @@ $countbaca = $CI->model_orders->countbaca(1);
             </ul>
           </li>
         <?php endif; ?>
-
 
         <?php if (in_array('createpenjualan', $user_permission) || in_array('updatepenjualan', $user_permission) || in_array('viewpenjualan', $user_permission) || in_array('deletepenjualan', $user_permission)) : ?>
           <li class="treeview" id="mainpenjualanNav">
@@ -600,8 +584,6 @@ $countbaca = $CI->model_orders->countbaca(1);
           </li>
         <?php endif; ?>
 
-
-
         <?php if (in_array('createvoucher', $user_permission) || in_array('updatevoucher', $user_permission) || in_array('viewvoucher', $user_permission) || in_array('deletevoucher', $user_permission)) : ?>
           <li class="treeview" id="mainvoucherNav">
             <a href="#">
@@ -629,7 +611,6 @@ $countbaca = $CI->model_orders->countbaca(1);
           </li>
         <?php endif; ?>
 
-
         <?php if (in_array('createdapro', $user_permission) || in_array('updatedapro', $user_permission) || in_array('viewdapro', $user_permission) || in_array('deletedapro', $user_permission)) : ?>
           <li class="treeview" id="maindaproNav">
             <a href="#">
@@ -654,6 +635,12 @@ $countbaca = $CI->model_orders->countbaca(1);
 
 
               <?php if (in_array('viewdapro', $user_permission)) : ?>
+                <li id="daprokeluar"><a href="<?php echo base_url('dapro/keluar') ?>"><i class="fa fa-sign-out"></i> Produk Keluar</a>
+                </li>
+              <?php endif; ?>
+
+
+              <?php if (in_array('viewdapro', $user_permission)) : ?>
                 <li id="laporan"><a href="<?php echo base_url('dapro/laporan') ?>"><i class="fa fa-file-text-o"></i> Laporan</a>
                 </li>
               <?php endif; ?>
@@ -666,13 +653,25 @@ $countbaca = $CI->model_orders->countbaca(1);
           </li>
         <?php endif; ?>
 
-        <!-- <li class="header">Settings</li> -->
+        <li class="header">Settings</li>
 
         <?php if (in_array('viewProfile', $user_permission)) : ?>
           <li id="profNav"><a href="<?php echo base_url('users/profile/') ?>"><i class="fa fa-user-o"></i> <span>Profil</span></a></li>
         <?php endif; ?>
         <?php if (in_array('updateSetting', $user_permission)) : ?>
           <li id="setNav"><a href="<?php echo base_url('users/setting/') ?>"><i class="fa fa-wrench"></i> <span>Pengaturan</span></a></li>
+        <?php endif; ?>
+
+        <?php if (in_array('viewReports', $user_permission)) : ?>
+          <li id="reportNav">
+            <a href="<?php echo base_url('reports/') ?>">
+              <i class="glyphicon glyphicon-stats"></i> <span>Reports</span>
+            </a>
+          </li>
+        <?php endif; ?>
+
+        <?php if (in_array('updateCompany', $user_permission)) : ?>
+          <li id="companyNav"><a href="<?php echo base_url('company/') ?>"><i class="fa fa-files-o"></i> <span>Perusahaan</span></a></li>
         <?php endif; ?>
 
       <?php endif; ?>

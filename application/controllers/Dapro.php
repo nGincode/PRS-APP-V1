@@ -513,7 +513,111 @@ class Dapro extends Admin_Controller
         </table>';
     }
 
+    public function inputkeluar()
+    {
 
+        $nama = $this->input->post('nama');
+        $jumlah = $this->input->post('jumlah');
+        $tgl_keluar = $this->input->post('tgl_keluar');
+        $ket = $this->input->post('ket');
+
+        if ($nama && $jumlah && $tgl_keluar && $ket) {
+            $product = $this->model_products->getProductData($nama);
+            if ($product) {
+                $data = array(
+                    'qty' => -$jumlah,
+                    'tgl' => $tgl_keluar,
+                    'ket' => $ket,
+                    'product_id' => $nama,
+                    'nama_produk' => $product['name'],
+                    'harga' => $product['price'],
+                    'satuan' => $product['satuan'],
+                    'tipe' => $product['tipe'],
+                    'keluar' => true
+                );
+                $up = $this->model_dapro->upbahanmetah($data);
+                if ($up == true) {
+                    $this->session->set_flashdata('success', 'Berhasil');
+                    redirect('dapro/keluar', 'refresh');
+                } else {
+                    $this->session->set_flashdata('error', 'Data Tidak Benar');
+                    redirect('dapro/keluar', 'refresh');
+                }
+            } else {
+                $this->session->set_flashdata('error', 'Data Tidak Benar');
+                redirect('dapro/keluar', 'refresh');
+            }
+        } else {
+            $this->session->set_flashdata('error', 'Data Tidak Benar');
+            redirect('dapro/keluar', 'refresh');
+        }
+    }
+
+    public function fetchbkeluar()
+    {
+        $result = array('data' => array());
+        // $var = $this->input->post('tgl');
+        $var =  '07/03/2022 - 17/03/2022';
+
+        if ($var) {
+
+            $tgl = str_replace('/', '-', $var);
+            $hasil = explode(" - ", $tgl);
+            $dari = date('Y-m-d', strtotime("-1 day", strtotime($hasil[0])));
+            $sampai = date('Y-m-d', strtotime("+1 day", strtotime($hasil[1])));
+
+            $data = $this->model_dapro->getdapro_bahanbaku($dari, $sampai);
+            foreach ($data as $key => $value) {
+
+                if ($value['keluar']) {
+                    if ($value['tipe']) {
+                        $tipe = 'Bahan Baku';
+                    } else {
+                        $tipe = 'Reguler';
+                    }
+                    $result['data'][] = array(
+                        $value['tgl'],
+                        $tipe,
+                        $value['nama_produk'],
+                        $value['qty'],
+                        $value['harga'] . '/' . $value['satuan'],
+                        $value['qty'] * $value['harga'],
+                        $value['ket']
+                    );
+                }
+            }
+        } else {
+            $result['data'] = array();
+        }
+        echo json_encode($result);
+    }
+
+    public function keluar()
+    {
+
+        $productid = $this->model_dapro->getproduct_id();
+        $dt = array();
+        foreach ($productid as $key => $value) {
+
+            $qty = 0;
+            $data = $this->model_dapro->getdaproid($value['product_id']);
+            if ($data) {
+                foreach ($data as $val) {
+                    $qty += $val['qty'];
+                }
+                $dt[] = array(
+                    'qty' => $qty,
+                    'nama' => $value['nama_produk'],
+                    'id' => $value['product_id'],
+                    'satuan' => $data[0]['satuan']
+
+                );
+            }
+        }
+        $this->data['data'] = $dt;
+        $this->data['namastore'] = $_SESSION['store'];
+        $this->render_template('dapro/keluar', $this->data);
+    }
 
 
     public function excel()
