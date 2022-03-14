@@ -152,7 +152,7 @@
         <form action="<?= base_url('penjualan/excelresep') ?>" method="post">
 
           <select name="id" style="height: 32px;border-bottom: #00a65a solid;border-radius: 3px;border-top: none;border-left: none;border-right: none;">
-            <option value="0">Semua</option>
+            <!-- <option value="0">Semua</option> -->
             <?php foreach ($store as $k => $v) : ?>
               <option value="<?php echo $v['id'] ?>"><?php echo $v['name'] ?></option>
             <?php endforeach ?>

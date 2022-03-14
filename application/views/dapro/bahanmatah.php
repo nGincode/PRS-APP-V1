@@ -62,7 +62,6 @@ endif; ?>
                                     <th>Qty</th>
                                     <th>Harga</th>
                                     <th>Tipe</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
 

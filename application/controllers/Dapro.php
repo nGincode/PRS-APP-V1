@@ -86,12 +86,6 @@ class Dapro extends Admin_Controller
             $data = $this->model_dapro->getorders_item($dari, $sampai, $store_id);
             foreach ($data as $key => $value) {
 
-                if ($value['dapro']) {
-                    $status = '<a class="btn btn-success">Terupload</a>';
-                } else {
-                    $status = '<a class="btn btn-warning">Belum Terupload</a>';
-                }
-
                 if ($value['tipe']) {
                     $tipe = 'Bahan Baku';
                 } else {
@@ -106,18 +100,17 @@ class Dapro extends Admin_Controller
                     $buttons .= '<li><a href="#" onclick="upload_orderdapro(' . $value['id'] . ')" ><i class="fa fa-upload"></i> Upload</a></li>';
                     $buttons .= '</ul></div>';
                 } else {
-                    $buttons = 'Terupload';
+                    $buttons = '<span class="badge badge-success">Terupload</span>';
                 }
 
-                if ($value['qtyarv']) {
+                if ($value['qty']) {
                     $result['data'][$key] = array(
                         $buttons,
                         $value['tgl_laporan'],
                         $value['nama_produk'],
                         $value['qty'],
                         $value['rate'] . '/' . $value['satuan'],
-                        $tipe,
-                        $status
+                        $tipe
                     );
                 }
             }
@@ -162,7 +155,7 @@ class Dapro extends Admin_Controller
                         $t,
                         $qty,
                         $harga . '/' . $satuan,
-                        $total
+                        number_format($total, 0, ",", ".")
                     );
                 } else {
                     $result['data'] = array();
@@ -183,7 +176,8 @@ class Dapro extends Admin_Controller
         $nama = $this->input->post('nama');
         $idproduct = $this->input->post('idproduct');
 
-        if ($jml <= $max && $id && $jml && $harga && $nama && $idproduct) {
+        // if ($jml <= $max && $id && $jml && $harga && $nama && $idproduct) {
+        if ($jml  && $id && $jml && $harga && $nama && $idproduct) {
 
 
             $data = $this->model_dapro->getitemresep($id);
@@ -254,7 +248,7 @@ class Dapro extends Admin_Controller
                     $value['nama'],
                     $value['qty'],
                     $value['harga'],
-                    $total
+                    number_format($total, 0, ",", ".")
                 );
             }
         } else {
@@ -296,7 +290,11 @@ class Dapro extends Admin_Controller
                     $hitung =  min($hasil);
                 }
 
-                $total = $hitung * $harga;
+                if ($harga < 0) {
+                    $total = '-' . number_format($hitung * $harga, 0, ",", ".");
+                } else {
+                    $total = number_format($hitung * $harga, 0, ",", ".");
+                }
                 $input = '
                 <input type="hidden" value="' . $value['idproduct'] . '" name="idproduct" id="idproduct">
                 <input type="hidden" value="' . $value['id'] . '" name="id" id="indent">
@@ -305,15 +303,15 @@ class Dapro extends Admin_Controller
                 <input type="hidden" value="' . $harga . '" name="harganya" id="harganya">
                 <input class="form-control" name="jml" type="number" max="' . $hitung . '" id="jml"><button onclick="kirimbrngjdi()" class="btn btn-success">Kirim</button>
                 ';
-                if ($hitung > 0) {
-                    $result['data'][$key] = array(
-                        $value['nama_menu'],
-                        $hitung,
-                        $input,
-                        $harga,
-                        $total
-                    );
-                }
+                // if ($hitung > 0) {
+                $result['data'][$key] = array(
+                    $value['nama_menu'],
+                    $hitung,
+                    $input,
+                    number_format($harga, 0, ",", "."),
+                    $total
+                );
+                // }
             }
         } else {
             $result['data'] = array();
@@ -332,7 +330,7 @@ class Dapro extends Admin_Controller
             $row = $this->model_dapro->status_up($id);
 
             $data = array(
-                'qty' => $row['qtyarv'],
+                'qty' => $row['qty'],
                 'product_id' => $row['product_id'],
                 'nama_produk' => $row['nama_produk'],
                 'harga' => $row['rate'],

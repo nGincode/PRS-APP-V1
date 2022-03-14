@@ -375,15 +375,16 @@ endif; ?>
         var $jml = $('#jml').val();
         var $harganya = $('#harganya').val();
         var $nmmnu = $('#nmmnu').val();
-        if ($jml > $max) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal...!',
-                text: 'Tidak Boleh Melebihi Qty Yang Dapat dibuat',
-                showConfirmButton: false,
-                timer: 1500
-            });
-        } else if (0 >= $jml) {
+        // if ($jml > $max) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Gagal...!',
+        //         text: 'Tidak Boleh Melebihi Qty Yang Dapat dibuat',
+        //         showConfirmButton: false,
+        //         timer: 1500
+        //     });
+        // } else 
+        if (0 >= $jml) {
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal...!',

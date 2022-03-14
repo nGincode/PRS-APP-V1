@@ -1483,6 +1483,7 @@ class penjualan extends Admin_Controller
                         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                         ->getStartColor()
                         ->setARGB('28a745');
+                    $sheet->setCellValue('B' . $baris, 'Total');
                     $sheet->setCellValue('G' . $baris, $hpp);
                 } else {
                     $spreadsheet

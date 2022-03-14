@@ -290,7 +290,7 @@ endif; ?>
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Reset'
+        confirmButtonText: 'Simpan'
       }).then((result) => {
         if (result.isConfirmed) {
           $.ajax({
