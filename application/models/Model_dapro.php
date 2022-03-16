@@ -164,6 +164,19 @@ class Model_dapro extends CI_Model
 		return $query->result_array();
 	}
 
+	public function fetchbahankeluar($tglawal, $tglakhir)
+	{
+
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
+
+		$sql = "SELECT DISTINCT product_id FROM dapro_bahanbaku WHERE keluar=1 AND $tgl ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 
 	public function fetchbahanbakutglak($id, $tglawal, $tglakhir)
 	{
@@ -207,6 +220,21 @@ class Model_dapro extends CI_Model
 		}
 
 		$sql = "SELECT * FROM dapro_bahanjadi WHERE idproduct = $id AND $tgl AND up = 1  ORDER BY tgl ASC";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
+
+
+	public function fetchbahanjaditglak2($id, $tglawal, $tglakhir)
+	{
+
+		if ($tglakhir) {
+			$tgl =  "tgl BETWEEN '$tglawal' AND '$tglakhir'";
+		} else {
+			$tgl =  "tgl = '" . $tglawal . "'";
+		}
+
+		$sql = "SELECT * FROM dapro_bahanbaku WHERE product_id = $id AND $tgl  AND keluar=1  ORDER BY tgl ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}

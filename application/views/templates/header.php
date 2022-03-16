@@ -77,5 +77,5 @@
 
 </head>
 
-<body class="hold-transition skin-purple sidebar-mini sidebar-collapse fixed">
+<body class="hold-transition skin-purple-light sidebar-mini sidebar-collapse fixed">
   <div class="wrapper">
