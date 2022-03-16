@@ -122,10 +122,9 @@
           <thead>
             <tr>
               <th style="width: 10px;">Action</th>
-              <th style="width: 10px;">No</th>
-              <th>Nama</th>
-              <th>Satuan</th>
-              <th>Harga</th>
+              <th style="width: 300px;">Nama</th>
+              <th style="width: 150px;">Harga/1</th>
+              <th>Resep</th>
             </tr>
           </thead>
 

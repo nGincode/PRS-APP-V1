@@ -155,7 +155,6 @@ class penjualan extends Admin_Controller
 
 
         $dt = $this->model_penjualan->getitemresep();
-        $no = 1;
         foreach ($dt as $key => $value) {
 
             $buttons = ' <div class="btn-group dropleft">
@@ -166,13 +165,19 @@ class penjualan extends Admin_Controller
             }
             $buttons .= '</ul></div>';
 
+            $iditem = $this->model_penjualan->getitemid($value['id']);
+            $resep = '';
+            foreach ($iditem as $v) {
+                $dtresep = $this->model_penjualan->getresep($v['idpenjualanresep']);
+                $resep .= $dtresep['nama_menu'] . ', ';
+            }
+
 
             $result['data'][$key] = array(
                 $buttons,
-                $no++,
                 $value['nama'],
-                $value['satuan'],
-                $value['harga'],
+                $value['harga'] . '/' . $value['satuan'],
+                $resep
             );
         }
         echo json_encode($result);

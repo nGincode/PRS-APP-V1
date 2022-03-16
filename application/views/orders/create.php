@@ -117,7 +117,6 @@
                   <th style="width:10%;min-width:70px;text-align: center;">Satuan</th>
                   <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
                   <th style="width:10%;text-align: center;"><i class="fa fa-trash"></i></th>
-                  </tr>
                 </thead>
 
                 <tbody>

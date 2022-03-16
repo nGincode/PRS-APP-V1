@@ -74,8 +74,8 @@
 
               <div class="form-group" id="selectmn" style="display: none;">
                 <div class="col-sm-7">
-                  <label for="nama1">Nama Produk Jadi</label>
-                  <select class="form-control select_group" id="nama1" name="menuproduk">
+                  <label for="nama1">Nama Produk Jadi</label><br>
+                  <select class="form-control select_group" style="width: 100%;" id="nama1" name="menuproduk">
                     <option> Pilih </option>
                     <?php foreach ($prodctjdi as $val) { ?>
                       <option value="<?= $val['id'] ?>"><?= $val['name'] ?></option>
@@ -93,17 +93,21 @@
 
               <table class="table table-bordered" id="product_info_table" style="overflow-x: scroll;display:block;">
                 <thead>
-                  <th style="width:50%;min-width:200px;text-align: center;">Nama Item</th>
+                  <th style="width:50%;min-width:200px;text-align: center;">Produk</th>
                   <th style="width:10%;min-width:70px;text-align: center;">Qty</th>
+                  <th style="width:10%;min-width:100px;text-align: center;">Hrg/1</th>
                   <th style="width:10%;min-width:70px;text-align: center;">Satuan</th>
-                  <th style="width:10%;min-width:100px;text-align: center;">Harga</th>
-                  <th style="width:10%;min-width:100px;text-align: center;">Jumlah</th>
-                  <th style="width:3%"><button type="button" id="add_row" class="btn btn-default"><i class="fa fa-plus"></i></button></th>
-                  </tr>
+                  <th style="width:20%;min-width:100px;text-align: center;">Jumlah</th>
+                  <th style="width:10%;text-align: center;"><i class="fa fa-trash"></i></th>
                 </thead>
 
                 <tbody>
                 </tbody>
+                <tfoot>
+                  <th colspan="6">
+                    <button type="button" style="width:20%;min-width:100%;text-align: center;" id="add_row" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                  </th>
+                </tfoot>
               </table>
               <br /> <br />
 
@@ -295,7 +299,7 @@
             '<td><input type="text" name="satuan[]" id="satuan_' + row_id + '" class="form-control" disabled><input type="hidden" name="satuan_value[]" id="satuan_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="hidden" name="rate[]" id="rate_' + row_id + '" class="form-control"><input disabled type="number" name="rate_value[]" id="rate_value_' + row_id + '" class="form-control"></td>' +
             '<td><input type="text" name="amount[]" id="amount_' + row_id + '" class="form-control" disabled><input type="hidden" name="amount_value[]" id="amount_value_' + row_id + '" class="form-control"></td>' +
-            '<td><button type="button" class="btn btn-default" onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
+            '<td><button type="button" class="btn btn-danger"  onclick="removeRow(\'' + row_id + '\')"><i class="fa fa-close"></i></button></td>' +
             '</tr>';
 
           if (count_table_tbody_tr >= 1) {
