@@ -1394,7 +1394,7 @@ class penjualan extends Admin_Controller
             $baris++;
         }
         $sheet->setCellValue('A' . $baris, 'Jumlah ');
-        $sheet->setCellValue('E' . $baris, $jml);
+        $sheet->setCellValue('E' . $baris, 'Rp. ' . number_format($jml, 0, ',', ','));
         $writer = new Xlsx($spreadsheet);
         header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Content-Type: application/vnd.ms-excel');
