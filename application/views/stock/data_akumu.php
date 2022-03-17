@@ -132,7 +132,12 @@
                 if (isset($stock['nama_produk'])) {
                   $n_produk = $stock['nama_produk'];
                 } else {
-                  $n_produk = $value['produk_id'] . ' Tidak diketahui';
+
+                  if ($value['nama_produk']) {
+                    $n_produk = $value['nama_produk'];
+                  } else {
+                    $n_produk = $value['produk_id'] . ' Tidak diketahui';
+                  }
                 }
 
                 if ($value['ket']) {

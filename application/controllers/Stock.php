@@ -1032,7 +1032,11 @@ class Stock extends Admin_Controller
                 if (isset($stock['nama_produk'])) {
                     $nama_produk = $stock['nama_produk'];
                 } else {
-                    $nama_produk = $value['produk_id'] . ' Tidak diketahui';
+                    if ($value['nama_produk']) {
+                        $nama_produk = $value['nama_produk'];
+                    } else {
+                        $nama_produk = $value['produk_id'] . ' Tidak diketahui';
+                    }
                 }
 
                 if ($value['ket']) {
@@ -1159,7 +1163,11 @@ class Stock extends Admin_Controller
                 if (isset($stock['nama_produk'])) {
                     $nama_produk = $stock['nama_produk'];
                 } else {
-                    $nama_produk = $value['produk_id'] . ' Tidak diketahui';
+                    if ($value['nama_produk']) {
+                        $nama_produk = $value['nama_produk'];
+                    } else {
+                        $nama_produk = $value['produk_id'] . ' Tidak diketahui';
+                    }
                 }
 
                 if ($value['bagian'] == 1) {
