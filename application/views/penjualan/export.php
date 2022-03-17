@@ -5,13 +5,14 @@
   echo "<script> Swal.fire({icon: 'error',title: 'Maaf...!',text: '" . $this->session->flashdata('error') . "',showConfirmButton: false,timer: 4000});</script>";
 ?>
 <?php endif; ?>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      Input
-      <small>Item Resep</small>
+      Kelola Penjualan
+      <small>Resep & HPP</small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -20,6 +21,131 @@
   </section>
 
 
+
+
+  <section class="content">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+      <div class="col-md-12 col-xs-12">
+
+        <div id="messages"></div>
+
+
+        <div class="box box-success box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title"><b><i class="fa fa-briefcase"></i> Upload Penjualan</b></h3>
+
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <!-- /.box-tools -->
+          </div>
+          <!-- /.box-header -->
+
+
+          <!-- Option button -->
+
+
+          <?= form_open_multipart('penjualan/export') ?>
+          <div class="box-body">
+            <input type="file" class="form-control" name="file_import">
+          </div>
+          <div class="box-footer">
+            <input type="submit" class="btn btn-primary" name="preview" value="Upload">
+            <a href="<?= base_url() ?>penjualan/dl_format" class="btn btn-success"><i class="fa fa-download" class="btn btn-success"></i> Download Format</a>
+          </div>
+          </form>
+
+          <!-- /.box-body -->
+
+          <div class="box-body">
+            Keterangan : <br>
+            <font color='red'>*</font> Perhatian Upload dengan benar pada qty jika tidak benar akan di ubah jadi 0<br>
+            <font color='red'>*</font> Data akan di replace ke data yang baru diupload<br>
+            <font color='red'>*</font> Untuk melihat data yang terupload bisa kunjungi submenu export<br>
+
+          </div>
+        </div>
+        <!-- /.box -->
+      </div>
+      <!-- col-md-12 -->
+    </div>
+    <!-- /.row -->
+
+
+  </section>
+
+
+  <?php if (isset($fields) && isset($sheet)) { ?>
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+
+          <div class="box box-success box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title"><b><i class="fa fa-briefcase"></i> Data Siap Import</b></h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+
+            <form>
+              <div class="box-body">
+                <br><br>
+                <table class="table">
+
+
+                  <thead>
+                    <tr>
+                      <!-- Header -->
+                      <?php foreach ($fields as $field) : ?>
+                        <th scope="col"><?= strtoupper($field) ?></th>
+                      <?php endforeach; ?>
+                    </tr>
+                  </thead>
+
+                  <!-- Data -->
+                  <tbody>
+                    <?php $i = 0;
+                    foreach ($sheet as $row) : ?>
+                      <tr class="clickable">
+
+                        <?php
+                        // skip the first row(header row)
+                        if ($i == 0) {
+                          $i++;
+                        } else {
+                          foreach ($letters as $col) {
+                            // if any col are empty, give a style color
+                            $null_col = (!empty($row[$col])) ? "" : " style='background: #fdd835;'";
+                            echo '<td class="view"' . $null_col . '>' . $row[$col] . '</td>';
+                          }
+                        }
+                        ?>
+
+                      </tr>
+                    <?php endforeach; ?>
+
+                  </tbody>
+                </table>
+              </div>
+              <div class="box-footer">
+                <a href="<?= base_url() ?>penjualan/import" class="btn btn-success"><i class="fa fa-sign-in"></i> Import</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- /.row -->
+
+
+    </section>
+  <?php } ?>
 
   <section class="content">
     <div class="box box-primary box-solid">

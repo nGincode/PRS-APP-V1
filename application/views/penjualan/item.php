@@ -260,6 +260,34 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
+
+
+
+
+
+  <!-- remove brand modal -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="removeModal1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Menghapus</h4>
+        </div>
+
+        <form role="form" action="<?php echo base_url('penjualan/removeitemall') ?>" method="post" id="removeForm1">
+          <div class="modal-body">
+            <p>Yakin Ingin Menghapus Keseluruhan Dari Item Hingga Resep?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger">Hapus</button>
+          </div>
+        </form>
+
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 <?php endif; ?>
 
 <script type="text/javascript">
@@ -342,6 +370,57 @@
 
             } else {
               $("#removeModal").modal('hide');
+              Swal.fire({
+                icon: 'error',
+                title: 'Maaf...!',
+                text: response.messages,
+                showConfirmButton: false,
+                timer: 4000
+              })
+
+            }
+          }
+        });
+
+        return false;
+      });
+    }
+  }
+
+
+  function removeFunc1(id) {
+    if (id) {
+      $("#removeForm1").on('submit', function() {
+
+        var form = $(this);
+
+        // remove the text-danger
+        $(".text-danger").remove();
+
+        $.ajax({
+          url: form.attr('action'),
+          type: form.attr('method'),
+          data: {
+            id: id
+          },
+          dataType: 'json',
+          success: function(response) {
+
+            manageTable.ajax.reload(null, false);
+
+            if (response.success === true) {
+              // hide the modal
+              $("#removeModal1").modal('hide');
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil...!',
+                text: response.messages,
+                showConfirmButton: false,
+                timer: 4000
+              })
+
+            } else {
+              $("#removeModal1").modal('hide');
               Swal.fire({
                 icon: 'error',
                 title: 'Maaf...!',

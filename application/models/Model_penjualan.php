@@ -56,6 +56,17 @@ class Model_penjualan extends CI_Model
 
 
 
+	public function removeitemresep($id)
+	{
+		if ($id) {
+			$this->db->where('iditemresep', $id);
+			$delete = $this->db->delete('penjualan_resep_id');
+			return ($delete == true) ? true : false;
+		}
+	}
+
+
+
 	public function create($data)
 	{
 		if ($data) {

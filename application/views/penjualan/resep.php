@@ -167,11 +167,11 @@
         <table id="manageTable" class="table table-bordered table-striped" style="width: 100%;">
           <thead>
             <tr>
-              <th style="width: 10px;">No</th>
               <th style="width: 10px;">Action</th>
-              <th>Store</th>
+              <th style="width: 100px;">Store</th>
               <th>Nama</th>
-              <th>Total HPP</th>
+              <th>Item</th>
+              <th style="width: 100px;">Total HPP</th>
             </tr>
           </thead>
 
@@ -219,8 +219,8 @@
             <p>Yakin Ingin Menghapus?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
-            <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger">Hapus</button>
           </div>
         </form>
 

@@ -550,7 +550,7 @@ $countbaca = $CI->model_orders->countbaca(1);
           <li class="treeview" id="mainpenjualanNav">
             <a href="#">
               <i class="fa fa-dollar"></i>
-              <span>Penjualan</span>
+              <span>Resep & HPP</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -570,13 +570,7 @@ $countbaca = $CI->model_orders->countbaca(1);
 
 
               <?php if (in_array('createpenjualan', $user_permission)) : ?>
-                <li id="addimportNav"><a href="<?php echo base_url('penjualan/check_import') ?>"><i class="fa fa-sign-in"></i> Import Excel</a>
-                </li>
-              <?php endif; ?>
-
-
-              <?php if (in_array('createpenjualan', $user_permission)) : ?>
-                <li id="addexportNav"><a href="<?php echo base_url('penjualan/export') ?>"><i class="fa fa-sign-in"></i> Export</a>
+                <li id="addexportNav"><a href="<?php echo base_url('penjualan/export') ?>"><i class="fa fa-sign-in"></i> Laporan Penjualan</a>
                 </li>
               <?php endif; ?>
 

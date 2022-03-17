@@ -162,6 +162,7 @@ class penjualan extends Admin_Controller
             <ul class="dropdown-menu">';
             if (in_array('deletepenjualan', $this->permission)) {
                 $buttons .= '<li><a style="cursor:pointer;" onclick="removeFunc(' . $value['id'] . ')" data-toggle="modal" data-target="#removeModal"><i class="fa fa-trash"></i> Hapus</a></li>';
+                $buttons .= '<li><a style="cursor:pointer;background: #ffe7e7;" onclick="removeFunc1(' . $value['id'] . ')" data-toggle="modal" data-target="#removeModal1"><i class="fa fa-trash"></i> Hapus Seluruh</a></li>';
             }
             $buttons .= '</ul></div>';
 
@@ -448,7 +449,6 @@ class penjualan extends Admin_Controller
 
 
         $dt = $this->model_penjualan->getresep();
-        $no = 1;
         foreach ($dt as $key => $value) {
 
             $buttons = ' <div class="btn-group dropleft">
@@ -469,10 +469,12 @@ class penjualan extends Admin_Controller
             $buttons .= '</ul></div>';
             $jmlh = 0;
             $dataresep = $this->model_penjualan->getresepitemid($value['id']);
+            $nama = '';
             foreach ($dataresep as $v) {
                 if ($v['iditemresep']) {
                     $item1 = $this->model_penjualan->getitemresep($v['iditemresep']);
-                    if (isset($item1['harga']) && isset($v['qty'])) {
+                    if ($item1) {
+                        $nama .= $item1['nama'] . ', ';
                         if ($item1['harga'] && $v['qty']) {
                             $jmlh += $item1['harga'] * $v['qty'];
                         } else {
@@ -484,7 +486,8 @@ class penjualan extends Admin_Controller
                     $jmlh += 0;
                 } else {
                     $item1 = $this->model_penjualan->getitemprod($v['idproduct']);
-                    if (isset($item1['price'])) {
+                    if ($item1) {
+                        $nama .= $item1['name'] . ', ';
                         $jmlh += $item1['price'] * $v['qty'];
                     } else {
                         $jmlh += 0;
@@ -497,10 +500,10 @@ class penjualan extends Admin_Controller
 
             $ttl = "Rp " . number_format($jmlh, 0, ',', '.');
             $result['data'][$key] = array(
-                $no++,
                 $buttons,
                 $store['name'],
                 $value['nama_menu'],
+                $nama,
                 $ttl
             );
         }
@@ -601,6 +604,47 @@ class penjualan extends Admin_Controller
     }
 
 
+    public function removeitemall()
+    {
+        if (!in_array('deletepenjualan', $this->permission)) {
+            redirect('dashboard', 'refresh');
+        }
+
+        $id = $this->input->post('id');
+
+        $cek = $this->model_penjualan->cekresep($id);
+        $response = array();
+        if ($cek) {
+            $delete = $this->model_penjualan->remove($id);
+            $delete = $this->model_penjualan->removeitemresep($id);
+            if ($delete == true) {
+                $response['success'] = true;
+                $response['messages'] = "Berhasil Terhapus (Semua item di resep terhapus)";
+            } else {
+                $response['success'] = false;
+                $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+            }
+        } else {
+            if ($id) {
+                $delete = $this->model_penjualan->remove($id);
+                if ($delete == true) {
+                    $response['success'] = true;
+                    $response['messages'] = "Berhasil Terhapus (Item Tidak Digunakan Diresep)";
+                } else {
+                    $response['success'] = false;
+                    $response['messages'] = "Kesalahan dalam database saat menghapus informasi produk";
+                }
+            } else {
+                $response['success'] = false;
+                $response['messages'] = "Refersh kembali!!";
+            }
+        }
+
+        echo json_encode($response);
+    }
+
+
+
 
 
 
@@ -659,58 +703,6 @@ class penjualan extends Admin_Controller
         $writer->save('php://output');
     }
 
-    public function check_import()
-    {
-        // load upload library
-        $this->load->library('upload');
-        $data['title'] = 'import data from excel';
-
-        // get fieldsname & number of coloumn
-        $data['fields'] = $this->Model->getFields();
-        $num_col = $this->Model->getCol();
-
-        // get letters array
-        $alphabet = $this->getLetters($num_col);
-
-        $this->load->view('templates/header', $this->data);
-        $this->load->view('templates/header_menu', $this->data);
-        $this->load->view('templates/side_menubar', $this->data);
-        $this->load->view('penjualan/import', $this->data);
-
-
-        // check if preview button was clicked
-        if (isset($_POST['preview'])) {
-
-            // set config for uploaded file
-            $config['upload_path']          = './uploads/';
-            $config['allowed_types']        = 'xlsx';
-            $config['file_name']                        = 'import_data';
-            $config['overwrite']                        = TRUE;
-
-            // load upload library config
-            $this->upload->initialize($config);
-
-            // if uploaded
-            if ($this->upload->do_upload('file_import')) {
-                // read file that has been uploaded using specific reader
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-                $spreadsheet = $reader->load('./uploads/' . $this->upload->data('file_name'));
-
-                // get all retrieved data from cell to array
-                $data['sheet'] = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-                $data['letters'] = $alphabet;
-
-                $this->load->view('penjualan/import_preview', $data);
-            }
-            // if failed upload
-            else {
-                $this->session->set_flashdata('error', 'File failed to upload :(');
-                redirect('penjualan/check_import');
-            }
-        }
-        $this->load->view('templates/footer', $this->data);
-    }
-
 
     public function import()
     {
@@ -750,8 +742,8 @@ class penjualan extends Admin_Controller
 
         // post all data in batch to database
         $this->Model->post_batch($data);
-        $this->session->set_flashdata('success', 'Import data has been inserted');
-        redirect('penjualan/check_import');
+        $this->session->set_flashdata('success', 'Berhasil Dimasukkan');
+        redirect('penjualan/export');
     }
 
 
@@ -759,6 +751,44 @@ class penjualan extends Admin_Controller
     public function export()
     {
 
+        // load upload library
+        $this->load->library('upload');
+        $this->data['title'] = 'import data from excel';
+
+        // get fieldsname & number of coloumn
+        $this->data['fields'] = $this->Model->getFields();
+        $num_col = $this->Model->getCol();
+
+        // get letters array
+        $alphabet = $this->getLetters($num_col);
+
+        // check if preview button was clicked
+        if (isset($_POST['preview'])) {
+
+            // set config for uploaded file
+            $config['upload_path']          = './uploads/';
+            $config['allowed_types']        = 'xlsx';
+            $config['file_name']                        = 'import_data';
+            $config['overwrite']                        = TRUE;
+
+            // load upload library config
+            $this->upload->initialize($config);
+
+            // if uploaded
+            if ($this->upload->do_upload('file_import')) {
+                // read file that has been uploaded using specific reader
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                $spreadsheet = $reader->load('./uploads/' . $this->upload->data('file_name'));
+
+                // get all retrieved data from cell to array
+                $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+                $this->data['sheet'] = $sheet;
+                $this->data['letters'] = $alphabet;
+            } else {
+                $this->session->set_flashdata('error', 'Gagal Mengupload File');
+                redirect('penjualan/export');
+            }
+        }
         $this->render_template('penjualan/export', $this->data);
     }
 

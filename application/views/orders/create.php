@@ -469,7 +469,7 @@
           } else if (data == 2) {
             Swal.fire({
               icon: 'info',
-              title: 'Sory Bro...!',
+              title: 'Cek Orderan Anda Kembali...!',
               text: 'Produk Pesanan Anda Ada Yang Duplikat',
               showConfirmButton: false,
               timer: 4000
