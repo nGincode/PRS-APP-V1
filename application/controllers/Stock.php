@@ -377,8 +377,12 @@ class Stock extends Admin_Controller
                     $nama_produk = $stock['nama_produk'];
                 }
             } else {
-                $nama_produk = 'tak diketahui';
                 $img = '';
+                if ($value['nama_produk']) {
+                    $nama_produk = $value['nama_produk'];
+                } else {
+                    $nama_produk = $value['produk_id'] . ' Tidak diketahui';
+                }
             }
 
             if ($value['bagian'] == 1) {
