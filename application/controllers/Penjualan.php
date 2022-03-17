@@ -1030,16 +1030,16 @@ class penjualan extends Admin_Controller
             $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
             if ($dtnama_menu) {
                 $total = $dtnama_menu['harga'] * $qty[$i];
-                $harga = "Rp " . number_format($dtnama_menu['harga'], 0, ',', '.');
+                $harga = $dtnama_menu['harga'];
                 $ttl = "Rp " . number_format($total, 0, ',', '.');
             } else {
                 $harga = 0;
                 $ttl = 0;
             }
             if ($c == $i + 1) {
-                $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  ']';
+                $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $harga . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $qty[$i] . '"' . ',"' . $ttl . '"' .  ']';
             } else {
-                $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  '],';
+                $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $harga . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' .  $qty[$i] . '"' . ',"' . $ttl . '"' .  '],';
             }
         }
         $array .= ']}';
@@ -1365,16 +1365,16 @@ class penjualan extends Admin_Controller
                     if ($dtnama_menu['harga']) {
                         $jml += $dtnama_menu['harga'] * $qty[$i];
                         $total = $dtnama_menu['harga'] * $qty[$i];
-                        $harga =  number_format($dtnama_menu['harga'], 0, ',', ',');
+                        $harga = $dtnama_menu['harga'];
                         $ttl =  number_format($total, 0, ',', ',');
                     } else {
                         $harga = 0;
                         $ttl = 0;
                     }
                     if ($c == $i + 1) {
-                        $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  ']';
+                        $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $harga . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $qty[$i] . '"' . ',"' . $ttl . '"' .  ']';
                     } else {
-                        $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $qty[$i] . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' . $harga . '"' . ',"' . $ttl . '"' .  '],';
+                        $array .= '[' . $no++ . ',' .  '"' . $nama[$i] . '"' . ',' . '"' . $harga . '/' . $dtnama_menu['satuan'] . '"' . ',' . '"' .  $qty[$i] . '"' . ',"' . $ttl . '"' .  '],';
                     }
                 }
             }
