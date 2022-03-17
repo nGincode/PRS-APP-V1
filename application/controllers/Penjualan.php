@@ -1278,8 +1278,8 @@ class penjualan extends Admin_Controller
 
         $sheet->setCellValue('A4', 'No');
         $sheet->setCellValue('B4', 'Nama Item');
-        $sheet->setCellValue('C4', 'QTY Total');
-        $sheet->setCellValue('D4', '1/Harga');
+        $sheet->setCellValue('C4', '1/Harga');
+        $sheet->setCellValue('D4', 'QTY Total');
         $sheet->setCellValue('E4', 'Harga Total');
 
         $dt = $this->model_penjualan->getimport();

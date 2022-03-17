@@ -206,8 +206,8 @@
             <tr>
               <th style="width: 10px;">No</th>
               <th>Nama Item</th>
-              <th>Qty Total</th>
               <th>1/Harga</th>
+              <th>Qty Total</th>
               <th>Harga Total</th>
             </tr>
           </thead>
