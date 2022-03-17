@@ -913,11 +913,15 @@ class Stock extends Admin_Controller
 
                 //nama produk
                 $produk_id = $value['produk_id'];
-                $stock = $this->model_stock->getnamastockid($produk_id);
-                if (isset($stock['nama_produk'])) {
-                    $nama_produk = $stock['nama_produk'];
+                if ($value['nama_produk']) {
+                    $nama_produk = $value['nama_produk'];
                 } else {
-                    $nama_produk = $value['produk_id'] . ' Tidak diketahui';
+                    $stock = $this->model_stock->getnamastockid($produk_id);
+                    if (isset($stock['nama_produk'])) {
+                        $nama_produk = $stock['nama_produk'];
+                    } else {
+                        $nama_produk = $value['produk_id'] . ' Tidak diketahui';
+                    }
                 }
 
 
@@ -1032,12 +1036,12 @@ class Stock extends Admin_Controller
             foreach ($ket as $key => $value) {
                 //nama produk
                 $produk_id = $value['produk_id'];
-                $stock = $this->model_stock->getnamastockid($produk_id);
-                if (isset($stock['nama_produk'])) {
-                    $nama_produk = $stock['nama_produk'];
+                if ($value['nama_produk']) {
+                    $nama_produk = $value['nama_produk'];
                 } else {
-                    if ($value['nama_produk']) {
-                        $nama_produk = $value['nama_produk'];
+                    $stock = $this->model_stock->getnamastockid($produk_id);
+                    if (isset($stock['nama_produk'])) {
+                        $nama_produk = $stock['nama_produk'];
                     } else {
                         $nama_produk = $value['produk_id'] . ' Tidak diketahui';
                     }
@@ -1163,12 +1167,12 @@ class Stock extends Admin_Controller
             foreach ($data as $key => $value) {
 
                 $produk_id = $value['produk_id'];
-                $stock = $this->model_stock->getnamastockid($produk_id);
-                if (isset($stock['nama_produk'])) {
-                    $nama_produk = $stock['nama_produk'];
+                if ($value['nama_produk']) {
+                    $nama_produk = $value['nama_produk'];
                 } else {
-                    if ($value['nama_produk']) {
-                        $nama_produk = $value['nama_produk'];
+                    $stock = $this->model_stock->getnamastockid($produk_id);
+                    if (isset($stock['nama_produk'])) {
+                        $nama_produk = $stock['nama_produk'];
                     } else {
                         $nama_produk = $value['produk_id'] . ' Tidak diketahui';
                     }

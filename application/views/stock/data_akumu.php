@@ -127,15 +127,15 @@
               foreach ($ket as $key => $value) {
                 //nama produk
                 $produk_id = $value['produk_id'];
-                $stock = $this->model_stock->getnamastockid($produk_id);
-
-                if (isset($stock['nama_produk'])) {
-                  $n_produk = $stock['nama_produk'];
+                if ($value['nama_produk']) {
+                  $n_produk = $value['nama_produk'];
                 } else {
+                  $stock = $this->model_stock->getnamastockid($produk_id);
 
-                  if ($value['nama_produk']) {
-                    $n_produk = $value['nama_produk'];
+                  if (isset($stock['nama_produk'])) {
+                    $n_produk = $stock['nama_produk'];
                   } else {
+
                     $n_produk = $value['produk_id'] . ' Tidak diketahui';
                   }
                 }
