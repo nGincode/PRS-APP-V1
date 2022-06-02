@@ -96,11 +96,17 @@
                     // print_r($order_data['order_item']);
                     // print_r($order_data['order']);
 
+
+
                     ?>
                     <?php
                     $jml = 0;
                     foreach ($order_data['order_item'] as $key => $val) :
                       $jml +=  $val['qty'] * $val['harga'];
+
+
+
+
                     ?>
 
                       <tr id="row_<?php echo $x; ?>">
@@ -115,6 +121,7 @@
                                                                       } ?>><?php echo $v['name'] ?></option>
                             <?php endforeach ?>
                           </select>
+
                         </td>
                         <td>
                           <input type="number" <?php if ($getbelanja['status'] == 1) {

@@ -47,8 +47,51 @@ class Products extends Admin_Controller
         } else {
             $this->data['storefilter'] = 'SEMUA';
         }
+        $prdct = $this->model_products->getProductData();
 
-        $this->data['products'] = $this->model_products->getProductData();
+        $hrgbr = [];
+        $hrgskrng = [];
+        foreach ($prdct as $key => $v) {
+
+            $hrgitem = $this->model_belanja->getbelanjaterimabyallid(mktime(0, 0, 0, date("n"), date("j") + 7, date("Y")), date('Y-m-d'), $v['id']);
+
+            $jmlhrg = 0;
+
+            foreach ($hrgitem as $h) {
+                $cekbelanja = $this->model_belanja->getbelanjaData($h['belanja_id']);
+                if ($cekbelanja['status'] && $h['harga']) {
+                    $jmlhrg += $h['harga'];
+                }
+            }
+
+            if ($jmlrow = count($hrgitem)) {
+                $jl = ceil($jmlhrg / $jmlrow); //jumlah
+                $persen = $jl * 0.1;
+                $hargacek = round($jl + $persen);
+            } else {
+                $hargacek = $jmlhrg;
+            }
+
+            $hrgbr[] = $hargacek;
+
+            $hrgskrng[] = $v['price'];
+        }
+
+        $cekarray = 0;
+        $cekin = '';
+        foreach ($hrgskrng as $itung => $k) {
+            if ($k != $hrgbr[$itung]) {
+                $cekarray += 1;
+            }
+        }
+
+        if (!$cekarray) {
+            $this->data['updateharga'] = false;
+        } else {
+            $this->data['updateharga'] = true;
+        }
+
+        $this->data['products'] = $prdct;
         $this->render_template('products/index', $this->data);
     }
 
@@ -244,7 +287,7 @@ class Products extends Admin_Controller
         }
 
         $this->form_validation->set_rules('sku', 'SKU', 'trim|required');
-        $this->form_validation->set_rules('price', 'Price', 'trim|required');
+        // $this->form_validation->set_rules('price', 'Price', 'trim|required');
         $this->form_validation->set_rules('qty', 'Qty', 'trim|required');
         $this->form_validation->set_rules('availability', 'Availability', 'trim|required');
 
@@ -291,7 +334,7 @@ class Products extends Admin_Controller
                     'sku' => $this->input->post('sku'),
                     'satuan' => $this->input->post('satuan'),
                     'tgl_input' => $this->input->post('tgl_input'),
-                    'price' => $this->input->post('price'),
+                    // 'price' => $this->input->post('price'),
                     'qty' => $this->input->post('qty'),
                     'ke' => $ke,
                     'hpp' => $this->input->post('hpp'),
@@ -1074,6 +1117,7 @@ class Products extends Admin_Controller
 
         $settgl_awal  = $this->input->post('tgl_awal');
         $settgl_akhir   = $this->input->post('tgl_akhir');
+        $outlet  = $this->input->post('outlet');
 
         if ($settgl_awal & $settgl_akhir) {
             $tgl_awal = date("Y-m-d", strtotime($settgl_awal));
@@ -1082,7 +1126,7 @@ class Products extends Admin_Controller
             $data['title'] = "Laporan Dari Tanggal " . $tgl_awal . ' Sampai ' . $tgl_akhir;
             $data['tgl_awal'] = $tgl_awal;
             $data['tgl_akhir'] = $tgl_akhir;
-            $data['hasil'] = $this->model_orders->getOrdersstore(1, $tgl_awal, $tgl_akhir);
+            $data['hasil'] = $this->model_orders->getOrdersstore($outlet, $tgl_awal, $tgl_akhir);
             $data['hasilm'] = $this->model_products->cetakpertanggalmasukstock($tgl_awal, $tgl_akhir);
             $this->load->view('products/laporan/print', $data);
         } else {
@@ -1132,8 +1176,13 @@ class Products extends Admin_Controller
         if ($data) {
             foreach ($data as $key => $value) {
 
-                $angka = $value['price'] * $value['qty'];
-
+                if ($value['price'] && $value['qty']) {
+                    $angka = $value['price'] * $value['qty'];
+                } else if ($value['qty']) {
+                    $angka = 0 * $value['qty'];
+                } else {
+                    $angka = 0 * 0;
+                }
                 $sheet->setCellValue('A' . $baris, $no++);
                 $sheet->setCellValue('B' . $baris, $value['name']);
                 $sheet->setCellValue('C' . $baris, $value['price']);
@@ -1795,5 +1844,81 @@ class Products extends Admin_Controller
         } // /foreach
 
         echo json_encode($result);
+    }
+
+
+    public function updateharga()
+    {
+
+        $pesan = 'id ';
+
+        $data = $this->model_products->getProductData();
+
+        foreach ($data as $key => $value) {
+
+            $hrgitem = $this->model_belanja->getbelanjaterimabyallid(mktime(0, 0, 0, date("n"), date("j") + 7, date("Y")), date('Y-m-d'), $value['id']);
+
+            $jmlhrg = 0;
+
+            foreach ($hrgitem as $h) {
+                $cekbelanja = $this->model_belanja->getbelanjaData($h['belanja_id']);
+                if ($cekbelanja['status'] && $h['harga']) {
+                    $jmlhrg += $h['harga'];
+                }
+            }
+
+            if ($jmlrow = count($hrgitem)) {
+                $jl = ceil($jmlhrg / $jmlrow); //jumlah
+                $persen = $jl * 0.1;
+                $hargacek = $jl + $persen;
+            } else {
+                $hargacek = $jmlhrg;
+            }
+
+
+
+
+            ///untuk eksekusi
+            $product_data = $this->model_products->getProductData($value['id']);
+            if ($product_data['price'] == $hargacek) {
+                $price = $product_data['price'];
+                $harga = $product_data['price_old'];
+                $tgl = $product_data['price_tgl'];
+            } else {
+                $tgl = date('Y-m-d');
+                $harga = $product_data['price'];
+                $price = $hargacek;
+            }
+
+            $data = array(
+                'price' => $price,
+                'price_old' => $harga,
+                'price_tgl' => $tgl
+            );
+
+            $cek = $this->model_products->update($data, $value['id']);
+            if (!$cek) {
+                $pesan .= $product_data['name'] . ', ';
+                $err = true;
+            }
+        }
+
+        $pesan .= 'Terjadi Kegagalan';
+
+        if (isset($err)) {
+            $succes = false;
+            $mess = $pesan;
+        } else {
+            $succes = true;
+            $mess = 'Harga Berhasil di Update';
+        }
+
+
+        echo json_encode(
+            [
+                'pesan' => $mess,
+                'success' => $succes
+            ]
+        );
     }
 }

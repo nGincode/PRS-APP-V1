@@ -78,5 +78,92 @@ class Dashboard extends Admin_Controller
 			$this->render_template('dashboard', $this->data);
 			return;
 		}
+
+
+
+		//update harga logistik
+		$prdct = $this->model_products->getProductData();
+
+		$hrgbr = [];
+		$hrgskrng = [];
+		foreach ($prdct as $key => $v) {
+
+			$hrgitem = $this->model_belanja->getbelanjaterimabyallid(mktime(0, 0, 0, date("n"), date("j") + 7, date("Y")), date('Y-m-d'), $v['id']);
+
+			$jmlhrg = 0;
+
+			foreach ($hrgitem as $h) {
+				$cekbelanja = $this->model_belanja->getbelanjaData($h['belanja_id']);
+				if ($cekbelanja['status'] && $h['harga']) {
+					$jmlhrg += $h['harga'];
+				}
+			}
+
+			if ($jmlrow = count($hrgitem)) {
+				$jl = ceil($jmlhrg / $jmlrow); //jumlah
+				$persen = $jl * 0.1;
+				$hargacek = round($jl + $persen);
+			} else {
+				$hargacek = $jmlhrg;
+			}
+
+			$hrgbr[] = $hargacek;
+
+			$hrgskrng[] = $v['price'];
+		}
+
+		$cekarray = 0;
+		foreach ($hrgskrng as $itung => $k) {
+			if ($k != $hrgbr[$itung]) {
+				$cekarray += 1;
+			}
+		}
+
+		if ($cekarray) {
+			foreach ($prdct as $key => $value) {
+
+				$hrgitem = $this->model_belanja->getbelanjaterimabyallid(mktime(0, 0, 0, date("n"), date("j") + 7, date("Y")), date('Y-m-d'), $value['id']);
+
+				$jmlhrg = 0;
+
+				foreach ($hrgitem as $h) {
+					$cekbelanja = $this->model_belanja->getbelanjaData($h['belanja_id']);
+					if ($cekbelanja['status'] && $h['harga']) {
+						$jmlhrg += $h['harga'];
+					}
+				}
+
+				if ($jmlrow = count($hrgitem)) {
+					$jl = ceil($jmlhrg / $jmlrow); //jumlah
+					$persen = $jl * 0.1;
+					$hargacek = $jl + $persen;
+				} else {
+					$hargacek = $jmlhrg;
+				}
+
+
+
+
+				///untuk eksekusi
+				$product_data = $this->model_products->getProductData($value['id']);
+				if ($product_data['price'] == $hargacek) {
+					$price = $product_data['price'];
+					$harga = $product_data['price_old'];
+					$tgl = $product_data['price_tgl'];
+				} else {
+					$tgl = date('Y-m-d');
+					$harga = $product_data['price'];
+					$price = $hargacek;
+				}
+
+				$data = array(
+					'price' => $price,
+					'price_old' => $harga,
+					'price_tgl' => $tgl
+				);
+
+				$this->model_products->update($data, $value['id']);
+			}
+		}
 	}
 }

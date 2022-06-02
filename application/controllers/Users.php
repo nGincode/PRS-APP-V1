@@ -265,6 +265,8 @@ class Users extends Admin_Controller
 		$user_group = $this->model_users->getUserGroup($user_id);
 		$this->data['user_group'] = $user_group;
 
+		// $this->model_stores->$this->session->userdata('store_id');
+
 		$this->render_template('users/profile', $this->data);
 	}
 

@@ -461,11 +461,18 @@ class Model_orders extends CI_Model
 		return $query->num_rows();
 	}
 
-	public function cetakpertanggal($store_id, $tgl_awal, $tgl_akhir, $id)
+	public function cetakpertanggal($product,$store_id, $tgl_awal, $tgl_akhir)
 	{
 
-		$query = $this->db->query("SELECT * FROM orders_item WHERE gudang_id=$id and store_id = $store_id AND status_up=1 AND tgl_order BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl_order ASC");
-		return $query->result();
+		$query = $this->db->query("SELECT * FROM orders_item WHERE store_id = $store_id AND product_id = $product AND status_up=1 AND tgl_laporan BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl_laporan ASC");
+		return $query->result_array();
+	}
+	
+	public function cetakpertanggalproduct($store_id, $tgl_awal, $tgl_akhir)
+	{
+
+		$query = $this->db->query("SELECT DISTINCT product_id FROM orders_item WHERE store_id = $store_id AND status_up=1 AND tgl_laporan BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl_laporan ASC");
+		return $query->result_array();
 	}
 
 	public function countbaca($baca)
@@ -511,9 +518,14 @@ class Model_orders extends CI_Model
 		return $query->row_array();
 	}
 
-	public function getOrdersstore($tgl_awal, $tgl_akhir)
+	public function getOrdersstore($store, $tgl_awal, $tgl_akhir)
 	{
-		$sql = "SELECT DISTINCT store_id FROM orders_item WHERE status_up=1 AND tgl_order BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY tgl_order ASC";
+	    if($store){
+	        $store = "AND store_id='$store'";
+	    }else{
+	        $store = '';
+	    }
+		$sql = "SELECT DISTINCT store_id FROM orders_item WHERE status_up=1 AND tgl_laporan BETWEEN '$tgl_awal' AND '$tgl_akhir' $store ORDER BY tgl_laporan ASC";
 		$query = $this->db->query($sql);
 		return $query->result_array();
 	}

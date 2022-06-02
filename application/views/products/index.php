@@ -64,6 +64,13 @@ endif; ?>
                   </ul>
                 </div>
 
+
+                <div style="margin-right:10px;">
+                  <?php if ($updateharga == true) : ?>
+                    <a href="#" onclick="updateharga()" class="btn btn-danger"><i class="fa fa-sign-out"></i> Update Harga</a>
+                  <?php endif; ?>
+                </div>
+
               </div>
 
               <hr>
@@ -304,6 +311,43 @@ endif; ?>
       alert('Isi Belum Lengkap');
     }
 
+  }
+
+
+  function updateharga() {
+    $.ajax({
+      url: '<?= base_url('/products/updateharga') ?>',
+      type: 'POST',
+      dataType: 'json',
+      success: function(response) {
+        if (response.success === true) {
+
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil...!',
+            text: response.pesan,
+            showConfirmButton: false,
+            timer: 4000
+          });
+
+          setTimeout(function() {
+            location.reload();
+          }, 4000);
+
+        } else {
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Maaf...!',
+            text: response.pesan,
+            showConfirmButton: false,
+            timer: 4000
+          });
+
+        }
+      }
+    });
   }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jQuery.print@1.5.1/jQuery.print.min.js"></script>

@@ -193,6 +193,8 @@ class Belanja extends Admin_Controller
 				$total = 0;
 			}
 
+
+
 			$result['data'][$key] = array(
 				'<center>' . $buttons . '</center>',
 				'<center>' . $value['tgl'] . '</center>',
@@ -638,7 +640,6 @@ class Belanja extends Admin_Controller
 
 
 		$bekukan = $this->model_belanja->bekukan($id);
-
 		if ($bekukan == true) {
 			echo '';
 		} else {
@@ -675,6 +676,8 @@ class Belanja extends Admin_Controller
 					}
 
 					$product = $this->model_products->getProductData($val['product_id']);
+
+
 
 					array_push($items, array(
 						'tgl' =>  $tgl,

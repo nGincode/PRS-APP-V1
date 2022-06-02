@@ -38,18 +38,19 @@
             <br><br>
             <h4><b>1.) Laporan Barang Keluar</b></h4>
             <?php
+            
+            //perualangan untuk outlet
             foreach ($hasil as $s) {
 
                 $no = 0;
 
                 $outlet = $this->model_stores->getStoresData($s['store_id']);
 
-                echo '
+                echo '<h1>'. $outlet['name'].'</h1><br>
                     <table id="manageTable" class="table table-bordered table-striped">
                     <tr>
                     <th><center>No</center></th>
                     <th><center>Outlet</center></th>
-                    <th><center>Tanggal Order</center></th>
                     <th><center>Nama Produk</center></th>
                     <th><center>Hrg/Satuan</center></th>
                     <th><center>Qty</center></th>
@@ -57,21 +58,40 @@
                     </tr>';
 
                 $store_id = $this->session->userdata('store_id');
-                $cetak = $this->model_orders->cetakpertanggal($s['store_id'], $tgl_awal, $tgl_akhir, $store_id);
+                
+                
+                
+                $product = $this->model_orders->cetakpertanggalproduct($s['store_id'], $tgl_awal, $tgl_akhir);
+                
+                $qty=0;
+                if ($product) {
+                    
+                    
+                    foreach ($product as $row) {
+                    
+                        
+                    $dataprodut = $this->model_orders->cetakpertanggal($row['product_id'],$s['store_id'], $tgl_awal, $tgl_akhir);
 
-                $Jumlah = 0;
-                $qty = 0;
-                if ($cetak) {
-                    foreach ($cetak as $row) {
-
-                        $products = $this->model_products->getProductData($row->product_id);
+                    $jumlah_qtydeliv = 0;
+                    if($dataprodut[0]['rate']){
+                    $jumlah_rate = $dataprodut[0]['rate'];
+                    }else{
+                    $jumlah_rate = 0;
+                    }
+                    $satuannya = $dataprodut[0]['satuan'];
+                    foreach ($dataprodut as $v) {
+                        $jumlah_qtydeliv +=$v['qtydeliv'];
+                    };
+                    $jumlah_total = $jumlah_qtydeliv * $jumlah_rate;
+                    $qty += $jumlah_total;
+                    
+                        $products = $this->model_products->getProductData($row['product_id']);
+                        if($products){
                         $pp = $products['name'];
-
-                        $store = $this->model_stores->getStoresData($row->store_id);
-                        $Jumlah += $row->amount;
-                        $qty += $row->qtydeliv;
-
-
+                        }else{
+                            $pp = 'TAK DITEMUKAN';
+                        }
+                        
                         $no++;
             ?>
 
@@ -80,28 +100,24 @@
                                 <center><?php echo $no ?></center>
                             </td>
                             <td>
-                                <center><?php echo $store['name']; ?></center>
-                            </td>
-                            <td>
-                                <center><?php echo $row->tgl_order; ?></center>
+                                <center><?php echo $outlet['name']; ?></center>
                             </td>
                             <td><?php echo $pp; ?></td>
-                            <td style="text-align: right;">Rp. <?php echo number_format($row->rate, 0, ',', '.') . '/' . $row->satuan; ?></td>
-                            <td style="text-align: right;"><?php echo $row->qtydeliv ?></td>
-                            <td style="text-align: right;">Rp. <?php echo number_format($row->amount, 0, ',', '.'); ?></td>
+                            <td style="text-align: right;">Rp. <?php echo number_format($jumlah_rate, 0, ',', '.') . '/' . $satuannya; ?></td>
+                            <td style="text-align: right;"><?php echo $jumlah_qtydeliv ?></td>
+                            <td style="text-align: right;">Rp. <?php echo number_format($jumlah_total, 0, ',', '.'); ?></td>
                         </tr>
 
             <?php
                     }
 
                     echo  '<tr style="background-color: #00c0ef38;">
-               <td colspan="5"><b>Jumlah</b></td>
-               <td  style="text-align: right;"s><b>' . $qty . '</b></td>
-               <td  style="text-align: right;"><b>Rp. ' . number_format($Jumlah, 0, ',', '.') . '</b></td>
-               </tr>';
+              <td colspan="5"><b>Jumlah</b></td>
+              <td  style="text-align: right;"><b>Rp. ' . number_format($qty, 0, ',', '.') . '</b></td>
+              </tr>';
                 } else {
                     echo  '<tr style="background-color: #f443368a;">
-                    <td colspan="7"><Center><b>Tidak ditemukan data</b></center></td>
+                    <td colspan="6"><Center><b>Tidak ditemukan data</b></center></td>
                     </tr>';
                 }
                 echo ' </table><br><br>';
@@ -110,7 +126,7 @@
             ?>
 
 
-            <h4><b>2.) Laporan Barang Masuk</b></h4>
+            <h4><b>2.) Laporan Barang Masuk Logistik</b></h4>
 
             <table id="manageTable" class="table table-bordered table-striped">
 

@@ -1029,7 +1029,11 @@ class penjualan extends Admin_Controller
 
             $dtnama_menu = $this->model_penjualan->getnamaitemmenu("$nama[$i]");
             if ($dtnama_menu) {
+                if($dtnama_menu['harga'] == ''){
+                $total = 0 * $qty[$i];
+                }else{
                 $total = $dtnama_menu['harga'] * $qty[$i];
+                }
                 $harga = $dtnama_menu['harga'];
                 $ttl = "Rp " . number_format($total, 0, ',', '.');
             } else {

@@ -71,7 +71,7 @@ endif; ?>
 
               <div class="form-group">
                 <label for="price">Harga</label>
-                <input type="text" class="form-control" id="price" name="price" required="" placeholder="Masukkan Harga" value="<?php echo $product_data['price']; ?>" autocomplete="off" />
+                <input type="text" disabled class="form-control" id="price" name="price" required="" placeholder="Masukkan Harga" value="<?php echo $product_data['price']; ?>" autocomplete="off" />
               </div>
 
               <div class="form-group">

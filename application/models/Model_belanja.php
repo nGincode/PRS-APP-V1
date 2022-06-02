@@ -179,4 +179,12 @@ class Model_belanja extends CI_Model
 		$update = $this->db->update('belanja', $data);
 		return ($update == true) ? true : false;
 	}
+
+
+	public function getbelanjaterimabyallid($tgl_awal, $tgl_akhir, $id)
+	{
+		$sql = "SELECT * FROM belanja_item WHERE product_id=$id AND tgl BETWEEN '$tgl_awal' AND '$tgl_akhir' ORDER BY id DESC ";
+		$query = $this->db->query($sql);
+		return $query->result_array();
+	}
 }

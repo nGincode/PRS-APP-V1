@@ -7,6 +7,7 @@ endif; ?>
 $s1 = json_decode($dt_store['s1'], TRUE);
 $s2 = json_decode($dt_store['s2'], TRUE);
 $lembur = json_decode($dt_store['lembur'], TRUE);
+$middel = json_decode($dt_store['middel'], TRUE);
 $khusus_s1 = json_decode($dt_store['khusus_s1'], TRUE);
 $khusus_s2 = json_decode($dt_store['khusus_s2'], TRUE);
 $akustik = json_decode($dt_store['akustik'], TRUE);
@@ -99,6 +100,11 @@ $akustik = json_decode($dt_store['akustik'], TRUE);
                         if ($akustik[0]) {
                           echo '<option value="6">Akustik</option>';
                         }
+
+
+                        if ($middel[0]) {
+                          echo '<option value="7">Middel</option>';
+                        }
                       } else {  ?>
 
                         <?php if ($s1[0]) { ?>
@@ -115,6 +121,11 @@ $akustik = json_decode($dt_store['akustik'], TRUE);
 
                       <?php if ($akustik[0]) { ?>
                         <option value="6">Akustik</option>
+                      <?php } ?>
+
+
+                      <?php if ($middel[0]) { ?>
+                        <option value="7">Middel</option>
                       <?php } ?>
 
                     </select>

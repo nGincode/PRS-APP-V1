@@ -23,7 +23,7 @@
   <section class="content">
     <!-- Small boxes (Stat box) -->
     <div class="row">
-      <div class="col-md-12 col-xs-12">
+      <div class="col-md-8">
 
         <div class="box box-white box-solid">
           <div class="box-header with-border">
@@ -119,70 +119,66 @@
                   </th>
                 </tfoot>
               </table>
-              <br /> <br />
-
-              <div class="col-md-6 col-xs-12 pull pull-right">
-
-                <div class="form-group">
-                  <label for="gross_amount" class="col-sm-5 control-label">Jumlah</label>
-                  <div class="col-sm-7">
-                    <input type="text" class="form-control" id="gross_amount" name="gross_amount" disabled autocomplete="off">
-                    <input type="hidden" class="form-control" id="gross_amount_value" name="gross_amount_value" autocomplete="off">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="gross_amount" class="col-sm-5 control-label">Tunai</label>
-                  <div class="col-sm-7">
-                    <input type="number" class="form-control" required id="tunai" name="tunai" autocomplete="off">
-                  </div>
-                </div>
-                <?php if ($is_service_enabled == true) : ?>
-                  <div class="form-group">
-                    <label for="service_charge" class="col-sm-5 control-label">S-Charge <?php echo $company_data['service_charge_value'] ?> %</label>
-                    <div class="col-sm-7">
-                      <input type="text" class="form-control" id="service_charge" name="service_charge" disabled autocomplete="off">
-                      <input type="hidden" class="form-control" id="service_charge_value" name="service_charge_value" autocomplete="off">
-                    </div>
-                  </div>
-                <?php endif; ?>
-                <?php if ($is_vat_enabled == true) : ?>
-                  <div class="form-group">
-                    <label for="vat_charge" class="col-sm-5 control-label">PPN <?php echo $company_data['vat_charge_value'] ?> %</label>
-                    <div class="col-sm-7">
-                      <input type="text" class="form-control" id="vat_charge" name="vat_charge" disabled autocomplete="off">
-                      <input type="hidden" class="form-control" id="vat_charge_value" name="vat_charge_value" autocomplete="off">
-                    </div>
-                  </div>
-                <?php endif; ?>
-                <div class="form-group" style="display: none;">
-                  <label for="discount" class="col-sm-5 control-label">Discount</label>
-                  <div class="col-sm-7">
-                    <input type="text" class="form-control" id="discount" name="discount" placeholder="Discount" onkeyup="subAmount()" autocomplete="off">
-                  </div>
-                </div>
-                <div class="form-group" style="display: none ;">
-                  <label for="net_amount" class="col-sm-5 control-label">Jumlah Total</label>
-                  <div class="col-sm-7">
-                    <input type="text" class="form-control" id="net_amount" name="net_amount" disabled autocomplete="off">
-                    <input type="hidden" class="form-control" id="net_amount_value" name="net_amount_value" autocomplete="off">
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            <!-- /.box-body -->
-
-            <div class="box-footer">
-              <input type="hidden" name="service_charge_rate" value="<?php echo $company_data['service_charge_value'] ?>" autocomplete="off">
-              <input type="hidden" name="vat_charge_rate" value="<?php echo $company_data['vat_charge_value'] ?>" autocomplete="off">
-              <button type="submit" style="width: 100%;height: 80px;" class="btn btn-primary"><i class="fa fa-sign-in"></i> Submit</button>
-            </div>
           </form>
           <!-- /.box-body -->
         </div>
 
+      </div>
+
+      <div class="col-md-4">
+
+        <div class="box box-white box-solid">
+          <div class="box-header with-border">
+            <h3 class="box-title"><b><i class="fa fa-shopping-cart"></i> Invoice Sales</b></h3>
+
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <!-- /.box-tools -->
+          </div>
 
 
+          <div style="min-height: 400px;">
+
+            <div class="card mb-3" style="max-width: 540px;">
+              <div class="row no-gutters">
+                <div class="col-md-2">
+                  <img src="<?= base_url() ?>uploads/ivn_image/unnamed.png" width="75px">
+                </div>
+                <div class="col-md-10">
+                  <div class="card-body" style="padding: 0px 10px 0px 10px;">
+                    <h5 class="card-title"><b>Ayam Filet</b></h5>
+                    <h5 style="float: right;"><b>Rp. 300.000</b></h5>
+                    <p class="card-text">100 Pcs</p>
+                    <hr>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="gross_amount" class="col-sm-5 control-label">Jumlah</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="gross_amount" name="gross_amount" disabled autocomplete="off">
+              <input type="hidden" class="form-control" id="gross_amount_value" name="gross_amount_value" autocomplete="off">
+            </div>
+          </div>
+          <br><br>
+          <div class="form-group">
+            <label for="gross_amount" class="col-sm-5 control-label">Tunai</label>
+            <div class="col-sm-7">
+              <input type="number" class="form-control" required id="tunai" name="tunai" autocomplete="off">
+            </div>
+          </div>
+          <br><br>
+          <button type="submit" style="width: 100%;height: 50px;" class="btn btn-success"><i class="fa fa-sign-in"></i> Bayar</button>
+
+        </div>
+      </div>
+
+      <div class="col-md-12 col-xs-12">
         <div class="box box-solid">
           <div class="box-header">
             <h3 class="box-title"><b><i class="fa fa-shopping-cart"></i> History Transaksi</b></h3>

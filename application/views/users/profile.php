@@ -161,6 +161,70 @@ endif; ?>
   <!-- /.content -->
 
 
+  <?php
+
+  if ($tipe == 2) : ?>
+    <section class="content">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-md-12 col-xs-12">
+
+          <div class="box box-primary box-solid">
+
+            <div class="box-header with-border">
+              <h3 class="box-title">
+                <b><i class="fa fa-users"></i> Store Setting</b>
+              </h3>
+
+              <!-- /.box-tools -->
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered table-condensed table-hovered">
+                <tr>
+                  <th>Username</th>
+                  <td><?php echo $user_data['username']; ?></td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td><?php echo $user_data['email']; ?></td>
+                </tr>
+                <tr>
+                  <th>Nama Depan</th>
+                  <td><?php echo $user_data['firstname']; ?></td>
+                </tr>
+                <tr>
+                  <th>Nama Belakang</th>
+                  <td><?php echo $user_data['lastname']; ?></td>
+                </tr>
+                <tr>
+                  <th>Gender</th>
+                  <td><?php echo ($user_data['gender'] == 1) ? 'Laki-Laki' : 'Perempuan'; ?></td>
+                </tr>
+                <tr>
+                  <th>No. Hp</th>
+                  <td><?php echo $user_data['phone']; ?></td>
+                </tr>
+                <tr>
+                  <th>Group</th>
+                  <td><span class="label label-info"><?php echo $user_group['group_name']; ?></span></td>
+                </tr>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- col-md-12 -->
+      </div>
+      <!-- /.row -->
+
+
+    </section>
+  <?php endif; ?>
+
+
 
   <section class="content">
     <!-- Small boxes (Stat box) -->
